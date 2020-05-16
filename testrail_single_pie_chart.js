@@ -2,12 +2,12 @@ $(function () {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
-        data: {functionname: 'getTestRailData_singleProject', arguments: ['Saudagar']},
+        data: {functionname: 'getTestRailData_singleProject', arguments: ['Phoenix']},
         success: function(result) 
         {
             var chartProperties = 
             {
-                "caption": "Testrail - Automation Cases Breakdown for Saudagar",
+                "caption": "Testrail - Automation Cases Breakdown for Phoenix",
                 "subCaption" : "",
                 "showValues":"1",
                 "showPercentInTooltip" : "1",

@@ -11,9 +11,10 @@
       <script src="js/jquery-2.1.4.js"></script>
       <script src="js/fusioncharts.js"></script>
       <script src="js/fusioncharts.charts.js"></script>
-      <script src="js/themes/fusioncharts.theme.zune.js"></script>
+      <script src="js/themes/fusioncharts.theme.ocean.js"></script>
       <script src="js/themes/fusioncharts.theme.fusion.js"></script>
-      <script src="index_chart.js"></script>
+      <script src="js/themes/fusioncharts.theme.candy.js"></script>
+      <script src="results_chart.js"></script>
    </head>
    <body data-gr-c-s-loaded="true">
       <div id="root">
@@ -38,12 +39,12 @@
                      </div>
                      <nav class="bd-links collapse" id="bd-docs-nav">
                         <ul class="left-options">
-                           <li class="left-option active" id="">
+                           <li class="left-option" id="">
                               <a href="index.php">
                               Dashboard
                               </a>
                            </li>
-                           <li class="left-option" id="">
+                           <li class="left-option active" id="">
                               <a href="results.php">
                               Results
                               </a>
@@ -81,82 +82,40 @@
                      <div class="row mt-3 db-chart">
                         <div id="parent1" class="col-lg-6 col-xl-4">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text1">RESULTS PROJECT</div>
+                              <div class="chart-title" id="text2">Average Production Percentage</div>
                               <div id="chart1" class="chart">
-                                 <form name="testform" method="POST" action="p0p1.html">
-                                    <?php 
-                                       require "db_config.php";
-                                       echo "<br><center><label>Select Your Thanos Project</label> <select name='projectName' id='projectName'>
-                                       <option value=''>Choose project</option>";
-                                       
-                                       $sql = "select projectName from thanos.results group by projectName"; 
-                                       foreach ($dbo->query($sql) as $row) 
-                                       { 
-                                          echo "<option value='$row[projectName]'>$row[projectName]</option>"; 
-                                       } 
-                                       ?>
-                                    </select>
-                                    <input type="submit" value="submit" />
-                                    </center>
-                                 </form>
-                                 <br>
+                                 <center>
+                                    <label id="gauge-chart-container1">&nbsp; Chart is loading here...</label>
+                                 </center>
                               </div>
                            </div>
                         </div>
                         <div id="parent2" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">TESTRAIL PROJECT</div>
+                              <div class="chart-title" id="text2">Average Sandbox Percentage</div>
                               <div id="chart2" class="chart">
-                                 <form name="testform" method="POST" action="p0p1.html">
-                                    <?php 
-                                       require "db_config.php";
-                                       echo "<br><center><label>Select Your Testrail Project</label> <select name='projectName' id='projectName'>
-                                       <option value=''>Choose project</option>";
-                                       
-                                       $sql = "select projectName from thanos.testrail group by projectName"; 
-                                       foreach ($dbo->query($sql) as $row) 
-                                       { 
-                                          echo "<option value='$row[projectName]'>$row[projectName]</option>"; 
-                                       } 
-                                       ?>
-                                    </select>
-                                    <input type="submit" value="submit" />
-                                    </center>
-                                 </form>
-                                 <br>
+                                 <center>
+                                    <label id="gauge-chart-container2">&nbsp; Chart is loading here...</label>
+                                 </center>
                               </div>
                            </div>
                         </div>
                         <div id="parent3" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text3">JIRA PROJECT</div>
+                              <div class="chart-title" id="text2">Average Staging Percentage</div>
                               <div id="chart3" class="chart">
-                                 <form name="testform" method="POST" action="p0p1.html">
-                                    <?php 
-                                       require "db_config.php";
-                                       echo "<br><center><label>Select Your Jira Project</label> <select name='projectName' id='projectName'>
-                                       <option value=''>Choose project</option>";
-                                       
-                                       $sql = "select projectName from thanos.jira group by projectName"; 
-                                       foreach ($dbo->query($sql) as $row) 
-                                       { 
-                                          echo "<option value='$row[projectName]'>$row[projectName]</option>"; 
-                                       } 
-                                       ?>
-                                    </select>
-                                    <input type="submit" value="submit" />
-                                    </center>
-                                 </form>
-                                 <br>
+                                 <center>
+                                    <label id="gauge-chart-container3">&nbsp; Chart is loading here...</label>
+                                 </center>
                               </div>
                            </div>
                         </div>
                      </div>
                      <div id="chart-container">
                         <center>
-                           <label id="chart-container1">Charts are loading here...</label>
+                           <label id="column-chart-container">&nbsp; Chart is loading here...</label>
                            <br><br>
-                           <label id="chart-container2">Charts are loading here...</label>
+                           <label id="line-chart-container">&nbsp; Chart is loading here...</label>
                         </center>
                      </div>
                      <div class="row">
