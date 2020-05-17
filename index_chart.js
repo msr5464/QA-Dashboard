@@ -3,28 +3,28 @@ $(function () {
     fetchTestrailData("7");
 });
 
-$(document).ready(function() {
-    $(".filter").click(function(){
+$(document).ready(function () {
+    $(".filter").click(function () {
         $(".filter").removeClass("active");
-        $(this).addClass("active"); 
+        $(this).addClass("active");
     });
 
-    $("#weeklyData").click(function(){
+    $("#weeklyData").click(function () {
         fetchResultsData("7");
         fetchTestrailData("7");
     });
 
-    $("#monthlyData").click(function(){
+    $("#monthlyData").click(function () {
         fetchResultsData("30");
         fetchTestrailData("30");
     });
 
-    $("#quarterlyData").click(function(){
+    $("#quarterlyData").click(function () {
         fetchResultsData("90");
         fetchTestrailData("90");
     });
 
-    $("#yearlyData").click(function(){
+    $("#yearlyData").click(function () {
         fetchResultsData("365");
         fetchTestrailData("365");
     });
@@ -34,12 +34,13 @@ function fetchResultsData(timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
-        data: {functionname: 'getLatestResultsData_All', arguments: [timeFilter]},
-        success: function(result) 
-        {
-            var chartProperties = 
-            {
-                "caption": "Average Pass Percentage of Automation cases on Staging",
+        data: {
+            functionname: 'getLatestResultsData_All',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
+            var chartProperties = {
+                "caption": "Thanos - Average Pass Percentage on Staging",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
@@ -70,27 +71,27 @@ function fetchTestrailData(timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
-        data: {functionname: 'getLatestTestrailData_All', arguments: [timeFilter]},
-        success: function (result) 
-        {
+        data: {
+            functionname: 'getLatestTestrailData_All',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
             var resultValue2 = 0;
             var resultValue3 = 0;
-            $.each(result, function(key, value)
-            {
-                if(key==="categories")
+            $.each(result, function (key, value) {
+                if (key === "categories")
                     categoriesData = value;
-                if(key==="dataset")
+                if (key === "dataset")
                     datasetData = value;
             });
 
-            var chartProperties = 
-            {
-                "caption": "Testrail - Automation Testcases Metrics",
+            var chartProperties = {
+                "caption": "Testrail - Total Testcase Distribution Metrics",
                 "placevaluesinside": "0",
                 "showvalues": "0",
                 "plottooltext": "$label - $seriesName - $dataValue",
                 "theme": "fusion",
-                "showsum":"1"
+                "showsum": "1"
             };
             apiChart = new FusionCharts({
                 type: 'stackedcolumn2d',

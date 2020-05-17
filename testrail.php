@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- saved from url=(0080)smart-energy-monitoring-dashboard/ -->
 <html lang="en">
    <head>
       <title>QA Dashboard</title>
@@ -14,7 +13,8 @@
       <script src="js/themes/fusioncharts.theme.ocean.js"></script>
       <script src="js/themes/fusioncharts.theme.fusion.js"></script>
       <script src="js/themes/fusioncharts.theme.candy.js"></script>
-      <script src="results_chart.js"></script>
+      <script src="js/themes/fusioncharts.theme.gammel.js"></script>
+      <script src="testrail_chart.js"></script>
    </head>
    <body data-gr-c-s-loaded="true">
       <div id="root">
@@ -25,7 +25,7 @@
                      <div class="row">
                         <div class="col-md-12 col-8">
                            <div class="text-sm-left text-md-center logo">
-                              QUALITY DASHBOARD
+                              <a href='/'>QUALITY DASHBOARD</a>
                            </div>
                         </div>
                         <div class="col-md-12 col-4 text-right">
@@ -40,16 +40,16 @@
                      <nav class="bd-links collapse" id="bd-docs-nav">
                         <ul class="left-options">
                            <li class="left-option" id="">
-                              <a href="index.php">
+                              <a href="/">
                               Dashboard
                               </a>
                            </li>
-                           <li class="left-option active" id="">
+                           <li class="left-option" id="">
                               <a href="results.php">
                               Results
                               </a>
                            </li>
-                           <li class="left-option" id="">
+                           <li class="left-option active" id="">
                               <a href="testrail.php">
                               Testrail
                               </a>
@@ -71,41 +71,60 @@
                      <div class="row mt-3">
                         <div class="col-md-7">
                            <ul class="buttonwrapper">
-                              <li id="today" class="filter active"><label id="weeklyData">WEEKLY</label></li>
+                              <li id="week" class="filter active"><label id="weeklyData">WEEKLY</label></li>
                               <li id="month" class="filter"><label id="monthlyData">MONTHLY</label></li>
-                              <li id="year" class="filter"><label id="quarterlyData">QUARTERLY</label></li>
+                              <li id="quarter" class="filter"><label id="quarterlyData">QUARTERLY</label></li>
                               <li id="year" class="filter"><label id="yearlyData">YEARLY</label></li>
                            </ul>
                         </div>
-                        <div class="col-md-5 text-right date-indicator" id="date">THANOS</div>
+                        <div class="col-md-5 text-right date-indicator">
+                           <label class="handLink" id="projectName"><?php echo strtoupper($_POST["projectName"]); ?></label>
+                           <div id="selectProject">
+                              <form name="testform" method="POST" action="testrail.php">
+                                 <?php 
+                                    require "db_config.php";
+                                    echo "<select name='projectName' id='projectName'>
+                                    <option value=''>Choose your project</option>";
+                                    
+                                    $sql = "select projectName from testrail group by projectName"; 
+                                    foreach ($dbo->query($sql) as $row) 
+                                    { 
+                                       echo "<option value='$row[projectName]'>$row[projectName]</option>"; 
+                                    } 
+                                    ?>
+                                 </select>
+                                 <input type="submit" value="submit" />
+                              </form>
+                           </div>
+                        </div>
                      </div>
                      <div class="row mt-3 db-chart">
                         <div id="parent1" class="col-lg-6 col-xl-4">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">Average Production Percentage</div>
+                              <div class="chart-title" id="text2">Total Automation Coverage Percentage</div>
                               <div id="chart1" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container1">&nbsp; Chart is loading here...</label>
+                                    <label id="gauge-chart-container1" style="color:orange"><b>Error!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
                         </div>
                         <div id="parent2" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">Average Sandbox Percentage</div>
+                              <div class="chart-title" id="text2">P0 Cases Coverage Percentage</div>
                               <div id="chart2" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container2">&nbsp; Chart is loading here...</label>
+                                    <label id="gauge-chart-container2" style="color:orange"><b>Error!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
                         </div>
                         <div id="parent3" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">Average Staging Percentage</div>
+                              <div class="chart-title" id="text2">P1 Cases Coverage Percentage</div>
                               <div id="chart3" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container3">&nbsp; Chart is loading here...</label>
+                                    <label id="gauge-chart-container3" style="color:orange"><b>Error!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
@@ -113,9 +132,17 @@
                      </div>
                      <div id="chart-container">
                         <center>
-                           <label id="column-chart-container">&nbsp; Chart is loading here...</label>
+                           <label id="pie-chart-container1" style="color:yellow"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
                            <br><br>
-                           <label id="line-chart-container">&nbsp; Chart is loading here...</label>
+                           <label id="line-chart-container1" style="color:orange"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
+                           <br><br>
+                           <label id="column-chart-container1" style="color:yellow"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
+                           <br><br>
+                           <label id="column-chart-container2" style="color:orange"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
+                           <br><br>
+                           <label id="column-chart-container3" style="color:yellow"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
+                           <br><br>
+                           <label id="column-chart-container4" style="color:orange"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
                         </center>
                      </div>
                      <div class="row">

@@ -43,35 +43,39 @@ function validateAndExecute(timeFilter) {
 
 function executeAll(projectName, timeFilter) {
     generateGaugeData(projectName, timeFilter);
-    fetchLastTenResults(projectName, timeFilter);
-    fetchAvgPercentageData(projectName, timeFilter);
+    fetchPieChartData(projectName, timeFilter);
     fetchTotalCasesData(projectName, timeFilter);
+    fetchAutomationCoverageData(timeFilter);
+    fetchP0CoverageData(timeFilter);
+    fetchP1CoverageData(timeFilter);
+    fetchP2CoverageData(timeFilter);
 }
 
 function generateGaugeData(projectName, timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
-        data: {
-            functionname: 'getAvgPassPercentage_Project',
-            arguments: [projectName, timeFilter]
-        },
-        success: function (result) {
+        data: {functionname: 'getTestrailCoverageData_Project', arguments: [projectName, timeFilter]},
+        success: function(result) 
+        {
             var resultValue1 = 0;
             var resultValue2 = 0;
             var resultValue3 = 0;
-            for (i = 0; i < result.length; i++) {
-                $.each(result[i], function (key, value) {
-                    if (key === "Production")
+            for (i=0;i<result.length;i++)
+            {
+                $.each(result[i], function(key, value)
+                {
+                    if(key==="totalCoverage")
                         resultValue1 = value;
-                    if (key === "Sandbox")
+                    if(key==="P0Coverage")
                         resultValue2 = value;
-                    if (key === "Staging")
+                    if(key==="P1Coverage")
                         resultValue3 = value;
                 });
             }
 
-            var chartProperties1 = {
+            var chartProperties1 = 
+            {
                 "caption": "",
                 "lowerLimit": "0",
                 "upperLimit": "100",
@@ -89,7 +93,8 @@ function generateGaugeData(projectName, timeFilter) {
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties1,
-                    "colorRange": {
+                    "colorRange": 
+                    {
                         "color": [{
                             "minValue": "0",
                             "maxValue": "50",
@@ -104,7 +109,8 @@ function generateGaugeData(projectName, timeFilter) {
                             "code": "#62B58F"
                         }]
                     },
-                    "dials": {
+                    "dials": 
+                    {
                         "dial": [{
                             "value": resultValue1
                         }]
@@ -113,7 +119,8 @@ function generateGaugeData(projectName, timeFilter) {
             });
             apiChart1.render();
 
-            var chartProperties2 = {
+            var chartProperties2 = 
+            {
                 "caption": "",
                 "lowerLimit": "0",
                 "upperLimit": "100",
@@ -131,7 +138,8 @@ function generateGaugeData(projectName, timeFilter) {
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties2,
-                    "colorRange": {
+                    "colorRange": 
+                    {
                         "color": [{
                             "minValue": "0",
                             "maxValue": "50",
@@ -146,7 +154,8 @@ function generateGaugeData(projectName, timeFilter) {
                             "code": "#62B58F"
                         }]
                     },
-                    "dials": {
+                    "dials": 
+                    {
                         "dial": [{
                             "value": resultValue2
                         }]
@@ -155,7 +164,8 @@ function generateGaugeData(projectName, timeFilter) {
             });
             apiChart2.render();
 
-            var chartProperties3 = {
+            var chartProperties3 = 
+            {
                 "caption": "",
                 "lowerLimit": "0",
                 "upperLimit": "100",
@@ -173,7 +183,8 @@ function generateGaugeData(projectName, timeFilter) {
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties3,
-                    "colorRange": {
+                    "colorRange": 
+                    {
                         "color": [{
                             "minValue": "0",
                             "maxValue": "50",
@@ -188,7 +199,8 @@ function generateGaugeData(projectName, timeFilter) {
                             "code": "#62B58F"
                         }]
                     },
-                    "dials": {
+                    "dials": 
+                    {
                         "dial": [{
                             "value": resultValue3
                         }]
@@ -200,82 +212,54 @@ function generateGaugeData(projectName, timeFilter) {
     });
 };
 
-function fetchLastTenResults(projectName, timeFilter) {
+
+function fetchPieChartData(projectName, timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
         data: {
-            functionname: 'getLatestResultsData_Project',
+            functionname: 'getTotalCasesTestrailData_Project_Pie',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
-            var chartProperties = {
-                "caption": "Details of last " + timeFilter + " Automation Builds",
-                "xAxisName": "Build Name",
-                "yAxisName": "Percentage",
-                "placevaluesinside": "1",
-                "rotatevalues": "0",
-                "showvalues": "1",
-                "plottooltext": "$label - $dataValue%",
-                "theme": "ocean"
-            };
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
 
+            var chartProperties = {
+                "caption": "Testrail - Automation Cases Breakdown for "+projectName,
+                "subCaption" : "",
+                "showValues":"1",
+                "showPercentInTooltip" : "1",
+                "numberPrefix" : "",
+                "enableMultiSlicing":"1",
+                "theme": "gammel"
+            };
             apiChart = new FusionCharts({
-                type: 'column3d',
-                renderAt: 'column-chart-container',
-                width: '95%',
-                height: '350',
+                type: 'pie3d',
+                renderAt: 'pie-chart-container1',
+                width: '1250',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
                     "data": result
-                },
-                "events": {
-                    "beforeRender": function (e, d) {
-                        var projectName = "GobizDashboard";
-                        var messageBlock = document.createElement('p');
-                        messageBlock.style.textAlign = "center";
-                        var activatedMessage = 'Click on the plot to access the Results Link';
-
-                        var getClickedMessage = function (categoryLabel, displayValue) {
-                            var temp = "";
-                            if (categoryLabel.includes("Golabs")) {
-                                temp = categoryLabel.replace("Golabs-", "");
-                            } else {
-                                temp = categoryLabel.replace("Jenkins", projectName);
-                                var position = temp.lastIndexOf("-");
-                                temp = temp.substring(0, position) + "-Automation" + temp.substring(position);
-                            }
-                            var resultsLink = "http://52.221.7.215/" + projectName + "/" + temp + "/html/index.html";
-                            return 'Results Url of <B>"' + categoryLabel + '"</B> - <a style="color:yellow" href="' + resultsLink + '" target="_blank">' + resultsLink + '</a>';
-                        };
-                        e.data.container.appendChild(messageBlock);
-
-                        function dataPlotClickListener(e, a) {
-                            var categoryLabel = e.data.categoryLabel;
-                            var displayValue = e.data.displayValue;
-                            var resMessage = getClickedMessage(categoryLabel, displayValue);
-                            messageBlock.innerHTML = resMessage;
-                        }
-
-                        messageBlock.innerText = activatedMessage;
-                        e.sender.addEventListener('dataplotclick', dataPlotClickListener);
-                    }
                 }
             });
-
             apiChart.render();
         }
     });
 };
-
 
 function fetchTotalCasesData(projectName, timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
         data: {
-            functionname: 'getTotalCasesResultsData_Project',
+            functionname: 'getTotalCasesTestrailData_Project_Line',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -287,18 +271,18 @@ function fetchTotalCasesData(projectName, timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "GroupName wise total cases for last " + timeFilter + " days",
+                "caption": "Distribution of total cases for last " + timeFilter + " days for "+projectName,
                 "subCaption": "",
-                "plottooltext": "$seriesName - $dataValue%",
+                "plottooltext": "$seriesName - $dataValue",
                 "yAxisName": "Total Testcases",
-                "theme": "candy",
+                "theme": "fusion",
                 "showValues": "1"
             };
             apiChart = new FusionCharts({
                 type: 'msline',
                 renderAt: 'line-chart-container1',
-                width: '95%',
-                height: '350',
+                width: '1250',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -311,41 +295,127 @@ function fetchTotalCasesData(projectName, timeFilter) {
     });
 };
 
-
-function fetchAvgPercentageData(projectName, timeFilter) {
+function fetchAutomationCoverageData(timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
-        data: {
-            functionname: 'getAvgResultsData_Project',
-            arguments: [projectName, timeFilter]
-        },
-        success: function (result) {
-            $.each(result, function (key, value) {
-                if (key === "categories")
-                    categoriesData = value;
-                if (key === "dataset")
-                    datasetData = value;
-            });
-
-            var chartProperties = {
-                "caption": "Average daily percentage for last " + timeFilter + " days",
-                "subCaption": "",
-                "plottooltext": "$seriesName - $dataValue%",
+        data: {functionname: 'getTestRailData_Coverage'},
+        success: function(result) 
+        {
+            var chartProperties = 
+            {
+                "caption": "Testrail - Full Automation Coverage [All Projects]",
+                "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
-                "theme": "fusion",
-                "showValues": "1"
+                "rotatevalues": "3",
+                "theme": "candy"
             };
+
             apiChart = new FusionCharts({
-                type: 'msline',
-                renderAt: 'line-chart-container2',
-                width: '95%',
-                height: '350',
+                type: 'column2d',
+                renderAt: 'column-chart-container1',
+                width: '1250',
+                height: '500',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
-                    "dataset": datasetData,
-                    "categories": categoriesData
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchP0CoverageData(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {functionname: 'getTestRailData_P0'},
+        success: function(result) 
+        {
+            var chartProperties = 
+            {
+                "caption": "Testrail - P0 Automation Coverage [All Projects]",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "rotatevalues": "3",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container2',
+                width: '1250',
+                height: '500',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchP1CoverageData(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {functionname: 'getTestRailData_P1'},
+        success: function(result) 
+        {
+            var chartProperties = 
+            {
+                "caption": "Testrail - P1 Automation Coverage [All Projects]",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "rotatevalues": "3",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container3',
+                width: '1250',
+                height: '500',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchP2CoverageData(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {functionname: 'getTestRailData_P2'},
+        success: function(result) 
+        {
+            var chartProperties = 
+            {
+                "caption": "Testrail - P2 Automation Coverage [All Projects]",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "rotatevalues": "3",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container4',
+                width: '1250',
+                height: '500',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
                 }
             });
             apiChart.render();

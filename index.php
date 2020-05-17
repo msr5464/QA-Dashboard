@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- saved from url=(0080)smart-energy-monitoring-dashboard/ -->
 <html lang="en">
    <head>
       <title>QA Dashboard</title>
@@ -24,7 +23,7 @@
                      <div class="row">
                         <div class="col-md-12 col-8">
                            <div class="text-sm-left text-md-center logo">
-                              QUALITY DASHBOARD
+                              <a href='/'>QUALITY DASHBOARD</a>
                            </div>
                         </div>
                         <div class="col-md-12 col-4 text-right">
@@ -39,7 +38,7 @@
                      <nav class="bd-links collapse" id="bd-docs-nav">
                         <ul class="left-options">
                            <li class="left-option active" id="">
-                              <a href="index.php">
+                              <a href="/">
                               Dashboard
                               </a>
                            </li>
@@ -83,7 +82,7 @@
                            <div class="chart-card mb-4">
                               <div class="chart-title" id="text1">RESULTS PROJECT</div>
                               <div id="chart1" class="chart">
-                                 <form name="testform" method="POST" action="p0p1.html">
+                                 <form name="testform" method="POST" action="results.php">
                                     <?php 
                                        require "db_config.php";
                                        echo "<br><center><label>Select Your Thanos Project</label> <select name='projectName' id='projectName'>
@@ -107,7 +106,7 @@
                            <div class="chart-card mb-4">
                               <div class="chart-title" id="text2">TESTRAIL PROJECT</div>
                               <div id="chart2" class="chart">
-                                 <form name="testform" method="POST" action="p0p1.html">
+                                 <form name="testform" method="POST" action="testrail.php">
                                     <?php 
                                        require "db_config.php";
                                        echo "<br><center><label>Select Your Testrail Project</label> <select name='projectName' id='projectName'>
@@ -131,7 +130,7 @@
                            <div class="chart-card mb-4">
                               <div class="chart-title" id="text3">JIRA PROJECT</div>
                               <div id="chart3" class="chart">
-                                 <form name="testform" method="POST" action="p0p1.html">
+                                 <form name="testform" method="POST" action="jira.php">
                                     <?php 
                                        require "db_config.php";
                                        echo "<br><center><label>Select Your Jira Project</label> <select name='projectName' id='projectName'>
