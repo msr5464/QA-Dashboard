@@ -13,6 +13,7 @@
       <script src="js/themes/fusioncharts.theme.ocean.js"></script>
       <script src="js/themes/fusioncharts.theme.fusion.js"></script>
       <script src="js/themes/fusioncharts.theme.candy.js"></script>
+      <script src="js/themes/fusioncharts.theme.zune.js"></script>
       <script src="results_chart.js"></script>
    </head>
    <body data-gr-c-s-loaded="true">
@@ -77,7 +78,7 @@
                            </ul>
                         </div>
                         <div class="col-md-5 text-right date-indicator">
-                           <label class="handLink" id="projectName"><?php echo strtoupper($_POST["projectName"]); ?></label>
+                           <label class="handLink" id="projectName"><?php echo $_POST["projectName"]; ?></label>
                            <div id="selectProject">
                               <form name="testform" method="POST" action="results.php">
                                  <?php 
@@ -103,7 +104,7 @@
                               <div class="chart-title" id="text2">Average Production Percentage</div>
                               <div id="chart1" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container1" style="color:orange"><b>Error!! Project not selected!</b></label>
+                                    <label id="gauge-chart-container1" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
@@ -113,7 +114,7 @@
                               <div class="chart-title" id="text2">Average Sandbox Percentage</div>
                               <div id="chart2" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container2" style="color:orange"><b>Error!! Project not selected!</b></label>
+                                    <label id="gauge-chart-container2" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
@@ -123,7 +124,7 @@
                               <div class="chart-title" id="text2">Average Staging Percentage</div>
                               <div id="chart3" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container3" style="color:orange"><b>Error!! Project not selected!</b></label>
+                                    <label id="gauge-chart-container3" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
@@ -131,15 +132,29 @@
                      </div>
                      <div id="chart-container">
                         <center>
-                           <label id="column-chart-container" style="color:yellow"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
-                           <br><br>
-                           <label id="line-chart-container1" style="color:orange"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
-                           <br><br>
-                           <label id="line-chart-container2" style="color:yellow"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>                           
+                           <div id="warning">
+                              <label style="color:yellow"><b>Currently showing graphs combining all the projects together!</b></label><br>
+                              <label style="color:orange"><b>For any project specific data points, first select any project from the above shown dropdown!</b></label>
+                           </div>
+                           <div class="projectChart">
+                              <label id="line-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="line-chart-container2">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="column-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container2">Chart is loading here...</label>
+                           </div>
                         </center>
                      </div>
                      <div class="row">
-                        <div class="col-md-12 pb-3">
+                        <div id="footer" class="col-md-12 pb-3">
                            <center>
                               <br>
                               <span class="footer-text-3">Note: </span>

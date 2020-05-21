@@ -49,14 +49,15 @@ function validateAndExecute(timeFilter) {
 
 function showProjectCharts(projectName, timeFilter) {
     generateGaugeData(projectName, timeFilter);
-    fetchLastTenResults(projectName, timeFilter);
-    fetchAvgPercentageData(projectName, timeFilter);
-    fetchTotalCasesData(projectName, timeFilter);
+    fetchPieChartData(projectName, timeFilter);
+    fetchJiraData_AllPercentages_Project(projectName, timeFilter);
+    fetchJiraData_AllNumbers_Project(projectName, timeFilter);
     //showDefaultCharts(timeFilter);
 }
 
 function showDefaultCharts(timeFilter) {
-
+    fetchJiraData_TotalBugs_All(timeFilter);
+    fetchJiraData_BugPercentage_All(timeFilter);
 }
 
 function generateGaugeData(projectName, timeFilter) {
@@ -211,81 +212,48 @@ function generateGaugeData(projectName, timeFilter) {
     });
 };
 
-function fetchLastTenResults(projectName, timeFilter) {
+
+function fetchPieChartData(projectName, timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
         data: {
-            functionname: 'getLatestResultsData_Project',
+            functionname: 'getJiraData_Project_Pie',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
-            var chartProperties = {
-                "caption": "Details of last " + timeFilter + " Automation Builds",
-                "xAxisName": "Build Name",
-                "yAxisName": "Percentage",
-                "placevaluesinside": "1",
-                "rotatevalues": "0",
-                "showvalues": "1",
-                "plottooltext": "$label - $dataValue%",
-                "theme": "ocean"
-            };
 
+            var chartProperties = {
+                "caption": "Priority wise Bugs Breakdown for last " + timeFilter + " days for "+projectName,
+                "subCaption" : "",
+                "showValues":"1",
+                "showPercentInTooltip" : "1",
+                "numberPrefix" : "",
+                "enableMultiSlicing":"1",
+                "theme": "gammel"
+            };
             apiChart = new FusionCharts({
-                type: 'column3d',
-                renderAt: 'column-chart-container1',
+                type: 'pie3d',
+                renderAt: 'pie-chart-container1',
                 width: '96%',
-                height: '350',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
                     "data": result
-                },
-                "events": {
-                    "beforeRender": function (e, d) {
-                        var messageBlock = document.createElement('p');
-                        messageBlock.style.textAlign = "center";
-                        var activatedMessage = 'Click on the plot to access the Results Link';
-
-                        var getClickedMessage = function (categoryLabel, displayValue) {
-                            var temp = "";
-                            if (categoryLabel.includes("Golabs")) {
-                                temp = categoryLabel.replace("Golabs-", "");
-                            } else {
-                                temp = categoryLabel.replace("Jenkins", projectName);
-                                var position = temp.lastIndexOf("-");
-                                temp = temp.substring(0, position) + "-Automation" + temp.substring(position);
-                            }
-                            var resultsLink = "http://52.221.7.215/" + projectName + "/" + temp + "/html/index.html";
-                            return 'Results Url of <B>"' + categoryLabel + '"</B> - <a style="color:yellow" href="' + resultsLink + '" target="_blank">' + resultsLink + '</a>';
-                        };
-                        e.data.container.appendChild(messageBlock);
-
-                        function dataPlotClickListener(e, a) {
-                            var categoryLabel = e.data.categoryLabel;
-                            var displayValue = e.data.displayValue;
-                            var resMessage = getClickedMessage(categoryLabel, displayValue);
-                            messageBlock.innerHTML = resMessage;
-                        }
-
-                        messageBlock.innerText = activatedMessage;
-                        e.sender.addEventListener('dataplotclick', dataPlotClickListener);
-                    }
                 }
             });
-
             apiChart.render();
         }
     });
 };
 
-
-function fetchTotalCasesData(projectName, timeFilter) {
+function fetchJiraData_AllPercentages_Project(projectName, timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
         data: {
-            functionname: 'getTotalCasesResultsData_Project',
+            functionname: 'getJiraData_AllPercentages_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -297,11 +265,11 @@ function fetchTotalCasesData(projectName, timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "GroupName wise total cases for last " + timeFilter + " days",
+                "caption": "Trend of Bug Percentage for last " + timeFilter + " days for "+projectName,
                 "subCaption": "",
-                "plottooltext": "$seriesName - $dataValue",
-                "yAxisName": "Total Testcases",
-                "theme": "candy",
+                "plottooltext": "$seriesName - $dataValue%",
+                "yAxisName": "Percentage",
+                "theme": "fusion",
                 "showValues": "1"
             };
             apiChart = new FusionCharts({
@@ -321,13 +289,12 @@ function fetchTotalCasesData(projectName, timeFilter) {
     });
 };
 
-
-function fetchAvgPercentageData(projectName, timeFilter) {
+function fetchJiraData_AllNumbers_Project(projectName, timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
         data: {
-            functionname: 'getAvgResultsData_Project',
+            functionname: 'getJiraData_AllNumbers_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -339,7 +306,7 @@ function fetchAvgPercentageData(projectName, timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Average daily percentage for last " + timeFilter + " days",
+                "caption": "Trend of Bug Count for last " + timeFilter + " days for "+projectName,
                 "subCaption": "",
                 "plottooltext": "$seriesName - $dataValue%",
                 "yAxisName": "Percentage",
@@ -351,6 +318,90 @@ function fetchAvgPercentageData(projectName, timeFilter) {
                 renderAt: 'line-chart-container2',
                 width: '96%',
                 height: '350',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchJiraData_TotalBugs_All(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {functionname: 'getJiraData_TotalBugs_All', arguments: [timeFilter]},
+        success: function(result) 
+        {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = 
+            {
+                "caption": "Total Bugs found in last " + timeFilter + " days [All Projects]",
+                "plottooltext": "$seriesName - $dataValue",
+                "yAxisName": "Number of Bugs",
+                "divlineColor": "#999999",
+                "divLineDashed": "1",
+                "theme": "fusion",
+                "showValues": "0",
+                "showsum": "1"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'stackedcolumn2dline',
+                renderAt: 'column-chart-container1',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchJiraData_BugPercentage_All(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {functionname: 'getJiraData_BugPercentage_All', arguments: [timeFilter]},
+        success: function(result) 
+        {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = 
+            {
+                "caption": "Bug Percentage w.r.t Tickets Tested for last " + timeFilter + " days [All Projects]",
+                "plottooltext": "$seriesName - $dataValue%",
+                "yAxisName": "Percentage",
+                "rotatevalues": "0",
+                "theme": "zune",
+                "showValues":"1"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'mscombi2d',
+                renderAt: 'column-chart-container2',
+                width: '96%',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,

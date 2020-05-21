@@ -10,10 +10,11 @@
       <script src="js/jquery-2.1.4.js"></script>
       <script src="js/fusioncharts.js"></script>
       <script src="js/fusioncharts.charts.js"></script>
-      <script src="js/themes/fusioncharts.theme.ocean.js"></script>
+      <script src="js/themes/fusioncharts.theme.zune.js"></script>
       <script src="js/themes/fusioncharts.theme.fusion.js"></script>
       <script src="js/themes/fusioncharts.theme.candy.js"></script>
-      <script src="results_chart.js"></script>
+      <script src="js/themes/fusioncharts.theme.gammel.js"></script>
+      <script src="jira_chart.js"></script>
    </head>
    <body data-gr-c-s-loaded="true">
       <div id="root">
@@ -77,15 +78,15 @@
                            </ul>
                         </div>
                         <div class="col-md-5 text-right date-indicator">
-                           <label class="handLink" id="projectName"><?php echo strtoupper($_POST["projectName"]); ?></label>
+                           <label class="handLink" id="projectName"><?php echo $_POST["projectName"]; ?></label>
                            <div id="selectProject">
-                              <form name="testform" method="POST" action="results.php">
+                              <form name="testform" method="POST" action="jira.php">
                                  <?php 
                                     require "db_config.php";
                                     echo "<select name='projectName' id='projectName'>
                                     <option value=''>Choose your project</option>";
                                     
-                                    $sql = "select projectName from thanos.results group by projectName"; 
+                                    $sql = "select projectName from jira group by projectName"; 
                                     foreach ($dbo->query($sql) as $row) 
                                     { 
                                        echo "<option value='$row[projectName]'>$row[projectName]</option>"; 
@@ -100,30 +101,30 @@
                      <div class="row mt-3 db-chart">
                         <div id="parent1" class="col-lg-6 col-xl-4">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">Average Production Percentage</div>
+                              <div class="chart-title" id="text2">Total Automation Coverage Percentage</div>
                               <div id="chart1" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container1" style="color:orange"><b>Error!! Project not selected!</b></label>
+                                    <label id="gauge-chart-container1" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
                         </div>
                         <div id="parent2" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">Average Sandbox Percentage</div>
+                              <div class="chart-title" id="text2">P0 Cases Coverage Percentage</div>
                               <div id="chart2" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container2" style="color:orange"><b>Error!! Project not selected!</b></label>
+                                    <label id="gauge-chart-container2" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
                         </div>
                         <div id="parent3" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">Average Staging Percentage</div>
+                              <div class="chart-title" id="text2">P1 Cases Coverage Percentage</div>
                               <div id="chart3" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container3" style="color:orange"><b>Error!! Project not selected!</b></label>
+                                    <label id="gauge-chart-container3" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
@@ -131,15 +132,41 @@
                      </div>
                      <div id="chart-container">
                         <center>
-                           <label id="column-chart-container" style="color:yellow"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
-                           <br><br>
-                           <label id="line-chart-container1" style="color:orange"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
-                           <br><br>
-                           <label id="line-chart-container2" style="color:yellow"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>                           
+                           <div id="warning">
+                              <label style="color:yellow"><b>Currently showing graphs combining all the projects together!</b></label><br>
+                              <label style="color:orange"><b>For any project specific data points, first select any project from the above shown dropdown!</b></label>
+                           </div>
+                           <div class="projectChart">
+                              <label id="pie-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="line-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="line-chart-container2">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container2">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container3">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container4">Chart is loading here...</label>
+                           </div>
                         </center>
                      </div>
                      <div class="row">
-                        <div class="col-md-12 pb-3">
+                        <div id="footer" class="col-md-12 pb-3">
                            <center>
                               <br>
                               <span class="footer-text-3">Note: </span>

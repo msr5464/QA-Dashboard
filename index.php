@@ -12,6 +12,7 @@
       <script src="js/fusioncharts.charts.js"></script>
       <script src="js/themes/fusioncharts.theme.zune.js"></script>
       <script src="js/themes/fusioncharts.theme.fusion.js"></script>
+      <script src="js/themes/fusioncharts.theme.candy.js"></script>
       <script src="index_chart.js"></script>
    </head>
    <body data-gr-c-s-loaded="true">
@@ -85,16 +86,17 @@
                                  <form name="testform" method="POST" action="results.php">
                                     <?php 
                                        require "db_config.php";
-                                       echo "<br><center><label>Select Your Thanos Project</label> <select name='projectName' id='projectName'>
-                                       <option value=''>Choose project</option>";
+                                       echo "<br><center><select name='projectName' id='projectName'>
+                                       <option value=''>Choose your thanos project</option>";
                                        
-                                       $sql = "select projectName from thanos.results group by projectName"; 
+                                       $sql = "select projectName from results group by projectName"; 
                                        foreach ($dbo->query($sql) as $row) 
                                        { 
                                           echo "<option value='$row[projectName]'>$row[projectName]</option>"; 
                                        } 
                                        ?>
                                     </select>
+                                    &nbsp;&nbsp;&nbsp;
                                     <input type="submit" value="submit" />
                                     </center>
                                  </form>
@@ -109,16 +111,17 @@
                                  <form name="testform" method="POST" action="testrail.php">
                                     <?php 
                                        require "db_config.php";
-                                       echo "<br><center><label>Select Your Testrail Project</label> <select name='projectName' id='projectName'>
-                                       <option value=''>Choose project</option>";
+                                       echo "<br><center><select name='projectName' id='projectName'>
+                                       <option value=''>Choose your testrail project</option>";
                                        
-                                       $sql = "select projectName from thanos.testrail group by projectName"; 
+                                       $sql = "select projectName from testrail group by projectName"; 
                                        foreach ($dbo->query($sql) as $row) 
                                        { 
                                           echo "<option value='$row[projectName]'>$row[projectName]</option>"; 
                                        } 
                                        ?>
                                     </select>
+                                    &nbsp;&nbsp;&nbsp;
                                     <input type="submit" value="submit" />
                                     </center>
                                  </form>
@@ -133,16 +136,17 @@
                                  <form name="testform" method="POST" action="jira.php">
                                     <?php 
                                        require "db_config.php";
-                                       echo "<br><center><label>Select Your Jira Project</label> <select name='projectName' id='projectName'>
-                                       <option value=''>Choose project</option>";
+                                       echo "<br><center><select name='projectName' id='projectName'>
+                                       <option value=''>Choose your jira project</option>";
                                        
-                                       $sql = "select projectName from thanos.jira group by projectName"; 
+                                       $sql = "select projectName from jira group by projectName"; 
                                        foreach ($dbo->query($sql) as $row) 
                                        { 
                                           echo "<option value='$row[projectName]'>$row[projectName]</option>"; 
                                        } 
                                        ?>
                                     </select>
+                                    &nbsp;&nbsp;&nbsp;
                                     <input type="submit" value="submit" />
                                     </center>
                                  </form>
@@ -153,9 +157,21 @@
                      </div>
                      <div id="chart-container">
                         <center>
-                           <label id="chart-container1">Charts are loading here...</label>
+                           <label id="column-chart-container1">Chart is loading here...</label>
                            <br><br>
-                           <label id="chart-container2">Charts are loading here...</label>
+                           <label id="column-chart-container2">Chart is loading here...</label>
+                           <br><br>
+                           <label id="column-chart-container3">Chart is loading here...</label>
+                           <br><br>
+                           <label id="column-chart-container4">Chart is loading here...</label>
+                           <br><br>
+                           <label id="column-chart-container5">Chart is loading here...</label>
+                           <br><br>
+                           <label id="column-chart-container6">Chart is loading here...</label>
+                           <br><br>
+                           <label id="column-chart-container7">Chart is loading here...</label>
+                           <br><br>
+                           <label id="column-chart-container8">Chart is loading here...</label>
                         </center>
                      </div>
                      <div class="row">

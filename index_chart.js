@@ -1,6 +1,5 @@
 $(function () {
-    fetchResultsData("7");
-    fetchTestrailData("7");
+    showDefaultCharts("7");
 });
 
 $(document).ready(function () {
@@ -10,37 +9,40 @@ $(document).ready(function () {
     });
 
     $("#weeklyData").click(function () {
-        fetchResultsData("7");
-        fetchTestrailData("7");
+        showDefaultCharts("7");
     });
 
     $("#monthlyData").click(function () {
-        fetchResultsData("30");
-        fetchTestrailData("30");
+        showDefaultCharts("30");
     });
 
     $("#quarterlyData").click(function () {
-        fetchResultsData("90");
-        fetchTestrailData("90");
+        showDefaultCharts("90");
     });
 
     $("#yearlyData").click(function () {
-        fetchResultsData("365");
-        fetchTestrailData("365");
+        showDefaultCharts("365");
     });
 });
 
-function fetchResultsData(timeFilter) {
+function showDefaultCharts(timeFilter) {
+    fetchResultsData_Production(timeFilter);
+    fetchResultsData_Staging(timeFilter);
+    fetchTestrailData_P0Coverage(timeFilter);
+    fetchTestrailData_P1Coverage(timeFilter);
+}
+
+function fetchResultsData_Production(timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
         data: {
-            functionname: 'getLatestResultsData_All',
+            functionname: 'getLatestResultsData_Production',
             arguments: [timeFilter]
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "Thanos - Average Pass Percentage on Staging",
+                "caption": "Thanos - Average Pass Percentage on Production [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
@@ -51,9 +53,45 @@ function fetchResultsData(timeFilter) {
             };
 
             apiChart = new FusionCharts({
-                type: 'column2d',
-                renderAt: 'chart-container1',
-                width: '95%',
+                type: 'column3d',
+                renderAt: 'column-chart-container1',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchResultsData_Staging(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {
+            functionname: 'getLatestResultsData_Staging',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
+            var chartProperties = {
+                "caption": "Thanos - Average Pass Percentage on Staging [All Projects]",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "placevaluesinside": "1",
+                "rotatevalues": "0",
+                "showvalues": "1",
+                "plottooltext": "$label - $dataValue%",
+                "theme": "zune"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column3d',
+                renderAt: 'column-chart-container2',
+                width: '96%',
                 height: '400',
                 dataFormat: 'json',
                 dataSource: {
@@ -67,42 +105,63 @@ function fetchResultsData(timeFilter) {
 };
 
 
-function fetchTestrailData(timeFilter) {
+function fetchTestrailData_P0Coverage(timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
-        data: {
-            functionname: 'getLatestTestrailData_All',
-            arguments: [timeFilter]
-        },
-        success: function (result) {
-            var resultValue2 = 0;
-            var resultValue3 = 0;
-            $.each(result, function (key, value) {
-                if (key === "categories")
-                    categoriesData = value;
-                if (key === "dataset")
-                    datasetData = value;
-            });
-
-            var chartProperties = {
-                "caption": "Testrail - Total Testcase Distribution Metrics",
-                "placevaluesinside": "0",
-                "showvalues": "0",
-                "plottooltext": "$label - $seriesName - $dataValue",
-                "theme": "fusion",
-                "showsum": "1"
+        data: {functionname: 'getTestRailData_P0'},
+        success: function(result) 
+        {
+            var chartProperties = 
+            {
+                "caption": "Testrail - P0 Automation Coverage [All Projects]",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "rotatevalues": "3",
+                "theme": "candy"
             };
+
             apiChart = new FusionCharts({
-                type: 'stackedcolumn2d',
-                renderAt: 'chart-container2',
+                type: 'column2d',
+                renderAt: 'column-chart-container3',
                 width: '96%',
                 height: '500',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
-                    "dataset": datasetData,
-                    "categories": categoriesData
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchTestrailData_P1Coverage(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {functionname: 'getTestRailData_P1'},
+        success: function(result) 
+        {
+            var chartProperties = 
+            {
+                "caption": "Testrail - P1 Automation Coverage [All Projects]",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "rotatevalues": "3",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container4',
+                width: '96%',
+                height: '500',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
                 }
             });
             apiChart.render();

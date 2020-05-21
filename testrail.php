@@ -78,7 +78,7 @@
                            </ul>
                         </div>
                         <div class="col-md-5 text-right date-indicator">
-                           <label class="handLink" id="projectName"><?php echo strtoupper($_POST["projectName"]); ?></label>
+                           <label class="handLink" id="projectName"><?php echo $_POST["projectName"]; ?></label>
                            <div id="selectProject">
                               <form name="testform" method="POST" action="testrail.php">
                                  <?php 
@@ -101,10 +101,10 @@
                      <div class="row mt-3 db-chart">
                         <div id="parent1" class="col-lg-6 col-xl-4">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">Total Automation Coverage Percentage</div>
+                              <div class="chart-title" id="text2">Full Automation Coverage Percentage</div>
                               <div id="chart1" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container1" style="color:orange"><b>Error!! Project not selected!</b></label>
+                                    <label id="gauge-chart-container1" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
@@ -114,7 +114,7 @@
                               <div class="chart-title" id="text2">P0 Cases Coverage Percentage</div>
                               <div id="chart2" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container2" style="color:orange"><b>Error!! Project not selected!</b></label>
+                                    <label id="gauge-chart-container2" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
@@ -124,7 +124,7 @@
                               <div class="chart-title" id="text2">P1 Cases Coverage Percentage</div>
                               <div id="chart3" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container3" style="color:orange"><b>Error!! Project not selected!</b></label>
+                                    <label id="gauge-chart-container3" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
                               </div>
                            </div>
@@ -132,21 +132,45 @@
                      </div>
                      <div id="chart-container">
                         <center>
-                           <label id="pie-chart-container1" style="color:yellow"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
-                           <br><br>
-                           <label id="line-chart-container1" style="color:orange"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
-                           <br><br>
-                           <label id="column-chart-container1" style="color:yellow"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
-                           <br><br>
-                           <label id="column-chart-container2" style="color:orange"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
-                           <br><br>
-                           <label id="column-chart-container3" style="color:yellow"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
-                           <br><br>
-                           <label id="column-chart-container4" style="color:orange"><b>From the dropdown, first select any project to fetch the respective data points!</b></label>
+                           <div id="warning">
+                              <label style="color:yellow"><b>Currently showing graphs combining all the projects together!</b></label><br>
+                              <label style="color:orange"><b>For any project specific data points, first select any project from the above shown dropdown!</b></label>
+                           </div>
+                           <div class="projectChart">
+                              <label id="pie-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="line-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container2">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container3">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container4">Chart is loading here...</label>
+                           </div>
+                           <!--div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container5">Chart is loading here...</label>
+                           </div-->
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container6">Chart is loading here...</label>
+                           </div>
                         </center>
                      </div>
                      <div class="row">
-                        <div class="col-md-12 pb-3">
+                        <div id="footer" class="col-md-12 pb-3">
                            <center>
                               <br>
                               <span class="footer-text-3">Note: </span>
