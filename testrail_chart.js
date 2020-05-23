@@ -236,13 +236,17 @@ function fetchPieChartData(projectName, timeFilter) {
 
             var chartProperties = {
                 "caption": "Automation Cases Breakdown for "+projectName,
-                "subCaption" : "",
-                "showValues":"1",
-                "enableMultiSlicing":"1",
-                "theme": "gammel"
+                "showpercentvalues": "1",
+                "defaultcenterlabel": "Automation Testcases",
+                "aligncaptionwithcanvas": "0",
+                "captionpadding": "0",
+                "decimals": "1",
+                "plottooltext": "$label: $dataValue",
+                "centerlabel": "$label: $value",
+                "theme": "candy"
             };
             apiChart = new FusionCharts({
-                type: 'pie3d',
+                type: 'doughnut2d',
                 renderAt: 'pie-chart-container1',
                 width: '96%',
                 height: '400',
@@ -442,7 +446,7 @@ function fetchTestrailData_FullCoverage(timeFilter) {
                 type: 'column2d',
                 renderAt: 'column-chart-container4',
                 width: '96%',
-                height: '500',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -475,7 +479,7 @@ function fetchTestrailData_P2Coverage(timeFilter) {
                 type: 'column2d',
                 renderAt: 'column-chart-container5',
                 width: '96%',
-                height: '500',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -517,7 +521,7 @@ function fetchTestrailData_Distribution(timeFilter) {
                 type: 'stackedcolumn2d',
                 renderAt: 'column-chart-container6',
                 width: '96%',
-                height: '500',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,

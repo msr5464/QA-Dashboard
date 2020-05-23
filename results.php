@@ -102,7 +102,7 @@
                         <div id="parent1" class="col-lg-6 col-xl-4">
                            <div class="chart-card mb-4">
                               <div class="chart-title" id="text2">Average Production Percentage</div>
-                              <div id="chart1" class="chart">
+                              <div id="chart1" class="">
                                  <center>
                                     <label id="gauge-chart-container1" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
@@ -112,7 +112,7 @@
                         <div id="parent2" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
                               <div class="chart-title" id="text2">Average Sandbox Percentage</div>
-                              <div id="chart2" class="chart">
+                              <div id="chart2" class="">
                                  <center>
                                     <label id="gauge-chart-container2" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
@@ -122,7 +122,7 @@
                         <div id="parent3" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
                               <div class="chart-title" id="text2">Average Staging Percentage</div>
-                              <div id="chart3" class="chart">
+                              <div id="chart3" class="">
                                  <center>
                                     <label id="gauge-chart-container3" style="color:orange"><b>Warning!! Project not selected!</b></label>
                                  </center>
@@ -137,16 +137,17 @@
                               <label style="color:orange"><b>For any project specific data points, first select any project from the above shown dropdown!</b></label>
                            </div>
                            <div class="projectChart">
+                              <label id="column-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
                               <label id="line-chart-container1">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
                               <br>
                               <label id="line-chart-container2">Chart is loading here...</label>
                            </div>
-                           <div class="projectChart">
-                              <br>
-                              <label id="column-chart-container1">Chart is loading here...</label>
-                           </div>
+
                            <div class="defaultChart">
                               <br>
                               <label id="column-chart-container2">Chart is loading here...</label>

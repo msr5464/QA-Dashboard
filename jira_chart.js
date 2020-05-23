@@ -52,12 +52,12 @@ function showProjectCharts(projectName, timeFilter) {
     fetchPieChartData(projectName, timeFilter);
     fetchJiraData_AllPercentages_Project(projectName, timeFilter);
     fetchJiraData_AllNumbers_Project(projectName, timeFilter);
+
     //showDefaultCharts(timeFilter);
 }
 
 function showDefaultCharts(timeFilter) {
     fetchJiraData_TotalBugs_All(timeFilter);
-    fetchJiraData_BugPercentage_All(timeFilter);
 }
 
 function generateGaugeData(projectName, timeFilter) {
@@ -82,132 +82,6 @@ function generateGaugeData(projectName, timeFilter) {
                         resultValue3 = value;
                 });
             }
-
-            var chartProperties1 = {
-                "caption": "",
-                "lowerLimit": "0",
-                "upperLimit": "100",
-                "showValue": "1",
-                "numberSuffix": "%",
-                "theme": "fusion",
-                "showToolTip": "1"
-            };
-
-            apiChart1 = new FusionCharts({
-                type: 'angulargauge',
-                renderAt: 'gauge-chart-container1',
-                width: '350',
-                height: '180',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties1,
-                    "colorRange": {
-                        "color": [{
-                            "minValue": "0",
-                            "maxValue": "50",
-                            "code": "#F2726F"
-                        }, {
-                            "minValue": "50",
-                            "maxValue": "75",
-                            "code": "#FFC533"
-                        }, {
-                            "minValue": "75",
-                            "maxValue": "100",
-                            "code": "#62B58F"
-                        }]
-                    },
-                    "dials": {
-                        "dial": [{
-                            "value": resultValue1
-                        }]
-                    }
-                }
-            });
-            apiChart1.render();
-
-            var chartProperties2 = {
-                "caption": "",
-                "lowerLimit": "0",
-                "upperLimit": "100",
-                "showValue": "1",
-                "numberSuffix": "%",
-                "theme": "fusion",
-                "showToolTip": "1"
-            };
-
-            apiChart2 = new FusionCharts({
-                type: 'angulargauge',
-                renderAt: 'gauge-chart-container2',
-                width: '350',
-                height: '180',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties2,
-                    "colorRange": {
-                        "color": [{
-                            "minValue": "0",
-                            "maxValue": "50",
-                            "code": "#F2726F"
-                        }, {
-                            "minValue": "50",
-                            "maxValue": "75",
-                            "code": "#FFC533"
-                        }, {
-                            "minValue": "75",
-                            "maxValue": "100",
-                            "code": "#62B58F"
-                        }]
-                    },
-                    "dials": {
-                        "dial": [{
-                            "value": resultValue2
-                        }]
-                    }
-                }
-            });
-            apiChart2.render();
-
-            var chartProperties3 = {
-                "caption": "",
-                "lowerLimit": "0",
-                "upperLimit": "100",
-                "showValue": "1",
-                "numberSuffix": "%",
-                "theme": "fusion",
-                "showToolTip": "1"
-            };
-
-            apiChart3 = new FusionCharts({
-                type: 'angulargauge',
-                renderAt: 'gauge-chart-container3',
-                width: '350',
-                height: '180',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties3,
-                    "colorRange": {
-                        "color": [{
-                            "minValue": "0",
-                            "maxValue": "50",
-                            "code": "#F2726F"
-                        }, {
-                            "minValue": "50",
-                            "maxValue": "75",
-                            "code": "#FFC533"
-                        }, {
-                            "minValue": "75",
-                            "maxValue": "100",
-                            "code": "#62B58F"
-                        }]
-                    },
-                    "dials": {
-                        "dial": [{
-                            "value": resultValue3
-                        }]
-                    }
-                }
-            });
-            apiChart3.render();
         }
     });
 };
@@ -225,15 +99,17 @@ function fetchPieChartData(projectName, timeFilter) {
 
             var chartProperties = {
                 "caption": "Priority wise Bugs Breakdown for last " + timeFilter + " days for "+projectName,
-                "subCaption" : "",
-                "showValues":"1",
-                "showPercentInTooltip" : "1",
-                "numberPrefix" : "",
-                "enableMultiSlicing":"1",
-                "theme": "gammel"
+                "showpercentvalues": "1",
+                "defaultcenterlabel": "Bugs Found",
+                "aligncaptionwithcanvas": "0",
+                "captionpadding": "0",
+                "decimals": "1",
+                "plottooltext": "$label: $dataValue",
+                "centerlabel": "$label: $value",
+                "theme": "candy"
             };
             apiChart = new FusionCharts({
-                type: 'pie3d',
+                type: 'doughnut2d',
                 renderAt: 'pie-chart-container1',
                 width: '96%',
                 height: '400',
@@ -276,7 +152,7 @@ function fetchJiraData_AllPercentages_Project(projectName, timeFilter) {
                 type: 'msline',
                 renderAt: 'line-chart-container1',
                 width: '96%',
-                height: '350',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -317,7 +193,7 @@ function fetchJiraData_AllNumbers_Project(projectName, timeFilter) {
                 type: 'msline',
                 renderAt: 'line-chart-container2',
                 width: '96%',
-                height: '350',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -347,59 +223,18 @@ function fetchJiraData_TotalBugs_All(timeFilter) {
             var chartProperties = 
             {
                 "caption": "Total Bugs found in last " + timeFilter + " days [All Projects]",
-                "plottooltext": "$seriesName - $dataValue",
+                "plottooltext": "$seriesName: $dataValue",
                 "yAxisName": "Number of Bugs",
                 "divlineColor": "#999999",
                 "divLineDashed": "1",
                 "theme": "fusion",
-                "showValues": "0",
-                "showsum": "1"
+                "showValues": "1",
+                "showsum": "0"
             };
 
             apiChart = new FusionCharts({
                 type: 'stackedcolumn2dline',
                 renderAt: 'column-chart-container1',
-                width: '96%',
-                height: '400',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "dataset": datasetData,
-                    "categories": categoriesData
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchJiraData_BugPercentage_All(timeFilter) {
-    $.ajax({
-        url: 'data_generator.php',
-        type: 'GET',
-        data: {functionname: 'getJiraData_BugPercentage_All', arguments: [timeFilter]},
-        success: function(result) 
-        {
-            $.each(result, function (key, value) {
-                if (key === "categories")
-                    categoriesData = value;
-                if (key === "dataset")
-                    datasetData = value;
-            });
-
-            var chartProperties = 
-            {
-                "caption": "Bug Percentage w.r.t Tickets Tested for last " + timeFilter + " days [All Projects]",
-                "plottooltext": "$seriesName - $dataValue%",
-                "yAxisName": "Percentage",
-                "rotatevalues": "0",
-                "theme": "zune",
-                "showValues":"1"
-            };
-
-            apiChart = new FusionCharts({
-                type: 'mscombi2d',
-                renderAt: 'column-chart-container2',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',

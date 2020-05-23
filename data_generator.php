@@ -41,18 +41,18 @@
           array_push($jsonArray, $jsonArrayItem);
         }
       break;
-      case 'getLatestResultsData_Project':
+      case 'getResultsData_Last10_Project':
         if( !is_array($_GET['arguments']) || (count($_GET['arguments']) < 2) )
         {
           $jsonArray['error'] = 'Error in passed arguments!';
         }
-        $sql = "select * from results where projectName='".$_GET['arguments'][0]."' order by id desc limit ".$_GET['arguments'][1];
+        $sql = "select buildTag,percentage,Date(createdAt) as createdAt from results where projectName='".$_GET['arguments'][0]."' order by id desc limit ".$_GET['arguments'][1];
 
         $counter = 1;
         foreach ($dbo->query($sql) as $row) 
         {
           $jsonArrayItem = array();
-          $jsonArrayItem['label'] = $row['buildTag'];
+          $jsonArrayItem['label'] = $row['createdAt']."\n".$row['buildTag'];
           $jsonArrayItem['value'] = $row['percentage'];
           array_push($jsonArray, $jsonArrayItem);
         }
@@ -63,12 +63,23 @@
         {
           $jsonArray['error'] = 'Error in passed arguments!';
         }
+        
         $sql = "select environment,round(AVG(percentage),0) as percentage from results where projectName='".$_GET['arguments'][0]."' and createdAt>=DATE_SUB(now() , INTERVAL ".$_GET['arguments'][1]." DAY) group by environment;";
         foreach ($dbo->query($sql) as $row) 
         {
+          $jsonArraySubSet1 = array();
           $jsonArrayItem = array();
-          $jsonArrayItem[$row['environment']] = $row['percentage'];
-          array_push($jsonArray, $jsonArrayItem);
+
+          
+          $jsonArrayItem['label'] = "Failed";
+          $jsonArrayItem['value'] = 100 - $row['percentage'];
+          array_push($jsonArraySubSet1, $jsonArrayItem);
+
+          $jsonArrayItem['label'] = "Passed";
+          $jsonArrayItem['value'] = $row['percentage'];
+          array_push($jsonArraySubSet1, $jsonArrayItem);
+
+          array_push($jsonArray, array($row['environment']."-data"=>$jsonArraySubSet1));
         }
       break;
 
@@ -578,7 +589,7 @@ case 'getTestRailIncrement_OnlyAutomated':
         $jsonArraySubSet1 = array();
         $jsonArraySubSet2 = array();
 
-        $sql = "SELECT projectName, max(bugPercentage) as bugPercentage, max(prodBugPercentage) as prodBugPercentage FROM `jira` WHERE createdAt>=DATE_SUB(now(), INTERVAL ".$_GET['arguments'][0]." DAY) GROUP BY projectName order by projectName desc;";
+        $sql = "SELECT * FROM `jira` WHERE id in(select max(id) from jira GROUP BY projectName) order by bugPercentage desc;";
 
         foreach ($dbo->query($sql) as $row) 
         {
@@ -612,8 +623,8 @@ case 'getTestRailIncrement_OnlyAutomated':
         $jsonArraySubSet2 = array();
         $jsonArraySubSet3 = array();
 
-        $sql = "SELECT a.projectName,a.totalBugs as newTotalBugs,b.totalBugs as oldTotalBugs,a.totalProdBugs as newTotalProdBugs,b.totalProdBugs as oldTotalProdBugs FROM jira a JOIN jira b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN jira c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id
- WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][0]." DAY) group by projectName order by a.projectName desc;";
+        $sql = "SELECT a.projectName,a.totalTicketsTested as newTotalTicketsTested,b.totalTicketsTested as oldTotalTicketsTested, a.totalBugs as newTotalBugs,b.totalBugs as oldTotalBugs,a.totalProdBugs as newTotalProdBugs,b.totalProdBugs as oldTotalProdBugs FROM jira a JOIN jira b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN jira c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id
+ WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][0]." DAY) group by projectName order by (a.totalBugs - b.totalBugs) desc;";
 
         foreach ($dbo->query($sql) as $row) 
         {
@@ -625,9 +636,11 @@ case 'getTestRailIncrement_OnlyAutomated':
           $jsonArrayItem['label'] = $row['projectName'];
           array_push($jsonArraySubCategory, $jsonArrayItem);
 
+          $totalTicketsTested = $row['newTotalTicketsTested'] - $row['oldTotalTicketsTested'];
           $increasedBugs = $row['newTotalBugs'] - $row['oldTotalBugs'];
           $increasedProdBugs = $row['newTotalProdBugs'] - $row['oldTotalProdBugs'];
 
+          $jsonArrayItem1['value'] = $totalTicketsTested;
           $jsonArrayItem2['value'] = $increasedBugs;
           $jsonArrayItem3['value'] = $increasedProdBugs;
           array_push($jsonArraySubSet1, $jsonArrayItem1);
@@ -637,8 +650,9 @@ case 'getTestRailIncrement_OnlyAutomated':
         }
         array_push($jsonArrayCategory, array("category"=>$jsonArraySubCategory));
 
+        //array_push($jsonArrayDataSet, array("seriesname"=>"Tickets Tested", "data"=>$jsonArraySubSet1));
         array_push($jsonArrayDataSet, array("seriesname"=>"Total Bugs found", "data"=>$jsonArraySubSet2));
-        array_push($jsonArrayDataSet, array("seriesname"=>"Production Bugs", "renderas"=>"line","data"=>$jsonArraySubSet3));
+        array_push($jsonArrayDataSet, array("seriesname"=>"Production Bugs", "renderas"=>"line", "data"=>$jsonArraySubSet3));
         $jsonArray = array("categories"=>$jsonArrayCategory,"dataset"=>$jsonArrayDataSet);
       break;
 
@@ -762,6 +776,7 @@ case 'getTestRailIncrement_OnlyAutomated':
           array_push($jsonArray, $jsonArrayItem);
         }
       break;
+
     }
     echo json_encode($jsonArray);
   }

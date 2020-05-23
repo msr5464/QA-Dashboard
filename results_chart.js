@@ -51,7 +51,7 @@ function showProjectCharts(projectName, timeFilter) {
     generateGaugeData(projectName, timeFilter);
     fetchLastTenResults(projectName, timeFilter);
     fetchAvgPercentageData(projectName, timeFilter);
-    fetchTotalCasesData(projectName, timeFilter);
+    fetchGroupWiseData(projectName, timeFilter);
     //showDefaultCharts(timeFilter);
 }
 
@@ -73,136 +73,110 @@ function generateGaugeData(projectName, timeFilter) {
             var resultValue3 = 0;
             for (i = 0; i < result.length; i++) {
                 $.each(result[i], function (key, value) {
-                    if (key === "Production")
+                    if (key === "Production-data")
                         resultValue1 = value;
-                    if (key === "Sandbox")
+                    if (key === "Sandbox-data")
                         resultValue2 = value;
-                    if (key === "Staging")
+                    if (key === "Staging-data")
                         resultValue3 = value;
                 });
             }
 
-            var chartProperties1 = {
-                "caption": "",
-                "lowerLimit": "0",
-                "upperLimit": "100",
-                "showValue": "1",
-                "numberSuffix": "%",
-                "theme": "fusion",
-                "showToolTip": "1"
+            var chartProperties = {
+                "showBorder": "0",
+                "captionfontcolor": "#686980",
+                "captionfontsize": "16",
+                "captionalignment": "left",
+                "showShadow": "0",
+                "use3DLighting": "0",
+                "showLabels": "0",
+                "showValues": "0",
+                "paletteColors": "#efefef,#11DFF6",
+                "bgColor": "#1D1B41",
+                "bgAlpha": "0",
+                "canvasBgAlpha": "0",
+                "doughnutRadius": "75",
+                "pieRadius": "90",
+                "enableSlicing": "0",
+                "plotBorderAlpha": "0",
+                "showToolTip": "0",
+                "baseFontSize": "14",
+                "logoURL": "shield.svg",
+                "logoScale": "4",
+                "logoAlpha": "100",
+                "logoPosition": "TR",
+                "logoTopMargin": "2",
+                "defaultCenterLabel": null,
+                "centerLabelBold": "1",
+                "centerLabelFontSize": "25",
+                "enableRotation": "0",
+                "captionfont": "avenir-heavy",
+                "baseFont": "avenir-medium",
+                "startingAngle": "90",
+                "animateClockwise": "1"
             };
 
             apiChart1 = new FusionCharts({
-                type: 'angulargauge',
+                type: 'doughnut2d',
                 renderAt: 'gauge-chart-container1',
                 width: '350',
-                height: '180',
+                height: '200',
                 dataFormat: 'json',
                 dataSource: {
-                    "chart": chartProperties1,
-                    "colorRange": {
-                        "color": [{
-                            "minValue": "0",
-                            "maxValue": "50",
-                            "code": "#F2726F"
-                        }, {
-                            "minValue": "50",
-                            "maxValue": "75",
-                            "code": "#FFC533"
-                        }, {
-                            "minValue": "75",
-                            "maxValue": "100",
-                            "code": "#62B58F"
-                        }]
-                    },
-                    "dials": {
-                        "dial": [{
-                            "value": resultValue1
-                        }]
+                    "chart": chartProperties,
+                    "data": resultValue1
+                },
+                "events": {
+                    "beforeInitialize": function () {
+                        if(resultValue1)
+                        {
+                            var passPercentage = resultValue1[1].value;
+                            chartProperties.defaultCenterLabel = passPercentage+"%";
+                        }
                     }
                 }
             });
             apiChart1.render();
 
-            var chartProperties2 = {
-                "caption": "",
-                "lowerLimit": "0",
-                "upperLimit": "100",
-                "showValue": "1",
-                "numberSuffix": "%",
-                "theme": "fusion",
-                "showToolTip": "1"
-            };
-
             apiChart2 = new FusionCharts({
-                type: 'angulargauge',
+                type: 'doughnut2d',
                 renderAt: 'gauge-chart-container2',
                 width: '350',
-                height: '180',
+                height: '200',
                 dataFormat: 'json',
                 dataSource: {
-                    "chart": chartProperties2,
-                    "colorRange": {
-                        "color": [{
-                            "minValue": "0",
-                            "maxValue": "50",
-                            "code": "#F2726F"
-                        }, {
-                            "minValue": "50",
-                            "maxValue": "75",
-                            "code": "#FFC533"
-                        }, {
-                            "minValue": "75",
-                            "maxValue": "100",
-                            "code": "#62B58F"
-                        }]
-                    },
-                    "dials": {
-                        "dial": [{
-                            "value": resultValue2
-                        }]
+                    "chart": chartProperties,
+                    "data": resultValue2
+                },
+                "events": {
+                    "beforeInitialize": function () {
+                        if(resultValue2)
+                        {
+                            var passPercentage = resultValue2[1].value;
+                            chartProperties.defaultCenterLabel = passPercentage+"%";
+                        }
                     }
                 }
             });
             apiChart2.render();
 
-            var chartProperties3 = {
-                "caption": "",
-                "lowerLimit": "0",
-                "upperLimit": "100",
-                "showValue": "1",
-                "numberSuffix": "%",
-                "theme": "fusion",
-                "showToolTip": "1"
-            };
-
             apiChart3 = new FusionCharts({
-                type: 'angulargauge',
+                type: 'doughnut2d',
                 renderAt: 'gauge-chart-container3',
                 width: '350',
-                height: '180',
+                height: '200',
                 dataFormat: 'json',
                 dataSource: {
-                    "chart": chartProperties3,
-                    "colorRange": {
-                        "color": [{
-                            "minValue": "0",
-                            "maxValue": "50",
-                            "code": "#F2726F"
-                        }, {
-                            "minValue": "50",
-                            "maxValue": "75",
-                            "code": "#FFC533"
-                        }, {
-                            "minValue": "75",
-                            "maxValue": "100",
-                            "code": "#62B58F"
-                        }]
-                    },
-                    "dials": {
-                        "dial": [{
-                            "value": resultValue3
-                        }]
+                    "chart": chartProperties,
+                    "data": resultValue3
+                },
+                "events": {
+                    "beforeInitialize": function () {
+                        if(resultValue3)
+                        {
+                            var passPercentage = resultValue3[1].value;
+                            chartProperties.defaultCenterLabel = passPercentage+"%";
+                        }
                     }
                 }
             });
@@ -216,13 +190,12 @@ function fetchLastTenResults(projectName, timeFilter) {
         url: 'data_generator.php',
         type: 'GET',
         data: {
-            functionname: 'getLatestResultsData_Project',
+            functionname: 'getResultsData_Last10_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
             var chartProperties = {
                 "caption": "Details of last " + timeFilter + " Automation Builds",
-                "xAxisName": "Build Name",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -235,7 +208,7 @@ function fetchLastTenResults(projectName, timeFilter) {
                 type: 'column3d',
                 renderAt: 'column-chart-container1',
                 width: '96%',
-                height: '350',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -279,49 +252,6 @@ function fetchLastTenResults(projectName, timeFilter) {
     });
 };
 
-
-function fetchTotalCasesData(projectName, timeFilter) {
-    $.ajax({
-        url: 'data_generator.php',
-        type: 'GET',
-        data: {
-            functionname: 'getTotalCasesResultsData_Project',
-            arguments: [projectName, timeFilter]
-        },
-        success: function (result) {
-            $.each(result, function (key, value) {
-                if (key === "categories")
-                    categoriesData = value;
-                if (key === "dataset")
-                    datasetData = value;
-            });
-
-            var chartProperties = {
-                "caption": "GroupName wise total cases for last " + timeFilter + " days",
-                "subCaption": "",
-                "plottooltext": "$seriesName - $dataValue",
-                "yAxisName": "Total Testcases",
-                "theme": "candy",
-                "showValues": "1"
-            };
-            apiChart = new FusionCharts({
-                type: 'msline',
-                renderAt: 'line-chart-container1',
-                width: '96%',
-                height: '350',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "dataset": datasetData,
-                    "categories": categoriesData
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-
 function fetchAvgPercentageData(projectName, timeFilter) {
     $.ajax({
         url: 'data_generator.php',
@@ -348,9 +278,50 @@ function fetchAvgPercentageData(projectName, timeFilter) {
             };
             apiChart = new FusionCharts({
                 type: 'msline',
+                renderAt: 'line-chart-container1',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchGroupWiseData(projectName, timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {
+            functionname: 'getTotalCasesResultsData_Project',
+            arguments: [projectName, timeFilter]
+        },
+        success: function (result) {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = {
+                "caption": "GroupName wise total cases for last " + timeFilter + " days",
+                "subCaption": "",
+                "plottooltext": "$seriesName - $dataValue",
+                "yAxisName": "Total Testcases",
+                "theme": "candy",
+                "showValues": "1"
+            };
+            apiChart = new FusionCharts({
+                type: 'msline',
                 renderAt: 'line-chart-container2',
                 width: '96%',
-                height: '350',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,

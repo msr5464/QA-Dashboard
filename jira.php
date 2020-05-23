@@ -101,7 +101,7 @@
                      <div class="row mt-3 db-chart">
                         <div id="parent1" class="col-lg-6 col-xl-4">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">Total Automation Coverage Percentage</div>
+                              <div class="chart-title" id="text2">Total Tickets Tested</div>
                               <div id="chart1" class="chart">
                                  <center>
                                     <label id="gauge-chart-container1" style="color:orange"><b>Warning!! Project not selected!</b></label>
@@ -111,7 +111,7 @@
                         </div>
                         <div id="parent2" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">P0 Cases Coverage Percentage</div>
+                              <div class="chart-title" id="text2">Total Bugs Found</div>
                               <div id="chart2" class="chart">
                                  <center>
                                     <label id="gauge-chart-container2" style="color:orange"><b>Warning!! Project not selected!</b></label>
@@ -121,7 +121,7 @@
                         </div>
                         <div id="parent3" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">P1 Cases Coverage Percentage</div>
+                              <div class="chart-title" id="text2">Only Production Bugs</div>
                               <div id="chart3" class="chart">
                                  <center>
                                     <label id="gauge-chart-container3" style="color:orange"><b>Warning!! Project not selected!</b></label>

@@ -30,6 +30,7 @@ function showDefaultCharts(timeFilter) {
     fetchResultsData_Staging(timeFilter);
     fetchTestrailData_P0Coverage(timeFilter);
     fetchTestrailData_P1Coverage(timeFilter);
+    fetchJiraData_BugPercentage(timeFilter);
 }
 
 function fetchResultsData_Production(timeFilter) {
@@ -42,7 +43,7 @@ function fetchResultsData_Production(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "Thanos - Average Pass Percentage on Production [All Projects]",
+                "caption": "Thanos - Average Production Percentage for last " + timeFilter + " days [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
@@ -56,7 +57,7 @@ function fetchResultsData_Production(timeFilter) {
                 type: 'column3d',
                 renderAt: 'column-chart-container1',
                 width: '96%',
-                height: '400',
+                height: '350',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -78,7 +79,7 @@ function fetchResultsData_Staging(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "Thanos - Average Pass Percentage on Staging [All Projects]",
+                "caption": "Thanos - Average Staging Percentage for last " + timeFilter + " days [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
@@ -92,7 +93,7 @@ function fetchResultsData_Staging(timeFilter) {
                 type: 'column3d',
                 renderAt: 'column-chart-container2',
                 width: '96%',
-                height: '400',
+                height: '350',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -125,7 +126,7 @@ function fetchTestrailData_P0Coverage(timeFilter) {
                 type: 'column2d',
                 renderAt: 'column-chart-container3',
                 width: '96%',
-                height: '500',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -157,11 +158,52 @@ function fetchTestrailData_P1Coverage(timeFilter) {
                 type: 'column2d',
                 renderAt: 'column-chart-container4',
                 width: '96%',
-                height: '500',
+                height: '400',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
                     "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchJiraData_BugPercentage(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {functionname: 'getJiraData_BugPercentage_All', arguments: [timeFilter]},
+        success: function(result) 
+        {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = 
+            {
+                "caption": "Jira - Overall Bug Percentage for 2020 [All Projects]",
+                "plottooltext": "$seriesName - $dataValue%",
+                "yAxisName": "Percentage",
+                "rotatevalues": "0",
+                "theme": "zune",
+                "showValues":"1"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'mscombi2d',
+                renderAt: 'column-chart-container5',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
                 }
             });
             apiChart.render();
