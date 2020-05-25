@@ -7,13 +7,7 @@
       <meta name="theme-color" content="#000000">
       <link rel="stylesheet" href="css/bootstrap.min.css">
       <link rel="stylesheet" href="css/main_style.css">
-      <script src="js/jquery-2.1.4.js"></script>
-      <script src="js/fusioncharts.js"></script>
-      <script src="js/fusioncharts.charts.js"></script>
-      <script src="js/themes/fusioncharts.theme.zune.js"></script>
-      <script src="js/themes/fusioncharts.theme.fusion.js"></script>
-      <script src="js/themes/fusioncharts.theme.candy.js"></script>
-      <script src="index_chart.js"></script>
+
    </head>
    <body data-gr-c-s-loaded="true">
       <div id="root">

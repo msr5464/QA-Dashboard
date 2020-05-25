@@ -406,7 +406,8 @@ img.dashboardImage {
 
 .custom-text-2 {
 	font-family: Nunito Sans Light;
-	font-size: 13px
+	font-size: 13px;
+	color: orange;	
 }
 
 .custom-text-3 {
@@ -456,5 +457,25 @@ img.dashboardImage {
 				letter-spacing: 0em;
 				
 					line-height: 1em;
+				
+			}
+
+.bigFont {
+				border: 0;
+				padding: 0;
+				margin: 0;
+				font-family: Helvetica, Arial, sans-serif;
+			
+				color: lightgreen;	
+			
+				font-size: 50px;	
+				
+				font-weight: bold;	
+			
+				text-decoration: all;	
+				
+				letter-spacing: 0em;
+			
+				line-height: 2;
 				
 			}

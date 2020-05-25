@@ -1,12 +1,14 @@
+var defaultFilter = "30";
 var projectName = 0;
+var backend = "results-data.php";
 $(function () {
-    validateAndExecute("7");
+    validateAndExecute(defaultFilter);
 });
 
 $(document).ready(function () {
     $("#projectName").click(function () {
         $("#selectProject").show();
-        showDefaultCharts("7");
+        showDefaultCharts(defaultFilter);
         $("#projectName").hide();
     });
 
@@ -46,30 +48,31 @@ function validateAndExecute(timeFilter) {
     }
 }
 
-function showProjectCharts(projectName, timeFilter) {
-    generateGaugeData(projectName, timeFilter);
-    fetchLastSevenResults(projectName, timeFilter);
-    fetchAvgPercentageData(projectName, timeFilter);
-    fetchGroupWiseData(projectName, timeFilter);
-}
-
 function showDefaultCharts(timeFilter) {
-    fetchResultsData_Production(timeFilter);
-    fetchResultsData_Staging(timeFilter);
+    fetchAvgPercentageProd_ColumnChart(timeFilter);
+    fetchAvgPercentageStg_ColumnChart(timeFilter);
+    fetchAvgExecutionTimeStg_ColumnChart(timeFilter);
 }
 
-function fetchResultsData_Production(timeFilter) {
+function showProjectCharts(projectName, timeFilter) {
+    fetchAvgPercentage_GaugeChart(projectName, timeFilter);
+    fetchLastSevenResults_ColumnChart(projectName, timeFilter);
+    fetchAvgDailyPercentage_LineChart(projectName, timeFilter);
+    fetchAvgDailyExecutionTime_LineChart(projectName, timeFilter);
+    fetchTotalCasesGroupwise_LineChart(projectName, timeFilter);
+}
+
+function fetchAvgPercentageProd_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getLatestResultsData_Production',
-            arguments: [timeFilter]
+            functionname: 'getAvgPercentage',
+            arguments: [timeFilter,'Production','production']
         },
         success: function (result) {
             var chartProperties = {
                 "caption": "Thanos - Average Production Percentage for last " + timeFilter + " days [All Projects]",
-                "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -94,18 +97,17 @@ function fetchResultsData_Production(timeFilter) {
     });
 };
 
-function fetchResultsData_Staging(timeFilter) {
+function fetchAvgPercentageStg_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getLatestResultsData_Staging',
-            arguments: [timeFilter]
+            functionname: 'getAvgPercentage',
+            arguments: [timeFilter,'Staging','regression']
         },
         success: function (result) {
             var chartProperties = {
                 "caption": "Thanos - Average Staging Percentage for last " + timeFilter + " days [All Projects]",
-                "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -130,12 +132,47 @@ function fetchResultsData_Staging(timeFilter) {
     });
 };
 
-function generateGaugeData(projectName, timeFilter) {
+function fetchAvgExecutionTimeStg_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getAvgPassPercentage_Project',
+            functionname: 'getAvgExecutionTime',
+            arguments: [timeFilter,'Staging','regression']
+        },
+        success: function (result) {
+            var chartProperties = {
+                "caption": "Thanos - Average Execution Time for last " + timeFilter + " days [All Projects]",
+                "yAxisName": "Time Taken (in minutes)",
+                "placevaluesinside": "1",
+                "rotatevalues": "0",
+                "showvalues": "1",
+                "plottooltext": "$label: $dataValue minutes",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container3',
+                width: '96%',
+                height: '350',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchAvgPercentage_GaugeChart(projectName, timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getAvgPercentage_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -173,7 +210,7 @@ function generateGaugeData(projectName, timeFilter) {
                 "plotBorderAlpha": "0",
                 "showToolTip": "1",
                 "baseFontSize": "14",
-                "logoURL": "shield.svg",
+                "logoURL": "assets/shield.svg",
                 "logoScale": "4",
                 "logoAlpha": "100",
                 "logoPosition": "TR",
@@ -257,12 +294,12 @@ function generateGaugeData(projectName, timeFilter) {
     });
 };
 
-function fetchLastSevenResults(projectName, timeFilter) {
+function fetchLastSevenResults_ColumnChart(projectName, timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getResultsData_Last7_Project',
+            functionname: 'getLast7Records',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -278,7 +315,7 @@ function fetchLastSevenResults(projectName, timeFilter) {
 
             apiChart = new FusionCharts({
                 type: 'column3d',
-                renderAt: 'column-chart-container3',
+                renderAt: 'column-chart-container4',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',
@@ -325,12 +362,12 @@ function fetchLastSevenResults(projectName, timeFilter) {
     });
 };
 
-function fetchAvgPercentageData(projectName, timeFilter) {
+function fetchAvgDailyPercentage_LineChart(projectName, timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getAvgResultsData_Project',
+            functionname: 'getDailyAvgPercentage_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -366,12 +403,53 @@ function fetchAvgPercentageData(projectName, timeFilter) {
     });
 };
 
-function fetchGroupWiseData(projectName, timeFilter) {
+function fetchAvgDailyExecutionTime_LineChart(projectName, timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getTotalCasesResultsData_Project',
+            functionname: 'getDailyAvgExecutionTime_Project',
+            arguments: [projectName, timeFilter, "'regression','production'"]
+        },
+        success: function (result) {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = {
+                "caption": "Average daily Execution Time for last " + timeFilter + " days",
+                "subCaption": "",
+                "plottooltext": "$seriesName - $dataValue minutes",
+                "yAxisName": "Time Taken (in minutes)",
+                "theme": "candy",
+                "showValues": "1"
+            };
+            apiChart = new FusionCharts({
+                type: 'msline',
+                renderAt: 'line-chart-container2',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchTotalCasesGroupwise_LineChart(projectName, timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getTotalCasesGroupwise_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -387,12 +465,12 @@ function fetchGroupWiseData(projectName, timeFilter) {
                 "subCaption": "",
                 "plottooltext": "$seriesName - $dataValue",
                 "yAxisName": "Total Testcases",
-                "theme": "candy",
+                "theme": "fusion",
                 "showValues": "1"
             };
             apiChart = new FusionCharts({
                 type: 'msline',
-                renderAt: 'line-chart-container2',
+                renderAt: 'line-chart-container3',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',

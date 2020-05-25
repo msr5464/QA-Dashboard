@@ -1,12 +1,14 @@
+var defaultFilter = "30";
 var projectName = 0;
+var backend = "jira-data.php";
 $(function () {
-    validateAndExecute("7");
+    validateAndExecute(defaultFilter);
 });
 
 $(document).ready(function () {
     $("#projectName").click(function () {
         $("#selectProject").show();
-        showDefaultCharts("7");
+        showDefaultCharts(defaultFilter);
         $("#projectName").hide();
     });
 
@@ -46,23 +48,23 @@ function validateAndExecute(timeFilter) {
     }
 }
 
-function showProjectCharts(projectName, timeFilter) {
-    generateGaugeData(projectName, timeFilter);
-    fetchPieChartData(projectName, timeFilter);
-    fetchJiraData_AllPercentages_Project(projectName, timeFilter);
-    fetchJiraData_AllNumbers_Project(projectName, timeFilter);
-}
-
 function showDefaultCharts(timeFilter) {
-    fetchJiraData_TotalBugs_All(timeFilter);
-    fetchJiraData_BugPercentage(timeFilter);
+    fetchTotalBugsFound_ColumnChart(timeFilter);
+    fetchBugPercentage_ColumnChart(timeFilter);
 }
 
-function fetchJiraData_TotalBugs_All(timeFilter) {
+function showProjectCharts(projectName, timeFilter) {
+    fetchTotalTicketsTested_GaugeChart(projectName, timeFilter);
+    fetchBugPriorityBreakdown_PieChart(projectName, timeFilter);
+    fetchBugPercentageTrend_ColumnChart(projectName, timeFilter);
+    fetchBugCountTrend_ColumnChart(projectName, timeFilter);
+}
+
+function fetchTotalBugsFound_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
-        data: {functionname: 'getJiraData_TotalBugs_All', arguments: [timeFilter]},
+        data: {functionname: 'getTotalBugsFound', arguments: [timeFilter]},
         success: function(result) 
         {
             $.each(result, function (key, value) {
@@ -101,11 +103,11 @@ function fetchJiraData_TotalBugs_All(timeFilter) {
     });
 };
 
-function fetchJiraData_BugPercentage(timeFilter) {
+function fetchBugPercentage_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
-        data: {functionname: 'getJiraData_BugPercentage_All', arguments: [timeFilter]},
+        data: {functionname: 'getBugPercentage', arguments: [timeFilter]},
         success: function(result) 
         {
             $.each(result, function (key, value) {
@@ -142,12 +144,12 @@ function fetchJiraData_BugPercentage(timeFilter) {
     });
 };
 
-function generateGaugeData(projectName, timeFilter) {
+function fetchTotalTicketsTested_GaugeChart(projectName, timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getAvgPassPercentage_Project',
+            functionname: 'getTotalTicketsTested_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -156,25 +158,38 @@ function generateGaugeData(projectName, timeFilter) {
             var resultValue3 = 0;
             for (i = 0; i < result.length; i++) {
                 $.each(result[i], function (key, value) {
-                    if (key === "Production")
+                    console.log(key);
+                    console.log(value);
+                    if (key === "totalTicketsTested")
                         resultValue1 = value;
-                    if (key === "Sandbox")
+                    if (key === "totalBugs")
                         resultValue2 = value;
-                    if (key === "Staging")
+                    if (key === "totalProdBugs")
                         resultValue3 = value;
                 });
             }
+            document.getElementById("gauge-chart-container1").innerHTML = resultValue1;
+            document.getElementById("gauge-chart-container1").classList.remove('custom-text-2');
+            document.getElementById("gauge-chart-container1").classList.add('bigFont');
+            
+            document.getElementById("gauge-chart-container2").innerHTML = resultValue2;
+            document.getElementById("gauge-chart-container2").classList.remove('custom-text-2');
+            document.getElementById("gauge-chart-container2").classList.add('bigFont');
+
+            document.getElementById("gauge-chart-container3").innerHTML = resultValue3;
+            document.getElementById("gauge-chart-container3").classList.remove('custom-text-2');
+            document.getElementById("gauge-chart-container3").classList.add('bigFont');
         }
     });
 };
 
 
-function fetchPieChartData(projectName, timeFilter) {
+function fetchBugPriorityBreakdown_PieChart(projectName, timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getJiraData_Project_Pie',
+            functionname: 'getBugPriorityBreakdown_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -206,12 +221,12 @@ function fetchPieChartData(projectName, timeFilter) {
     });
 };
 
-function fetchJiraData_AllPercentages_Project(projectName, timeFilter) {
+function fetchBugPercentageTrend_ColumnChart(projectName, timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getJiraData_AllPercentages_Project',
+            functionname: 'getBugPercentageTrend_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -247,12 +262,12 @@ function fetchJiraData_AllPercentages_Project(projectName, timeFilter) {
     });
 };
 
-function fetchJiraData_AllNumbers_Project(projectName, timeFilter) {
+function fetchBugCountTrend_ColumnChart(projectName, timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getJiraData_AllNumbers_Project',
+            functionname: 'getBugCountTrend_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {

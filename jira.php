@@ -14,7 +14,7 @@
       <script src="js/themes/fusioncharts.theme.fusion.js"></script>
       <script src="js/themes/fusioncharts.theme.candy.js"></script>
       <script src="js/themes/fusioncharts.theme.gammel.js"></script>
-      <script src="jira_chart.js"></script>
+      <script src="jira-chart.js"></script>
    </head>
    <body data-gr-c-s-loaded="true">
       <div id="root">
@@ -66,8 +66,8 @@
                      <div class="row mt-3">
                         <div class="col-md-7">
                            <ul class="buttonwrapper">
-                              <li id="week" class="filter active"><label id="weeklyData">WEEKLY</label></li>
-                              <li id="month" class="filter"><label id="monthlyData">MONTHLY</label></li>
+                              <li id="week" class="filter"><label id="weeklyData">WEEKLY</label></li>
+                              <li id="month" class="filter active"><label id="monthlyData">MONTHLY</label></li>
                               <li id="quarter" class="filter"><label id="quarterlyData">QUARTERLY</label></li>
                               <li id="year" class="filter"><label id="yearlyData">YEARLY</label></li>
                            </ul>
@@ -99,7 +99,7 @@
                               <div class="chart-title" id="text2">Total Tickets Tested</div>
                               <div id="chart1" class="chart">
                                  <center>
-                                    <label class="custom-text-2" id="gauge-chart-container1" style="color:orange">Project not selected.<br>No data to display!</label>
+                                    <label class="custom-text-2" id="gauge-chart-container1">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -109,7 +109,7 @@
                               <div class="chart-title" id="text2">Total Bugs Found</div>
                               <div id="chart2" class="chart">
                                  <center>
-                                    <label class="custom-text-2" id="gauge-chart-container2" style="color:orange">Project not selected.<br>No data to display!</label>
+                                    <label class="custom-text-2" id="gauge-chart-container2">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -119,7 +119,7 @@
                               <div class="chart-title" id="text2">Only Production Bugs</div>
                               <div id="chart3" class="chart">
                                  <center>
-                                    <label class="custom-text-2" id="gauge-chart-container3" style="color:orange">Project not selected.<br>No data to display!</label>
+                                    <label class="custom-text-2" id="gauge-chart-container3">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>

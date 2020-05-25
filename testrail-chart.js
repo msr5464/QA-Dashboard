@@ -1,12 +1,14 @@
+var defaultFilter = "30";
 var projectName = 0;
+var backend = "testrail-data.php";
 $(function () {
-    validateAndExecute("7");
+    validateAndExecute(defaultFilter);
 });
 
 $(document).ready(function () {
     $("#projectName").click(function () {
         $("#selectProject").show();
-        showDefaultCharts("7");
+        showDefaultCharts(defaultFilter);
         $("#projectName").hide();
     });
 
@@ -46,28 +48,28 @@ function validateAndExecute(timeFilter) {
     }
 }
 
-function showProjectCharts(projectName, timeFilter) {
-    generateGaugeData(projectName, timeFilter);
-    fetchPieChartData(projectName, timeFilter);
-    fetchTotalCasesData(projectName, timeFilter);
-}
-
 function showDefaultCharts(timeFilter) {
-    fetchTestrailData_P0CoverageChange(timeFilter);
-    fetchTestrailData_P1CoverageChange(timeFilter);
-    fetchTestrailData_AutomatedLastWeek(timeFilter);
-    fetchTestrailData_P0Coverage(timeFilter);
-    fetchTestrailData_P1Coverage(timeFilter);
-    fetchTestrailData_FullCoverage(timeFilter);
-    //fetchTestrailData_P2Coverage(timeFilter);
-    fetchTestrailData_Distribution(timeFilter);
+    fetchP0CoverageChange_ColumnChart(timeFilter);
+    fetchP1CoverageChange_ColumnChart(timeFilter);
+    fetchAutomatedCountChange_ColumnChart(timeFilter);
+    fetchTotalP0Coverage_ColumnChart(timeFilter);
+    fetchTotalP1Coverage_ColumnChart(timeFilter);
+    fetchTotalAutomationCoverage_ColumnChart(timeFilter);
+    //fetchTotalP2Coverage_ColumnChart(timeFilter);
+    fetchTestcaseDistribution_ColumnChart(timeFilter);
 }
 
-function fetchTestrailData_P0CoverageChange(timeFilter) {
+function showProjectCharts(projectName, timeFilter) {
+    fetchCoverageNumbers_GaugeChart(projectName, timeFilter);
+    fetchAutomationCasesBreakdown_PieChart(projectName, timeFilter);
+    fetchTestcaseCountTrend_LineChart(projectName, timeFilter);
+}
+
+function fetchP0CoverageChange_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
-        data: {functionname: 'getTestRailIncrement_P0', arguments: [timeFilter]},
+        data: {functionname: 'getP0CoverageChange', arguments: [timeFilter]},
         success: function(result) 
         {
             $.each(result, function (key, value) {
@@ -104,11 +106,11 @@ function fetchTestrailData_P0CoverageChange(timeFilter) {
     });
 };
 
-function fetchTestrailData_P1CoverageChange(timeFilter) {
+function fetchP1CoverageChange_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
-        data: {functionname: 'getTestRailIncrement_P1', arguments: [timeFilter]},
+        data: {functionname: 'getP1CoverageChange', arguments: [timeFilter]},
         success: function(result) 
         {
             $.each(result, function (key, value) {
@@ -145,11 +147,11 @@ function fetchTestrailData_P1CoverageChange(timeFilter) {
     });
 };
 
-function fetchTestrailData_AutomatedLastWeek(timeFilter) {
+function fetchAutomatedCountChange_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
-        data: {functionname: 'getTestRailIncrement_OnlyAutomated', arguments: [timeFilter]},
+        data: {functionname: 'getAutomatedCountChange', arguments: [timeFilter]},
         success: function(result) 
         {
             $.each(result, function (key, value) {
@@ -186,11 +188,11 @@ function fetchTestrailData_AutomatedLastWeek(timeFilter) {
     });
 };
 
-function fetchTestrailData_P0Coverage(timeFilter) {
+function fetchTotalP0Coverage_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
-        data: {functionname: 'getTestRailData_P0'},
+        data: {functionname: 'getTotalP0Coverage'},
         success: function(result) 
         {
             var chartProperties = 
@@ -218,11 +220,11 @@ function fetchTestrailData_P0Coverage(timeFilter) {
     });
 };
 
-function fetchTestrailData_P1Coverage(timeFilter) {
+function fetchTotalP1Coverage_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
-        data: {functionname: 'getTestRailData_P1'},
+        data: {functionname: 'getTotalP1Coverage'},
         success: function(result) 
         {
             var chartProperties = 
@@ -250,11 +252,11 @@ function fetchTestrailData_P1Coverage(timeFilter) {
     });
 };
 
-function fetchTestrailData_FullCoverage(timeFilter) {
+function fetchTotalAutomationCoverage_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
-        data: {functionname: 'getTestRailData_Coverage'},
+        data: {functionname: 'getTotalAutomationCoverage'},
         success: function(result) 
         {
             var chartProperties = 
@@ -283,11 +285,11 @@ function fetchTestrailData_FullCoverage(timeFilter) {
     });
 };
 
-function fetchTestrailData_P2Coverage(timeFilter) {
+function fetchTotalP2Coverage_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
-        data: {functionname: 'getTestRailData_P2'},
+        data: {functionname: 'getTotalP2Coverage'},
         success: function(result) 
         {
             var chartProperties = 
@@ -316,12 +318,12 @@ function fetchTestrailData_P2Coverage(timeFilter) {
     });
 };
 
-function fetchTestrailData_Distribution(timeFilter) {
+function fetchTestcaseDistribution_ColumnChart(timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getLatestTestrailData_All',
+            functionname: 'getTestcaseCountDistribution',
             arguments: [timeFilter]
         },
         success: function (result) {
@@ -359,11 +361,11 @@ function fetchTestrailData_Distribution(timeFilter) {
     });
 };
 
-function generateGaugeData(projectName, timeFilter) {
+function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
-        data: {functionname: 'getTestrailCoverageData_Project', arguments: [projectName, timeFilter]},
+        data: {functionname: 'getCoverageNumbers_Project', arguments: [projectName, timeFilter]},
         success: function(result) 
         {
             var resultValue1 = 0;
@@ -520,13 +522,12 @@ function generateGaugeData(projectName, timeFilter) {
     });
 };
 
-
-function fetchPieChartData(projectName, timeFilter) {
+function fetchAutomationCasesBreakdown_PieChart(projectName, timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getTotalCasesTestrailData_Project_Pie',
+            functionname: 'getAutomationCasesBreakdown_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -558,12 +559,12 @@ function fetchPieChartData(projectName, timeFilter) {
     });
 };
 
-function fetchTotalCasesData(projectName, timeFilter) {
+function fetchTestcaseCountTrend_LineChart(projectName, timeFilter) {
     $.ajax({
-        url: 'data_generator.php',
+        url: backend,
         type: 'GET',
         data: {
-            functionname: 'getTotalCasesTestrailData_Project_Line',
+            functionname: 'getTestcaseCountTrend_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {

@@ -14,7 +14,8 @@
       <script src="js/themes/fusioncharts.theme.fusion.js"></script>
       <script src="js/themes/fusioncharts.theme.candy.js"></script>
       <script src="js/themes/fusioncharts.theme.zune.js"></script>
-      <script src="results_chart.js"></script>
+      <script src="js/themes/fusioncharts.theme.carbon.js"></script>
+      <script src="results-chart.js"></script>
    </head>
    <body data-gr-c-s-loaded="true">
       <div id="root">
@@ -66,8 +67,8 @@
                      <div class="row mt-3">
                         <div class="col-md-7">
                            <ul class="buttonwrapper">
-                              <li id="week" class="filter active"><label id="weeklyData">WEEKLY</label></li>
-                              <li id="month" class="filter"><label id="monthlyData">MONTHLY</label></li>
+                              <li id="week" class="filter"><label id="weeklyData">WEEKLY</label></li>
+                              <li id="month" class="filter active"><label id="monthlyData">MONTHLY</label></li>
                               <li id="quarter" class="filter"><label id="quarterlyData">QUARTERLY</label></li>
                               <li id="year" class="filter"><label id="yearlyData">YEARLY</label></li>
                            </ul>
@@ -99,7 +100,7 @@
                               <div class="chart-title">Average Production Percentage</div>
                               <div id="chart1" class="">
                                  <center>
-                                    <label class="custom-text-2" id="gauge-chart-container1" style="color:orange">Project not selected.<br>No data to display!</label>
+                                    <label class="custom-text-2" id="gauge-chart-container1">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -109,7 +110,7 @@
                               <div class="chart-title">Average Sandbox Percentage</div>
                               <div id="chart2" class="">
                                  <center>
-                                    <label class="custom-text-2" id="gauge-chart-container2" style="color:orange">Project not selected.<br>No data to display!</label>
+                                    <label class="custom-text-2" id="gauge-chart-container2">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -119,7 +120,7 @@
                               <div class="chart-title">Average Staging Percentage</div>
                               <div id="chart3" class="">
                                  <center>
-                                    <label class="custom-text-2" id="gauge-chart-container3" style="color:orange">Project not selected.<br>No data to display!</label>
+                                    <label class="custom-text-2" id="gauge-chart-container3">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -139,9 +140,13 @@
                               <br>
                               <label id="column-chart-container2">Chart is loading here...</label>
                            </div>
-                           <div class="projectChart">
+                           <div class="defaultChart">
                               <br>
                               <label id="column-chart-container3">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="column-chart-container4">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
                               <br>
@@ -150,6 +155,10 @@
                            <div class="projectChart">
                               <br>
                               <label id="line-chart-container2">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="line-chart-container3">Chart is loading here...</label>
                            </div>
                         </center>
                      </div>
