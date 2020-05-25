@@ -140,32 +140,20 @@ body {
 	opacity: .6
 }
 
-.left-options li#Dashboard:before {
-	background-image: url(../../static/media/Dashboard.a2171383.svg);
+.left-options li#results:before {
+	background-image: url(../assets/automation.svg);
 	background-repeat: no-repeat;
 	background-size: 24px 24px
 }
 
-.left-options li#Cost:before {
-	background-image: url(../../static/media/Cost.b78f44b7.svg);
+.left-options li#testrail:before {
+	background-image: url(../assets/testrail.svg);
 	background-repeat: no-repeat;
 	background-size: 24px 24px
 }
 
-.left-options li#Appliances:before {
-	background-image: url(../../static/media/Appliances.ad37a0a9.svg);
-	background-repeat: no-repeat;
-	background-size: 24px 24px
-}
-
-.left-options li#Usage-by-rooms:before {
-	background-image: url(../../static/media/Usage_by_rooms.5a9ea417.svg);
-	background-repeat: no-repeat;
-	background-size: 24px 24px
-}
-
-.left-options li#Emissions:before {
-	background-image: url(../../static/media/Emissions.1f2febf2.svg);
+.left-options li#jira:before {
+	background-image: url(../assets/bug.svg);
 	background-repeat: no-repeat;
 	background-size: 24px 24px
 }
@@ -248,10 +236,6 @@ body {
 	border-bottom: 2px solid rgba(0, 0, 0, .2)
 }
 
-#text1 {
-	text-transform: uppercase
-}
-
 @media (min-width:768px) {
 	#nav {
 		position: -webkit-sticky;
@@ -281,19 +265,6 @@ body {
 	}
 }
 
-.footer-text-1 {
-	font-family: Nunito Sans Regular;
-	font-size: 16px
-}
-
-.footer-text-2 {
-	font-family: Nunito Sans Light;
-	font-size: 15px
-}
-
-.chart1-em {
-	width: 100%
-}
 
 #e1,
 #e2 {
@@ -301,11 +272,6 @@ body {
 	cursor: pointer
 }
 
-.chart1-app,
-.chart1-co,
-.chart1-us {
-	width: 100%
-}
 
 .kpi-title {
 	font-size: 16px;
@@ -373,17 +339,6 @@ body {
 	cursor: pointer
 }
 
-@media (min-width:1200px) and (max-width:1600px) {
-	.db-chart>.col-lg-6 {
-		padding-right: 0
-	}
-}
-
-@media (max-width:992px) {
-	.db-chart>.col-lg-6 {
-		width: 100%!important
-	}
-}
 
 @media (max-width:768px) {
 	#content-body {
@@ -392,16 +347,7 @@ body {
 	.left-options {
 		margin-top: 40px
 	}
-	#em-chart-container,
-	#us-chart-container {
-		width: 950px
-	}
-	.res-chart {
-		overflow-x: auto
-	}
-	.res-chart--parent {
-		overflow-x: hidden
-	}
+
 	::-webkit-scrollbar {
 		-webkit-appearance: none
 	}
@@ -443,4 +389,72 @@ body {
   text-transform: uppercase;
 }
 
-/*# sourceMappingURL=main.72e3962d.css.map*/
+img.dashboardImage {
+  height: 20%;
+  width: 20%;
+}
+
+.project-dropdown {
+	font-size: 16px;
+	font-family: Nunito Sans Light
+}
+
+.custom-text-1 {
+	font-family: Nunito Sans Regular;
+	font-size: 16px
+}
+
+.custom-text-2 {
+	font-family: Nunito Sans Light;
+	font-size: 13px
+}
+
+.custom-text-3 {
+	font-family: Nunito Sans Light;
+	font-size: 12px
+}
+
+.paragraph1 {
+				border: 0;
+				padding: 0;
+				margin: 0;
+			
+			
+				font-family: Helvetica, Arial, sans-serif;
+			
+				color: #ffffff;	
+			
+				font-size: 20px;	
+				
+				font-weight: normal;	
+			
+				text-decoration: none;	
+				
+				letter-spacing: 0em;
+			
+					line-height: 1.4;
+				
+			}
+
+
+.paragraph2 {
+				border: 0;
+				padding: 0;
+				margin: 0;
+			
+			
+				font-family: Helvetica, Arial, sans-serif;
+			
+				color: yellow;	
+			
+				font-size: 16px;	
+				
+				font-weight: normal;	
+			
+				text-decoration: none;	
+				
+				letter-spacing: 0em;
+				
+					line-height: 1em;
+				
+			}

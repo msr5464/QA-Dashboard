@@ -41,7 +41,7 @@
           array_push($jsonArray, $jsonArrayItem);
         }
       break;
-      case 'getResultsData_Last10_Project':
+      case 'getResultsData_Last7_Project':
         if( !is_array($_GET['arguments']) || (count($_GET['arguments']) < 2) )
         {
           $jsonArray['error'] = 'Error in passed arguments!';
@@ -71,11 +71,11 @@
           $jsonArrayItem = array();
 
           
-          $jsonArrayItem['label'] = "Failed";
+          $jsonArrayItem['label'] = "Fail Percentage";
           $jsonArrayItem['value'] = 100 - $row['percentage'];
           array_push($jsonArraySubSet1, $jsonArrayItem);
 
-          $jsonArrayItem['label'] = "Passed";
+          $jsonArrayItem['label'] = "Pass Percentage";
           $jsonArrayItem['value'] = $row['percentage'];
           array_push($jsonArraySubSet1, $jsonArrayItem);
 
@@ -379,7 +379,7 @@ case 'getTotalCasesTestrailData_Project_Line':
         $jsonArraySubSet5 = array();
         $jsonArraySubSet6 = array();
         $jsonArraySubSet7 = array();
-        $sql = "SELECT  DATE(createdAt) as createdAt, max(totalCases) as totalCases, max(totalAutomationCases) as totalAutomationCases, max(p0Cases) as p0Cases, max(p1Cases) as p1Cases, max(p2Cases) as p2Cases FROM `testrail` WHERE projectName='".$_GET['arguments'][0]."' and createdAt>=DATE_SUB(now() , INTERVAL ".$_GET['arguments'][1]." DAY) GROUP BY DATE(createdAt);";
+        $sql = "SELECT  DATE(createdAt) as createdAt, max(totalCases) as totalCases, max(totalAutomationCases) as totalAutomationCases, max(p0Cases) as p0Cases, max(p1Cases) as p1Cases, max(p2Cases) as p2Cases FROM `testrail` WHERE projectName='".$_GET['arguments'][0]."' and createdAt>=DATE_SUB(now() , INTERVAL ".$_GET['arguments'][1]."+1 DAY) GROUP BY DATE(createdAt);";
 
         foreach ($dbo->query($sql) as $row) 
         {

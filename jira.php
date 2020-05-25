@@ -39,24 +39,19 @@
                      </div>
                      <nav class="bd-links collapse" id="bd-docs-nav">
                         <ul class="left-options">
-                           <li class="left-option" id="">
-                              <a href="/">
-                              Dashboard
-                              </a>
-                           </li>
-                           <li class="left-option" id="">
+                           <li class="left-option" id="results">
                               <a href="results.php">
-                              Results
+                              Thanos Results
                               </a>
                            </li>
-                           <li class="left-option" id="">
+                           <li class="left-option" id="testrail">
                               <a href="testrail.php">
-                              Testrail
+                              Testrail Numbers
                               </a>
                            </li>
-                           <li class="left-option active" id="">
+                           <li class="left-option active" id="jira">
                               <a href="jira.php">
-                              Jira
+                              Bug Metrics
                               </a>
                            </li>
                         </ul>
@@ -79,7 +74,7 @@
                         </div>
                         <div class="col-md-5 text-right date-indicator">
                            <label class="handLink" id="projectName"><?php echo $_POST["projectName"]; ?></label>
-                           <div id="selectProject">
+                           <div id="selectProject" class="project-dropdown">
                               <form name="testform" method="POST" action="jira.php">
                                  <?php 
                                     require "db_config.php";
@@ -104,7 +99,7 @@
                               <div class="chart-title" id="text2">Total Tickets Tested</div>
                               <div id="chart1" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container1" style="color:orange"><b>Warning!! Project not selected!</b></label>
+                                    <label class="custom-text-2" id="gauge-chart-container1" style="color:orange">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -114,7 +109,7 @@
                               <div class="chart-title" id="text2">Total Bugs Found</div>
                               <div id="chart2" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container2" style="color:orange"><b>Warning!! Project not selected!</b></label>
+                                    <label class="custom-text-2" id="gauge-chart-container2" style="color:orange">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -124,7 +119,7 @@
                               <div class="chart-title" id="text2">Only Production Bugs</div>
                               <div id="chart3" class="chart">
                                  <center>
-                                    <label id="gauge-chart-container3" style="color:orange"><b>Warning!! Project not selected!</b></label>
+                                    <label class="custom-text-2" id="gauge-chart-container3" style="color:orange">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -133,19 +128,8 @@
                      <div id="chart-container">
                         <center>
                            <div id="warning">
-                              <label style="color:yellow"><b>Currently showing graphs combining all the projects together!</b></label><br>
-                              <label style="color:orange"><b>For any project specific data points, first select any project from the above shown dropdown!</b></label>
-                           </div>
-                           <div class="projectChart">
-                              <label id="pie-chart-container1">Chart is loading here...</label>
-                           </div>
-                           <div class="projectChart">
-                              <br>
-                              <label id="line-chart-container1">Chart is loading here...</label>
-                           </div>
-                           <div class="projectChart">
-                              <br>
-                              <label id="line-chart-container2">Chart is loading here...</label>
+                              <label class="paragraph1" style="color:yellow">Currently showing graphs combining all the projects together!</label><br>
+                              <label class="paragraph2" style="color:orange">For any project specific data points, first select any project from the above shown dropdown!</label>
                            </div>
                            <div class="defaultChart">
                               <br>
@@ -163,14 +147,26 @@
                               <br>
                               <label id="column-chart-container4">Chart is loading here...</label>
                            </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="pie-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="line-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="line-chart-container2">Chart is loading here...</label>
+                           </div>
                         </center>
                      </div>
                      <div class="row">
                         <div id="footer" class="col-md-12 pb-3">
                            <center>
                               <br>
-                              <span class="footer-text-3">Note: </span>
-                              <span class="footer-text-3">This website is created by Mukesh Singh Rajput to track the day to day QA Activities within the organisation </span>
+                              <span class="custom-text-3">Note: </span>
+                              <span class="custom-text-3">This website is created by Mukesh Singh Rajput to track the day to day QA Activities within the organisation </span>
                            </center>
                         </div>
                      </div>

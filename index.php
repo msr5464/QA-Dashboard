@@ -38,24 +38,19 @@
                      </div>
                      <nav class="bd-links collapse" id="bd-docs-nav">
                         <ul class="left-options">
-                           <li class="left-option active" id="">
-                              <a href="/">
-                              Dashboard
-                              </a>
-                           </li>
-                           <li class="left-option" id="">
+                           <li class="left-option" id="results">
                               <a href="results.php">
-                              Results
+                              Thanos Results
                               </a>
                            </li>
-                           <li class="left-option" id="">
+                           <li class="left-option" id="testrail">
                               <a href="testrail.php">
-                              Testrail
+                              Testrail Numbers
                               </a>
                            </li>
-                           <li class="left-option" id="">
+                           <li class="left-option" id="jira">
                               <a href="jira.php">
-                              Jira
+                              Bug Metrics
                               </a>
                            </li>
                         </ul>
@@ -69,25 +64,19 @@
                      </div>
                      <div class="row mt-3">
                         <div class="col-md-7">
-                           <ul class="buttonwrapper">
-                              <li id="today" class="filter active"><label id="weeklyData">WEEKLY</label></li>
-                              <li id="month" class="filter"><label id="monthlyData">MONTHLY</label></li>
-                              <li id="year" class="filter"><label id="quarterlyData">QUARTERLY</label></li>
-                              <li id="year" class="filter"><label id="yearlyData">YEARLY</label></li>
-                           </ul>
                         </div>
                         <div class="col-md-5 text-right date-indicator" id="date">THANOS</div>
                      </div>
                      <div class="row mt-3 db-chart">
                         <div id="parent1" class="col-lg-6 col-xl-4">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text1">RESULTS PROJECT</div>
-                              <div id="chart1" class="chart">
+                              <div class="chart-title" id="text2">FOR THANOS DATA</div>
+                              <div id="chart1" class="project-dropdown">
                                  <form name="testform" method="POST" action="results.php">
                                     <?php 
                                        require "db_config.php";
                                        echo "<br><center><select name='projectName' id='projectName'>
-                                       <option value=''>Choose your thanos project</option>";
+                                       <option value=''>Choose your project</option>";
                                        
                                        $sql = "select projectName from results group by projectName"; 
                                        foreach ($dbo->query($sql) as $row) 
@@ -106,13 +95,13 @@
                         </div>
                         <div id="parent2" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">TESTRAIL PROJECT</div>
-                              <div id="chart2" class="chart">
+                              <div class="chart-title" id="text2">FOR TESTRAIL DATA</div>
+                              <div id="chart2" class="project-dropdown">
                                  <form name="testform" method="POST" action="testrail.php">
                                     <?php 
                                        require "db_config.php";
                                        echo "<br><center><select name='projectName' id='projectName'>
-                                       <option value=''>Choose your testrail project</option>";
+                                       <option value=''>Choose your project</option>";
                                        
                                        $sql = "select projectName from testrail group by projectName"; 
                                        foreach ($dbo->query($sql) as $row) 
@@ -131,13 +120,13 @@
                         </div>
                         <div id="parent3" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text3">JIRA PROJECT</div>
-                              <div id="chart3" class="chart">
+                              <div class="chart-title" id="text3">FOR JIRA DATA</div>
+                              <div id="chart3" class="project-dropdown">
                                  <form name="testform" method="POST" action="jira.php">
                                     <?php 
                                        require "db_config.php";
                                        echo "<br><center><select name='projectName' id='projectName'>
-                                       <option value=''>Choose your jira project</option>";
+                                       <option value=''>Choose your project</option>";
                                        
                                        $sql = "select projectName from jira group by projectName"; 
                                        foreach ($dbo->query($sql) as $row) 
@@ -157,29 +146,22 @@
                      </div>
                      <div id="chart-container">
                         <center>
-                           <label id="column-chart-container1">Chart is loading here...</label>
+                              <p class="paragraph1">This dashboard helps to track the overall QA progress at once centralised place!
+                              </p>
+                              <br>
+                              <p class="paragraph2">To fetch the numbers/metrics, please select your respective project!
+                              </p>
+                           
                            <br><br>
-                           <label id="column-chart-container2">Chart is loading here...</label>
-                           <br><br>
-                           <label id="column-chart-container3">Chart is loading here...</label>
-                           <br><br>
-                           <label id="column-chart-container4">Chart is loading here...</label>
-                           <br><br>
-                           <label id="column-chart-container5">Chart is loading here...</label>
-                           <br><br>
-                           <label id="column-chart-container6">Chart is loading here...</label>
-                           <br><br>
-                           <label id="column-chart-container7">Chart is loading here...</label>
-                           <br><br>
-                           <label id="column-chart-container8">Chart is loading here...</label>
+                           <img class="dashboardImage" src="assets/dashboard.svg">
                         </center>
                      </div>
                      <div class="row">
                         <div class="col-md-12 pb-3">
                            <center>
                               <br>
-                              <span class="footer-text-3">Note: </span>
-                              <span class="footer-text-3">This website is created by Mukesh Singh Rajput to track the day to day QA Activities within the organisation </span>
+                              <span class="custom-text-3">Note: </span>
+                              <span class="custom-text-3">This website is created by Mukesh Singh Rajput to track the day to day QA Activities within the organisation </span>
                            </center>
                         </div>
                      </div>

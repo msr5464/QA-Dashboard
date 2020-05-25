@@ -42,22 +42,93 @@ function validateAndExecute(timeFilter) {
     } else {
         showDefaultCharts(timeFilter);
         $("#projectName").hide();
-        //$("#footer").hide();
         $(".projectChart").hide();
     }
 }
 
 function showProjectCharts(projectName, timeFilter) {
     generateGaugeData(projectName, timeFilter);
-    fetchLastTenResults(projectName, timeFilter);
+    fetchLastSevenResults(projectName, timeFilter);
     fetchAvgPercentageData(projectName, timeFilter);
     fetchGroupWiseData(projectName, timeFilter);
-    //showDefaultCharts(timeFilter);
 }
 
 function showDefaultCharts(timeFilter) {
-
+    fetchResultsData_Production(timeFilter);
+    fetchResultsData_Staging(timeFilter);
 }
+
+function fetchResultsData_Production(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {
+            functionname: 'getLatestResultsData_Production',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
+            var chartProperties = {
+                "caption": "Thanos - Average Production Percentage for last " + timeFilter + " days [All Projects]",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "placevaluesinside": "1",
+                "rotatevalues": "0",
+                "showvalues": "1",
+                "plottooltext": "$label: $dataValue%",
+                "theme": "zune"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column3d',
+                renderAt: 'column-chart-container1',
+                width: '96%',
+                height: '350',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchResultsData_Staging(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {
+            functionname: 'getLatestResultsData_Staging',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
+            var chartProperties = {
+                "caption": "Thanos - Average Staging Percentage for last " + timeFilter + " days [All Projects]",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "placevaluesinside": "1",
+                "rotatevalues": "0",
+                "showvalues": "1",
+                "plottooltext": "$label: $dataValue%",
+                "theme": "zune"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column3d',
+                renderAt: 'column-chart-container2',
+                width: '96%',
+                height: '350',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
 
 function generateGaugeData(projectName, timeFilter) {
     $.ajax({
@@ -83,6 +154,7 @@ function generateGaugeData(projectName, timeFilter) {
             }
 
             var chartProperties = {
+                "plottooltext": "$label: $dataValue%",
                 "showBorder": "0",
                 "captionfontcolor": "#686980",
                 "captionfontsize": "16",
@@ -95,11 +167,11 @@ function generateGaugeData(projectName, timeFilter) {
                 "bgColor": "#1D1B41",
                 "bgAlpha": "0",
                 "canvasBgAlpha": "0",
-                "doughnutRadius": "75",
-                "pieRadius": "90",
+                "doughnutRadius": "57",
+                "pieRadius": "70",
                 "enableSlicing": "0",
                 "plotBorderAlpha": "0",
-                "showToolTip": "0",
+                "showToolTip": "1",
                 "baseFontSize": "14",
                 "logoURL": "shield.svg",
                 "logoScale": "4",
@@ -119,8 +191,8 @@ function generateGaugeData(projectName, timeFilter) {
             apiChart1 = new FusionCharts({
                 type: 'doughnut2d',
                 renderAt: 'gauge-chart-container1',
-                width: '350',
-                height: '200',
+                width: '88%',
+                height: '180',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -141,8 +213,8 @@ function generateGaugeData(projectName, timeFilter) {
             apiChart2 = new FusionCharts({
                 type: 'doughnut2d',
                 renderAt: 'gauge-chart-container2',
-                width: '350',
-                height: '200',
+                width: '88%',
+                height: '180',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -163,8 +235,8 @@ function generateGaugeData(projectName, timeFilter) {
             apiChart3 = new FusionCharts({
                 type: 'doughnut2d',
                 renderAt: 'gauge-chart-container3',
-                width: '350',
-                height: '200',
+                width: '88%',
+                height: '180',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -185,12 +257,12 @@ function generateGaugeData(projectName, timeFilter) {
     });
 };
 
-function fetchLastTenResults(projectName, timeFilter) {
+function fetchLastSevenResults(projectName, timeFilter) {
     $.ajax({
         url: 'data_generator.php',
         type: 'GET',
         data: {
-            functionname: 'getResultsData_Last10_Project',
+            functionname: 'getResultsData_Last7_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
@@ -200,13 +272,13 @@ function fetchLastTenResults(projectName, timeFilter) {
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
                 "showvalues": "1",
-                "plottooltext": "$label - $dataValue%",
+                "plottooltext": "$label: $dataValue%",
                 "theme": "ocean"
             };
 
             apiChart = new FusionCharts({
                 type: 'column3d',
-                renderAt: 'column-chart-container1',
+                renderAt: 'column-chart-container3',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',
@@ -222,6 +294,7 @@ function fetchLastTenResults(projectName, timeFilter) {
 
                         var getClickedMessage = function (categoryLabel, displayValue) {
                             var temp = "";
+                            categoryLabel = categoryLabel.substring(categoryLabel.lastIndexOf("\n")+1);
                             if (categoryLabel.includes("Golabs")) {
                                 temp = categoryLabel.replace("Golabs-", "");
                             } else {

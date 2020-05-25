@@ -42,7 +42,6 @@ function validateAndExecute(timeFilter) {
     } else {
         showDefaultCharts(timeFilter);
         $("#projectName").hide();
-        //$("#footer").hide();
         $(".projectChart").hide();
     }
 }
@@ -52,13 +51,96 @@ function showProjectCharts(projectName, timeFilter) {
     fetchPieChartData(projectName, timeFilter);
     fetchJiraData_AllPercentages_Project(projectName, timeFilter);
     fetchJiraData_AllNumbers_Project(projectName, timeFilter);
-
-    //showDefaultCharts(timeFilter);
 }
 
 function showDefaultCharts(timeFilter) {
     fetchJiraData_TotalBugs_All(timeFilter);
+    fetchJiraData_BugPercentage(timeFilter);
 }
+
+function fetchJiraData_TotalBugs_All(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {functionname: 'getJiraData_TotalBugs_All', arguments: [timeFilter]},
+        success: function(result) 
+        {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = 
+            {
+                "caption": "Total Bugs found in last " + timeFilter + " days [All Projects]",
+                "plottooltext": "$seriesName: $dataValue",
+                "yAxisName": "Number of Bugs",
+                "divlineColor": "#999999",
+                "divLineDashed": "1",
+                "theme": "fusion",
+                "showValues": "1",
+                "showsum": "0"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'stackedcolumn2dline',
+                renderAt: 'column-chart-container1',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchJiraData_BugPercentage(timeFilter) {
+    $.ajax({
+        url: 'data_generator.php',
+        type: 'GET',
+        data: {functionname: 'getJiraData_BugPercentage_All', arguments: [timeFilter]},
+        success: function(result) 
+        {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = 
+            {
+                "caption": "Overall Bug Percentage for 2020 [All Projects]",
+                "plottooltext": "$seriesName - $dataValue%",
+                "yAxisName": "Percentage",
+                "rotatevalues": "0",
+                "theme": "zune",
+                "showValues":"1"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'mscombi2d',
+                renderAt: 'column-chart-container2',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
 
 function generateGaugeData(projectName, timeFilter) {
     $.ajax({
@@ -192,49 +274,6 @@ function fetchJiraData_AllNumbers_Project(projectName, timeFilter) {
             apiChart = new FusionCharts({
                 type: 'msline',
                 renderAt: 'line-chart-container2',
-                width: '96%',
-                height: '400',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "dataset": datasetData,
-                    "categories": categoriesData
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchJiraData_TotalBugs_All(timeFilter) {
-    $.ajax({
-        url: 'data_generator.php',
-        type: 'GET',
-        data: {functionname: 'getJiraData_TotalBugs_All', arguments: [timeFilter]},
-        success: function(result) 
-        {
-            $.each(result, function (key, value) {
-                if (key === "categories")
-                    categoriesData = value;
-                if (key === "dataset")
-                    datasetData = value;
-            });
-
-            var chartProperties = 
-            {
-                "caption": "Total Bugs found in last " + timeFilter + " days [All Projects]",
-                "plottooltext": "$seriesName: $dataValue",
-                "yAxisName": "Number of Bugs",
-                "divlineColor": "#999999",
-                "divLineDashed": "1",
-                "theme": "fusion",
-                "showValues": "1",
-                "showsum": "0"
-            };
-
-            apiChart = new FusionCharts({
-                type: 'stackedcolumn2dline',
-                renderAt: 'column-chart-container1',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',
