@@ -1,6 +1,6 @@
 <?php
   header('Content-type: application/json');
-  require "db_config.php";
+  require "db-config.php";
   
   $jsonArray = array();
   if (!isset($_GET['functionname'])) 

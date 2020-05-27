@@ -1,14 +1,16 @@
 var defaultFilter = "30";
+var currentYear = "2020";
 var projectName = 0;
 var backend = "results-data.php";
-$(function () {
-    validateAndExecute(defaultFilter);
+
+$(function () {    
+    activateFilter();
 });
 
 $(document).ready(function () {
     $("#projectName").click(function () {
         $("#selectProject").show();
-        showDefaultCharts(defaultFilter);
+        showDefaultCharts(getFilter());
         $("#projectName").hide();
     });
 
@@ -18,43 +20,91 @@ $(document).ready(function () {
     });
 
     $("#weeklyData").click(function(){
-        validateAndExecute("7");
+        saveFilter("7");
+        validateAndExecute(getFilter());
     });
 
     $("#monthlyData").click(function(){
-        validateAndExecute("30");
+        saveFilter("30");
+        validateAndExecute(getFilter());
     });
 
     $("#quarterlyData").click(function(){
-        validateAndExecute("90");
+        saveFilter("90");
+        validateAndExecute(getFilter());
     });
 
     $("#yearlyData").click(function(){
-        validateAndExecute("365");
+        saveFilter("365");
+        validateAndExecute(getFilter());
     });
 });
+
+function activateFilter() {
+    var currentFilter = getFilter();
+    if(!currentFilter) {
+        saveFilter(defaultFilter);
+        currentFilter = defaultFilter;
+    }
+    switch(currentFilter) {
+        case '7':
+        document.getElementById("week").classList.add("active");
+        break;
+        case '30':
+        document.getElementById("month").classList.add("active");
+        break;
+        case '90':
+        document.getElementById("quarter").classList.add("active");
+        break;
+        case '365':
+        document.getElementById("year").classList.add("active");
+        break;
+    }
+    validateAndExecute(currentFilter);
+}
+
+function saveFilter(value) {
+    localStorage.setItem("appiledFilter", value);
+}
+
+function getFilter() {
+    return localStorage.getItem("appiledFilter");
+}
+
+function hideProjectCharts() {
+    $(".defaultChart").show();
+    $("#projectName").hide();
+    $(".projectChart").hide();
+    $("#warning").show();
+    $("#selectProject").show();
+    $("#projectName").html("");
+    $(".gauge").html("Project not selected.<br>No data to display!");
+}
+
+function hideDefaultCharts() {
+    $("#selectProject").hide();
+    $("#warning").hide();
+    $(".defaultChart").hide();
+}
 
 function validateAndExecute(timeFilter) {
     projectName = $("#projectName").html();
     if (projectName.length != 0) {
-        $("#selectProject").hide();
-        $("#warning").hide();
         showProjectCharts(projectName, timeFilter);
-        $(".defaultChart").hide();
     } else {
         showDefaultCharts(timeFilter);
-        $("#projectName").hide();
-        $(".projectChart").hide();
     }
 }
 
 function showDefaultCharts(timeFilter) {
+    hideProjectCharts();
     fetchAvgPercentageProd_ColumnChart(timeFilter);
     fetchAvgPercentageStg_ColumnChart(timeFilter);
     fetchAvgExecutionTimeStg_ColumnChart(timeFilter);
 }
 
 function showProjectCharts(projectName, timeFilter) {
+    hideDefaultCharts();
     fetchAvgPercentage_GaugeChart(projectName, timeFilter);
     fetchLastSevenResults_ColumnChart(projectName, timeFilter);
     fetchAvgDailyPercentage_LineChart(projectName, timeFilter);
@@ -229,7 +279,7 @@ function fetchAvgPercentage_GaugeChart(projectName, timeFilter) {
                 type: 'doughnut2d',
                 renderAt: 'gauge-chart-container1',
                 width: '88%',
-                height: '180',
+                height: '160',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -251,7 +301,7 @@ function fetchAvgPercentage_GaugeChart(projectName, timeFilter) {
                 type: 'doughnut2d',
                 renderAt: 'gauge-chart-container2',
                 width: '88%',
-                height: '180',
+                height: '160',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -273,7 +323,7 @@ function fetchAvgPercentage_GaugeChart(projectName, timeFilter) {
                 type: 'doughnut2d',
                 renderAt: 'gauge-chart-container3',
                 width: '88%',
-                height: '180',
+                height: '160',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,

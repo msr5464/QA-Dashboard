@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
       <meta name="theme-color" content="#000000">
       <link rel="stylesheet" href="css/bootstrap.min.css">
-      <link rel="stylesheet" href="css/main_style.css">
+      <link rel="stylesheet" href="css/main-style.css">
 
    </head>
    <body data-gr-c-s-loaded="true">
@@ -68,7 +68,7 @@
                               <div id="chart1" class="project-dropdown">
                                  <form name="testform" method="POST" action="results.php">
                                     <?php 
-                                       require "db_config.php";
+                                       require "db-config.php";
                                        echo "<br><center><select name='projectName' id='projectName'>
                                        <option value=''>Choose your project</option>";
                                        
@@ -93,7 +93,7 @@
                               <div id="chart2" class="project-dropdown">
                                  <form name="testform" method="POST" action="testrail.php">
                                     <?php 
-                                       require "db_config.php";
+                                       require "db-config.php";
                                        echo "<br><center><select name='projectName' id='projectName'>
                                        <option value=''>Choose your project</option>";
                                        
@@ -118,7 +118,7 @@
                               <div id="chart3" class="project-dropdown">
                                  <form name="testform" method="POST" action="jira.php">
                                     <?php 
-                                       require "db_config.php";
+                                       require "db-config.php";
                                        echo "<br><center><select name='projectName' id='projectName'>
                                        <option value=''>Choose your project</option>";
                                        

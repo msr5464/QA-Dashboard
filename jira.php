@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
       <meta name="theme-color" content="#000000">
       <link rel="stylesheet" href="css/bootstrap.min.css">
-      <link rel="stylesheet" href="css/main_style.css">
+      <link rel="stylesheet" href="css/main-style.css">
       <script src="js/jquery-2.1.4.js"></script>
       <script src="js/fusioncharts.js"></script>
       <script src="js/fusioncharts.charts.js"></script>
@@ -67,7 +67,7 @@
                         <div class="col-md-7">
                            <ul class="buttonwrapper">
                               <li id="week" class="filter"><label id="weeklyData">WEEKLY</label></li>
-                              <li id="month" class="filter active"><label id="monthlyData">MONTHLY</label></li>
+                              <li id="month" class="filter"><label id="monthlyData">MONTHLY</label></li>
                               <li id="quarter" class="filter"><label id="quarterlyData">QUARTERLY</label></li>
                               <li id="year" class="filter"><label id="yearlyData">YEARLY</label></li>
                            </ul>
@@ -77,7 +77,7 @@
                            <div id="selectProject" class="project-dropdown">
                               <form name="testform" method="POST" action="jira.php">
                                  <?php 
-                                    require "db_config.php";
+                                    require "db-config.php";
                                     echo "<select name='projectName' id='projectName'>
                                     <option value=''>Choose your project</option>";
                                     
@@ -99,7 +99,7 @@
                               <div class="chart-title" id="text2">Total Tickets Tested</div>
                               <div id="chart1" class="chart">
                                  <center>
-                                    <label class="custom-text-2" id="gauge-chart-container1">Project not selected.<br>No data to display!</label>
+                                    <label class="gauge custom-text-2" id="gauge-chart-container1">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -109,7 +109,7 @@
                               <div class="chart-title" id="text2">Total Bugs Found</div>
                               <div id="chart2" class="chart">
                                  <center>
-                                    <label class="custom-text-2" id="gauge-chart-container2">Project not selected.<br>No data to display!</label>
+                                    <label class="gauge custom-text-2" id="gauge-chart-container2">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -119,7 +119,7 @@
                               <div class="chart-title" id="text2">Only Production Bugs</div>
                               <div id="chart3" class="chart">
                                  <center>
-                                    <label class="custom-text-2" id="gauge-chart-container3">Project not selected.<br>No data to display!</label>
+                                    <label class="gauge custom-text-2" id="gauge-chart-container3">Project not selected.<br>No data to display!</label>
                                  </center>
                               </div>
                            </div>
@@ -138,14 +138,6 @@
                            <div class="defaultChart">
                               <br>
                               <label id="column-chart-container2">Chart is loading here...</label>
-                           </div>
-                           <div class="defaultChart">
-                              <br>
-                              <label id="column-chart-container3">Chart is loading here...</label>
-                           </div>
-                           <div class="defaultChart">
-                              <br>
-                              <label id="column-chart-container4">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
                               <br>

@@ -1,6 +1,6 @@
 <?php
   header('Content-type: application/json');
-  require "db_config.php";
+  require "db-config.php";
   
   $jsonArray = array();
   if (!isset($_GET['functionname'])) 
@@ -23,7 +23,7 @@
         $jsonArraySubSet1 = array();
         $jsonArraySubSet2 = array();
         $jsonArraySubSet3 = array();
-        $sql = "SELECT a.projectName as projectName, a.p0CoveragePerc as newP0CoveragePerc,b.p0CoveragePerc as oldP0CoveragePerc FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][0]." DAY) and (a.p0CoveragePerc > b.p0CoveragePerc or a.p0CoveragePerc < b.p0CoveragePerc) group by projectName;";
+        $sql = "SELECT a.projectName as projectName, a.p0CoveragePerc as newP0CoveragePerc,b.p0CoveragePerc as oldP0CoveragePerc FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][0]." + 1 DAY) and (a.p0CoveragePerc > b.p0CoveragePerc or a.p0CoveragePerc < b.p0CoveragePerc) group by projectName;";
 
         foreach ($dbo->query($sql) as $row) 
         {
@@ -69,7 +69,7 @@
         $jsonArraySubSet1 = array();
         $jsonArraySubSet2 = array();
         $jsonArraySubSet3 = array();
-        $sql = "SELECT a.projectName as projectName, a.p1CoveragePerc as newP1CoveragePerc,b.p1CoveragePerc as oldP1CoveragePerc FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][0]." DAY) and (a.p1CoveragePerc > b.p1CoveragePerc or a.p1CoveragePerc < b.p1CoveragePerc) group by projectName";
+        $sql = "SELECT a.projectName as projectName, a.p1CoveragePerc as newP1CoveragePerc,b.p1CoveragePerc as oldP1CoveragePerc FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][0]." + 1 DAY) and (a.p1CoveragePerc > b.p1CoveragePerc or a.p1CoveragePerc < b.p1CoveragePerc) group by projectName";
 
         foreach ($dbo->query($sql) as $row) 
         {
@@ -115,7 +115,7 @@
         $jsonArraySubSet1 = array();
         $jsonArraySubSet2 = array();
         $jsonArraySubSet3 = array();
-        $sql = "SELECT a.projectName as projectName, a.alreadyAutomated as newAlreadyAutomated,b.alreadyAutomated as oldAlreadyAutomated FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][0]." DAY) and (a.alreadyAutomated > b.alreadyAutomated or a.alreadyAutomated < b.alreadyAutomated) group by projectName;";
+        $sql = "SELECT a.projectName as projectName, a.alreadyAutomated as newAlreadyAutomated,b.alreadyAutomated as oldAlreadyAutomated FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][0]." + 1 DAY) and (a.alreadyAutomated > b.alreadyAutomated or a.alreadyAutomated < b.alreadyAutomated) group by projectName;";
 
         foreach ($dbo->query($sql) as $row) 
         {

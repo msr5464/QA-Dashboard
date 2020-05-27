@@ -1,14 +1,16 @@
 var defaultFilter = "30";
+var currentYear = "2020";
 var projectName = 0;
 var backend = "testrail-data.php";
-$(function () {
-    validateAndExecute(defaultFilter);
+
+$(function () {    
+    activateFilter();
 });
 
 $(document).ready(function () {
     $("#projectName").click(function () {
         $("#selectProject").show();
-        showDefaultCharts(defaultFilter);
+        showDefaultCharts(getFilter());
         $("#projectName").hide();
     });
 
@@ -18,37 +20,84 @@ $(document).ready(function () {
     });
 
     $("#weeklyData").click(function(){
-        validateAndExecute("7");
+        saveFilter("7");
+        validateAndExecute(getFilter());
     });
 
     $("#monthlyData").click(function(){
-        validateAndExecute("30");
+        saveFilter("30");
+        validateAndExecute(getFilter());
     });
 
     $("#quarterlyData").click(function(){
-        validateAndExecute("90");
+        saveFilter("90");
+        validateAndExecute(getFilter());
     });
 
     $("#yearlyData").click(function(){
-        validateAndExecute("365");
+        saveFilter("365");
+        validateAndExecute(getFilter());
     });
 });
+
+function activateFilter() {
+    var currentFilter = getFilter();
+    if(!currentFilter) {
+        saveFilter(defaultFilter);
+        currentFilter = defaultFilter;
+    }
+    switch(currentFilter) {
+        case '7':
+        document.getElementById("week").classList.add("active");
+        break;
+        case '30':
+        document.getElementById("month").classList.add("active");
+        break;
+        case '90':
+        document.getElementById("quarter").classList.add("active");
+        break;
+        case '365':
+        document.getElementById("year").classList.add("active");
+        break;
+    }
+    validateAndExecute(currentFilter);
+}
+
+function saveFilter(value) {
+    localStorage.setItem("appiledFilter", value);
+}
+
+function getFilter() {
+    return localStorage.getItem("appiledFilter");
+}
+
+function hideProjectCharts() {
+    $(".defaultChart").show();
+    $("#projectName").hide();
+    $(".projectChart").hide();
+    $("#warning").show();
+    $("#selectProject").show();
+    $("#projectName").html("");
+    $(".gauge").html("Project not selected.<br>No data to display!");
+}
+
+function hideDefaultCharts() {
+    $("#selectProject").hide();
+    $("#warning").hide();
+    $(".defaultChart").hide();
+}
 
 function validateAndExecute(timeFilter) {
     projectName = $("#projectName").html();
     if (projectName.length != 0) {
-        $("#selectProject").hide();
-        $("#warning").hide();
         showProjectCharts(projectName, timeFilter);
-        $(".defaultChart").hide();
     } else {
         showDefaultCharts(timeFilter);
-        $("#projectName").hide();
-        $(".projectChart").hide();
     }
 }
 
 function showDefaultCharts(timeFilter) {
+    hideProjectCharts();
     fetchP0CoverageChange_ColumnChart(timeFilter);
     fetchP1CoverageChange_ColumnChart(timeFilter);
     fetchAutomatedCountChange_ColumnChart(timeFilter);
@@ -57,9 +106,11 @@ function showDefaultCharts(timeFilter) {
     fetchTotalAutomationCoverage_ColumnChart(timeFilter);
     //fetchTotalP2Coverage_ColumnChart(timeFilter);
     fetchTestcaseDistribution_ColumnChart(timeFilter);
+    
 }
 
 function showProjectCharts(projectName, timeFilter) {
+    hideDefaultCharts();
     fetchCoverageNumbers_GaugeChart(projectName, timeFilter);
     fetchAutomationCasesBreakdown_PieChart(projectName, timeFilter);
     fetchTestcaseCountTrend_LineChart(projectName, timeFilter);
@@ -80,7 +131,7 @@ function fetchP0CoverageChange_ColumnChart(timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "P0 Coverage changes  in last " + timeFilter + " days",
+                "caption": "P0 Coverage changes  in last " + timeFilter + " days [All Projects]",
                 "plottooltext": "$seriesName: $dataValue%",
                 "yAxisName": "Percentage",
                 "divlineColor": "#999999",
@@ -121,7 +172,7 @@ function fetchP1CoverageChange_ColumnChart(timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "P1 Coverage changes in last " + timeFilter + " days",
+                "caption": "P1 Coverage changes in last " + timeFilter + " days [All Projects]",
                 "plottooltext": "$seriesName: $dataValue%",
                 "yAxisName": "Percentage",
                 "divlineColor": "#999999",
@@ -162,7 +213,7 @@ function fetchAutomatedCountChange_ColumnChart(timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Total Testcases automated in last " + timeFilter + " days",
+                "caption": "Total Testcases automated in last " + timeFilter + " days [All Projects]",
                 "plottooltext": "$seriesName: $dataValue cases",
                 "yAxisName": "Testcase Count",
                 "divlineColor": "#999999",
@@ -197,7 +248,7 @@ function fetchTotalP0Coverage_ColumnChart(timeFilter) {
         {
             var chartProperties = 
             {
-                "caption": "Testrail - P0 Automation Coverage [All Projects]",
+                "caption": "P0 Automation Coverage for " + currentYear + " [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
                 "rotatevalues": "3",
@@ -229,7 +280,7 @@ function fetchTotalP1Coverage_ColumnChart(timeFilter) {
         {
             var chartProperties = 
             {
-                "caption": "Testrail - P1 Automation Coverage [All Projects]",
+                "caption": "P1 Automation Coverage for " + currentYear + " [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
                 "rotatevalues": "3",
@@ -261,7 +312,7 @@ function fetchTotalAutomationCoverage_ColumnChart(timeFilter) {
         {
             var chartProperties = 
             {
-                "caption": "Testrail - Full Automation Coverage [All Projects]",
+                "caption": "Full Automation Coverage for " + currentYear + " [All Projects]",
                 "plottooltext": "$label: $dataValue% automated",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
@@ -294,7 +345,7 @@ function fetchTotalP2Coverage_ColumnChart(timeFilter) {
         {
             var chartProperties = 
             {
-                "caption": "Testrail - P2 Automation Coverage [All Projects]",
+                "caption": "P2 Automation Coverage for " + currentYear + " [All Projects]",
                 "plottooltext": "$seriesName: $dataValue%",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
@@ -337,7 +388,7 @@ function fetchTestcaseDistribution_ColumnChart(timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Testrail - Total Testcase Distribution Metrics [All Projects]",
+                "caption": "Total Testcase Distribution Metrics for " + currentYear + " [All Projects]",
                 "placevaluesinside": "0",
                 "showvalues": "0",
                 "plottooltext": "$seriesName: $dataValue",
@@ -399,7 +450,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
                 type: 'angulargauge',
                 renderAt: 'gauge-chart-container1',
                 width: '88%',
-                height: '180',
+                height: '160',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties1,
@@ -444,7 +495,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
                 type: 'angulargauge',
                 renderAt: 'gauge-chart-container2',
                 width: '88%',
-                height: '180',
+                height: '160',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties2,
@@ -489,7 +540,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
                 type: 'angulargauge',
                 renderAt: 'gauge-chart-container3',
                 width: '88%',
-                height: '180',
+                height: '160',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties3,
@@ -533,7 +584,7 @@ function fetchAutomationCasesBreakdown_PieChart(projectName, timeFilter) {
         success: function (result) {
 
             var chartProperties = {
-                "caption": "Automation Cases Breakdown for "+projectName,
+                "caption": projectName + " Automation Cases Breakdown for " + currentYear,
                 "showpercentvalues": "1",
                 "defaultcenterlabel": "Automation Testcases",
                 "aligncaptionwithcanvas": "0",

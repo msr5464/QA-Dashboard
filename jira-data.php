@@ -1,6 +1,6 @@
 <?php
   header('Content-type: application/json');
-  require "db_config.php";
+  require "db-config.php";
   
   $jsonArray = array();
   if (!isset($_GET['functionname'])) 
@@ -24,7 +24,7 @@
         $jsonArraySubSet2 = array();
         $jsonArraySubSet3 = array();
         $sql = "SELECT a.projectName,a.totalTicketsTested as newTotalTicketsTested,b.totalTicketsTested as oldTotalTicketsTested, a.totalBugs as newTotalBugs,b.totalBugs as oldTotalBugs,a.totalProdBugs as newTotalProdBugs,b.totalProdBugs as oldTotalProdBugs FROM jira a JOIN jira b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN jira c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id
- WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][0]." DAY) group by projectName order by (a.totalBugs - b.totalBugs) desc;";
+ WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][0]." + 1 DAY) group by projectName order by (a.totalBugs - b.totalBugs) desc;";
 
         foreach ($dbo->query($sql) as $row) 
         {
@@ -93,7 +93,7 @@
         {
           $jsonArray['error'] = 'Error in passed arguments!';
         }
-        $sql = "SELECT (a.totalTicketsTested-b.totalTicketsTested) as totalTicketsTested,(a.totalBugs-b.totalBugs) as totalBugs,(a.totalProdBugs-b.totalProdBugs) as totalProdBugs FROM jira a JOIN jira b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN jira c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][1]." DAY) and a.projectName='".$_GET['arguments'][0]."' group by a.projectName order by a.projectName desc;";
+        $sql = "SELECT (a.totalTicketsTested-b.totalTicketsTested) as totalTicketsTested,(a.totalBugs-b.totalBugs) as totalBugs,(a.totalProdBugs-b.totalProdBugs) as totalProdBugs FROM jira a JOIN jira b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN jira c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][1]." + 1 DAY) and a.projectName='".$_GET['arguments'][0]."' group by a.projectName order by a.projectName desc;";
 
         foreach ($dbo->query($sql) as $row) 
         {
@@ -110,7 +110,7 @@
         {
           $jsonArray['error'] = 'Error in passed arguments!';
         }
-        $sql = "SELECT (a.totalP0Bugs-b.totalP0Bugs) as totalP0Bugs,(a.totalP1Bugs-b.totalP1Bugs) as totalP1Bugs,(a.totalP2Bugs-b.totalP2Bugs) as totalP2Bugs,(a.totalOtherBugs-b.totalOtherBugs) as totalOtherBugs FROM jira a JOIN jira b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN jira c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][1]." DAY) and a.projectName='".$_GET['arguments'][0]."' group by a.projectName order by a.projectName desc;";
+        $sql = "SELECT (a.totalP0Bugs-b.totalP0Bugs) as totalP0Bugs,(a.totalP1Bugs-b.totalP1Bugs) as totalP1Bugs,(a.totalP2Bugs-b.totalP2Bugs) as totalP2Bugs,(a.totalOtherBugs-b.totalOtherBugs) as totalOtherBugs FROM jira a JOIN jira b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN jira c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL ".$_GET['arguments'][1]." + 1 DAY) and a.projectName='".$_GET['arguments'][0]."' group by a.projectName order by a.projectName desc;";
 
         foreach ($dbo->query($sql) as $row) 
         {
@@ -140,7 +140,7 @@
         $jsonArrayDataSet = array();
         $jsonArraySubSet1 = array();
         $jsonArraySubSet2 = array();
-        $sql = "SELECT DATE(createdAt) as createdAt, max(bugPercentage) as bugPercentage, max(prodBugPercentage) as prodBugPercentage FROM `jira` WHERE projectName='".$_GET['arguments'][0]."' and createdAt>=DATE_SUB(now() , INTERVAL ".$_GET['arguments'][1]." DAY) GROUP BY DATE(createdAt);";
+        $sql = "SELECT DATE(createdAt) as createdAt, max(bugPercentage) as bugPercentage, max(prodBugPercentage) as prodBugPercentage FROM `jira` WHERE projectName='".$_GET['arguments'][0]."' and createdAt>=DATE_SUB(now() , INTERVAL ".$_GET['arguments'][1]." + 1 DAY) GROUP BY DATE(createdAt);";
 
         foreach ($dbo->query($sql) as $row) 
         {
@@ -178,7 +178,7 @@
         $jsonArraySubSet5 = array();
         $jsonArraySubSet6 = array();
         $jsonArraySubSet7 = array();
-        $sql = "SELECT DATE(createdAt) as createdAt, max(totalTicketsTested) as totalTicketsTested, max(totalBugs) as totalBugs, max(totalProdBugs) as totalProdBugs, max(totalP0Bugs) as totalP0Bugs, max(p0ProdBugs) as p0ProdBugs,max(totalP1Bugs) as totalP1Bugs, max(p1ProdBugs) as p1ProdBugs FROM `jira` WHERE projectName='".$_GET['arguments'][0]."' and createdAt>=DATE_SUB(now() , INTERVAL ".$_GET['arguments'][1]." DAY) GROUP BY DATE(createdAt);";
+        $sql = "SELECT DATE(createdAt) as createdAt, max(totalTicketsTested) as totalTicketsTested, max(totalBugs) as totalBugs, max(totalProdBugs) as totalProdBugs, max(totalP0Bugs) as totalP0Bugs, max(p0ProdBugs) as p0ProdBugs,max(totalP1Bugs) as totalP1Bugs, max(p1ProdBugs) as p1ProdBugs FROM `jira` WHERE projectName='".$_GET['arguments'][0]."' and createdAt>=DATE_SUB(now() , INTERVAL ".$_GET['arguments'][1]." + 1 DAY) GROUP BY DATE(createdAt);";
 
         foreach ($dbo->query($sql) as $row) 
         {
