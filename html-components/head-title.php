@@ -12,4 +12,4 @@
 <script src="js/themes/fusioncharts.theme.zune.js"></script>
 <script src="js/themes/fusioncharts.theme.carbon.js"></script>
 <script src="js/themes/fusioncharts.theme.gammel.js"></script>
-<script src="<?php echo $pageName; ?>-chart.js"></script>
+<script src="js/customJs/<?php echo $pageName; ?>-chart.js"></script>
