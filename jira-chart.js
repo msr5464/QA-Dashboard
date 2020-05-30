@@ -1,9 +1,9 @@
 var defaultFilter = "30";
 var currentYear = "2020";
 var projectName = 0;
-var backend = "jira-data.php";
+var backend = "server/jira-data.php";
 
-$(function () {    
+$(function () {
     activateFilter();
 });
 
@@ -19,22 +19,22 @@ $(document).ready(function () {
         $(this).addClass("active");
     });
 
-    $("#weeklyData").click(function(){
+    $("#weeklyData").click(function () {
         saveFilter("7");
         validateAndExecute(getFilter());
     });
 
-    $("#monthlyData").click(function(){
+    $("#monthlyData").click(function () {
         saveFilter("30");
         validateAndExecute(getFilter());
     });
 
-    $("#quarterlyData").click(function(){
+    $("#quarterlyData").click(function () {
         saveFilter("90");
         validateAndExecute(getFilter());
     });
 
-    $("#yearlyData").click(function(){
+    $("#yearlyData").click(function () {
         saveFilter("365");
         validateAndExecute(getFilter());
     });
@@ -42,23 +42,23 @@ $(document).ready(function () {
 
 function activateFilter() {
     var currentFilter = getFilter();
-    if(!currentFilter) {
+    if (!currentFilter) {
         saveFilter(defaultFilter);
         currentFilter = defaultFilter;
     }
-    switch(currentFilter) {
+    switch (currentFilter) {
         case '7':
-        document.getElementById("week").classList.add("active");
-        break;
+            document.getElementById("week").classList.add("active");
+            break;
         case '30':
-        document.getElementById("month").classList.add("active");
-        break;
+            document.getElementById("month").classList.add("active");
+            break;
         case '90':
-        document.getElementById("quarter").classList.add("active");
-        break;
+            document.getElementById("quarter").classList.add("active");
+            break;
         case '365':
-        document.getElementById("year").classList.add("active");
-        break;
+            document.getElementById("year").classList.add("active");
+            break;
     }
     validateAndExecute(currentFilter);
 }
@@ -116,9 +116,11 @@ function fetchTotalBugsFound_ColumnChart(timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
-        data: {functionname: 'getTotalBugsFound', arguments: [timeFilter]},
-        success: function(result) 
-        {
+        data: {
+            functionname: 'getTotalBugsFound',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
             $.each(result, function (key, value) {
                 if (key === "categories")
                     categoriesData = value;
@@ -126,8 +128,7 @@ function fetchTotalBugsFound_ColumnChart(timeFilter) {
                     datasetData = value;
             });
 
-            var chartProperties = 
-            {
+            var chartProperties = {
                 "caption": "Total Bugs found in last " + timeFilter + " days [All Projects]",
                 "plottooltext": "$seriesName: $dataValue",
                 "yAxisName": "Number of Bugs",
@@ -159,9 +160,11 @@ function fetchBugPercentage_ColumnChart(timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
-        data: {functionname: 'getBugPercentage', arguments: [timeFilter]},
-        success: function(result) 
-        {
+        data: {
+            functionname: 'getBugPercentage',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
             $.each(result, function (key, value) {
                 if (key === "categories")
                     categoriesData = value;
@@ -169,14 +172,13 @@ function fetchBugPercentage_ColumnChart(timeFilter) {
                     datasetData = value;
             });
 
-            var chartProperties = 
-            {
+            var chartProperties = {
                 "caption": "Overall Bug Percentage for 2020 [All Projects]",
                 "plottooltext": "$seriesName - $dataValue%",
                 "yAxisName": "Percentage",
                 "rotatevalues": "0",
                 "theme": "zune",
-                "showValues":"1"
+                "showValues": "1"
             };
 
             apiChart = new FusionCharts({
@@ -221,11 +223,9 @@ function fetchTotalTicketsTested_GaugeChart(projectName, timeFilter) {
             document.getElementById("gauge-chart-container1").innerHTML = resultValue1;
             document.getElementById("gauge-chart-container1").classList.remove('custom-text-2');
             document.getElementById("gauge-chart-container1").classList.add('bigFont');
-            
             document.getElementById("gauge-chart-container2").innerHTML = resultValue2;
             document.getElementById("gauge-chart-container2").classList.remove('custom-text-2');
             document.getElementById("gauge-chart-container2").classList.add('bigFont');
-
             document.getElementById("gauge-chart-container3").innerHTML = resultValue3;
             document.getElementById("gauge-chart-container3").classList.remove('custom-text-2');
             document.getElementById("gauge-chart-container3").classList.add('bigFont');
@@ -245,7 +245,7 @@ function fetchBugPriorityBreakdown_PieChart(projectName, timeFilter) {
         success: function (result) {
 
             var chartProperties = {
-                "caption": "Priority wise Bugs Breakdown for last " + timeFilter + " days for "+projectName,
+                "caption": "Priority wise Bugs Breakdown for last " + timeFilter + " days for " + projectName,
                 "showpercentvalues": "1",
                 "defaultcenterlabel": "Bugs Found",
                 "aligncaptionwithcanvas": "0",
@@ -288,7 +288,7 @@ function fetchBugPercentageTrend_ColumnChart(projectName, timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Trend of Bug Percentage for last " + timeFilter + " days for "+projectName,
+                "caption": "Trend of Bug Percentage for last " + timeFilter + " days for " + projectName,
                 "subCaption": "",
                 "plottooltext": "$seriesName - $dataValue%",
                 "yAxisName": "Percentage",
@@ -329,7 +329,7 @@ function fetchBugCountTrend_ColumnChart(projectName, timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Trend of Bug Count for last " + timeFilter + " days for "+projectName,
+                "caption": "Trend of Bug Count for last " + timeFilter + " days for " + projectName,
                 "subCaption": "",
                 "plottooltext": "$seriesName - $dataValue%",
                 "yAxisName": "Percentage",

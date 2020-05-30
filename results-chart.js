@@ -1,9 +1,9 @@
 var defaultFilter = "30";
 var currentYear = "2020";
 var projectName = 0;
-var backend = "results-data.php";
+var backend = "server/results-data.php";
 
-$(function () {    
+$(function () {
     activateFilter();
 });
 
@@ -19,22 +19,22 @@ $(document).ready(function () {
         $(this).addClass("active");
     });
 
-    $("#weeklyData").click(function(){
+    $("#weeklyData").click(function () {
         saveFilter("7");
         validateAndExecute(getFilter());
     });
 
-    $("#monthlyData").click(function(){
+    $("#monthlyData").click(function () {
         saveFilter("30");
         validateAndExecute(getFilter());
     });
 
-    $("#quarterlyData").click(function(){
+    $("#quarterlyData").click(function () {
         saveFilter("90");
         validateAndExecute(getFilter());
     });
 
-    $("#yearlyData").click(function(){
+    $("#yearlyData").click(function () {
         saveFilter("365");
         validateAndExecute(getFilter());
     });
@@ -42,23 +42,23 @@ $(document).ready(function () {
 
 function activateFilter() {
     var currentFilter = getFilter();
-    if(!currentFilter) {
+    if (!currentFilter) {
         saveFilter(defaultFilter);
         currentFilter = defaultFilter;
     }
-    switch(currentFilter) {
+    switch (currentFilter) {
         case '7':
-        document.getElementById("week").classList.add("active");
-        break;
+            document.getElementById("week").classList.add("active");
+            break;
         case '30':
-        document.getElementById("month").classList.add("active");
-        break;
+            document.getElementById("month").classList.add("active");
+            break;
         case '90':
-        document.getElementById("quarter").classList.add("active");
-        break;
+            document.getElementById("quarter").classList.add("active");
+            break;
         case '365':
-        document.getElementById("year").classList.add("active");
-        break;
+            document.getElementById("year").classList.add("active");
+            break;
     }
     validateAndExecute(currentFilter);
 }
@@ -118,7 +118,7 @@ function fetchAvgPercentageProd_ColumnChart(timeFilter) {
         type: 'GET',
         data: {
             functionname: 'getAvgPercentage',
-            arguments: [timeFilter,'Production','production']
+            arguments: [timeFilter, 'Production', 'production']
         },
         success: function (result) {
             var chartProperties = {
@@ -153,7 +153,7 @@ function fetchAvgPercentageStg_ColumnChart(timeFilter) {
         type: 'GET',
         data: {
             functionname: 'getAvgPercentage',
-            arguments: [timeFilter,'Staging','regression']
+            arguments: [timeFilter, 'Staging', 'regression']
         },
         success: function (result) {
             var chartProperties = {
@@ -188,7 +188,7 @@ function fetchAvgExecutionTimeStg_ColumnChart(timeFilter) {
         type: 'GET',
         data: {
             functionname: 'getAvgExecutionTime',
-            arguments: [timeFilter,'Staging','regression']
+            arguments: [timeFilter, 'Staging', 'regression']
         },
         success: function (result) {
             var chartProperties = {
@@ -260,7 +260,7 @@ function fetchAvgPercentage_GaugeChart(projectName, timeFilter) {
                 "plotBorderAlpha": "0",
                 "showToolTip": "1",
                 "baseFontSize": "14",
-                "logoURL": "assets/shield.svg",
+                "logoURL": "images/shield.svg",
                 "logoScale": "4",
                 "logoAlpha": "100",
                 "logoPosition": "TR",
@@ -287,10 +287,9 @@ function fetchAvgPercentage_GaugeChart(projectName, timeFilter) {
                 },
                 "events": {
                     "beforeInitialize": function () {
-                        if(resultValue1)
-                        {
+                        if (resultValue1) {
                             var passPercentage = resultValue1[1].value;
-                            chartProperties.defaultCenterLabel = passPercentage+"%";
+                            chartProperties.defaultCenterLabel = passPercentage + "%";
                         }
                     }
                 }
@@ -309,10 +308,9 @@ function fetchAvgPercentage_GaugeChart(projectName, timeFilter) {
                 },
                 "events": {
                     "beforeInitialize": function () {
-                        if(resultValue2)
-                        {
+                        if (resultValue2) {
                             var passPercentage = resultValue2[1].value;
-                            chartProperties.defaultCenterLabel = passPercentage+"%";
+                            chartProperties.defaultCenterLabel = passPercentage + "%";
                         }
                     }
                 }
@@ -331,10 +329,9 @@ function fetchAvgPercentage_GaugeChart(projectName, timeFilter) {
                 },
                 "events": {
                     "beforeInitialize": function () {
-                        if(resultValue3)
-                        {
+                        if (resultValue3) {
                             var passPercentage = resultValue3[1].value;
-                            chartProperties.defaultCenterLabel = passPercentage+"%";
+                            chartProperties.defaultCenterLabel = passPercentage + "%";
                         }
                     }
                 }
@@ -381,7 +378,7 @@ function fetchLastSevenResults_ColumnChart(projectName, timeFilter) {
 
                         var getClickedMessage = function (categoryLabel, displayValue) {
                             var temp = "";
-                            categoryLabel = categoryLabel.substring(categoryLabel.lastIndexOf("\n")+1);
+                            categoryLabel = categoryLabel.substring(categoryLabel.lastIndexOf("\n") + 1);
                             if (categoryLabel.includes("Golabs")) {
                                 temp = categoryLabel.replace("Golabs-", "");
                             } else {

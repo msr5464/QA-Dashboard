@@ -141,19 +141,19 @@ body {
 }
 
 .left-options li#results:before {
-	background-image: url(../assets/automation.svg);
+	background-image: url(../images/automation.svg);
 	background-repeat: no-repeat;
 	background-size: 24px 24px
 }
 
 .left-options li#testrail:before {
-	background-image: url(../assets/testrail.svg);
+	background-image: url(../images/testrail.svg);
 	background-repeat: no-repeat;
 	background-size: 24px 24px
 }
 
 .left-options li#jira:before {
-	background-image: url(../assets/bug.svg);
+	background-image: url(../images/bug.svg);
 	background-repeat: no-repeat;
 	background-size: 24px 24px
 }
@@ -265,13 +265,11 @@ body {
 	}
 }
 
-
 #e1,
 #e2 {
 	border: none;
 	cursor: pointer
 }
-
 
 .kpi-title {
 	font-size: 16px;
@@ -339,7 +337,6 @@ body {
 	cursor: pointer
 }
 
-
 @media (max-width:768px) {
 	#content-body {
 		padding: 0 15px!important
@@ -347,7 +344,6 @@ body {
 	.left-options {
 		margin-top: 40px
 	}
-
 	::-webkit-scrollbar {
 		-webkit-appearance: none
 	}
@@ -385,13 +381,13 @@ body {
 }
 
 .handLink {
-  cursor:pointer;
-  text-transform: uppercase;
+	cursor: pointer;
+	text-transform: uppercase;
 }
 
 img.dashboardImage {
-  height: 20%;
-  width: 20%;
+	height: 20%;
+	width: 20%;
 }
 
 .project-dropdown {
@@ -407,7 +403,7 @@ img.dashboardImage {
 .custom-text-2 {
 	font-family: Nunito Sans Light;
 	font-size: 13px;
-	color: orange;	
+	color: orange;
 }
 
 .custom-text-3 {
@@ -416,66 +412,40 @@ img.dashboardImage {
 }
 
 .paragraph1 {
-				border: 0;
-				padding: 0;
-				margin: 0;
-			
-			
-				font-family: Helvetica, Arial, sans-serif;
-			
-				color: #ffffff;	
-			
-				font-size: 20px;	
-				
-				font-weight: normal;	
-			
-				text-decoration: none;	
-				
-				letter-spacing: 0em;
-			
-					line-height: 1.4;
-				
-			}
-
+	border: 0;
+	padding: 0;
+	margin: 0;
+	font-family: Helvetica, Arial, sans-serif;
+	color: #ffffff;
+	font-size: 20px;
+	font-weight: normal;
+	text-decoration: none;
+	letter-spacing: 0em;
+	line-height: 1.4;
+}
 
 .paragraph2 {
-				border: 0;
-				padding: 0;
-				margin: 0;
-			
-			
-				font-family: Helvetica, Arial, sans-serif;
-			
-				color: yellow;	
-			
-				font-size: 16px;	
-				
-				font-weight: normal;	
-			
-				text-decoration: none;	
-				
-				letter-spacing: 0em;
-				
-					line-height: 1em;
-				
-			}
+	border: 0;
+	padding: 0;
+	margin: 0;
+	font-family: Helvetica, Arial, sans-serif;
+	color: yellow;
+	font-size: 16px;
+	font-weight: normal;
+	text-decoration: none;
+	letter-spacing: 0em;
+	line-height: 1em;
+}
 
 .bigFont {
-				border: 0;
-				padding: 0;
-				margin: 0;
-				font-family: Helvetica, Arial, sans-serif;
-			
-				color: lightgreen;	
-			
-				font-size: 50px;	
-				
-				font-weight: bold;	
-			
-				text-decoration: all;	
-				
-				letter-spacing: 0em;
-			
-				line-height: 2;
-				
-			}
+	border: 0;
+	padding: 0;
+	margin: 0;
+	font-family: Helvetica, Arial, sans-serif;
+	color: lightgreen;
+	font-size: 50px;
+	font-weight: bold;
+	text-decoration: all;
+	letter-spacing: 0em;
+	line-height: 2;
+}

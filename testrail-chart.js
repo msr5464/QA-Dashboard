@@ -1,9 +1,9 @@
 var defaultFilter = "30";
 var currentYear = "2020";
 var projectName = 0;
-var backend = "testrail-data.php";
+var backend = "server/testrail-data.php";
 
-$(function () {    
+$(function () {
     activateFilter();
 });
 
@@ -19,22 +19,22 @@ $(document).ready(function () {
         $(this).addClass("active");
     });
 
-    $("#weeklyData").click(function(){
+    $("#weeklyData").click(function () {
         saveFilter("7");
         validateAndExecute(getFilter());
     });
 
-    $("#monthlyData").click(function(){
+    $("#monthlyData").click(function () {
         saveFilter("30");
         validateAndExecute(getFilter());
     });
 
-    $("#quarterlyData").click(function(){
+    $("#quarterlyData").click(function () {
         saveFilter("90");
         validateAndExecute(getFilter());
     });
 
-    $("#yearlyData").click(function(){
+    $("#yearlyData").click(function () {
         saveFilter("365");
         validateAndExecute(getFilter());
     });
@@ -42,23 +42,23 @@ $(document).ready(function () {
 
 function activateFilter() {
     var currentFilter = getFilter();
-    if(!currentFilter) {
+    if (!currentFilter) {
         saveFilter(defaultFilter);
         currentFilter = defaultFilter;
     }
-    switch(currentFilter) {
+    switch (currentFilter) {
         case '7':
-        document.getElementById("week").classList.add("active");
-        break;
+            document.getElementById("week").classList.add("active");
+            break;
         case '30':
-        document.getElementById("month").classList.add("active");
-        break;
+            document.getElementById("month").classList.add("active");
+            break;
         case '90':
-        document.getElementById("quarter").classList.add("active");
-        break;
+            document.getElementById("quarter").classList.add("active");
+            break;
         case '365':
-        document.getElementById("year").classList.add("active");
-        break;
+            document.getElementById("year").classList.add("active");
+            break;
     }
     validateAndExecute(currentFilter);
 }
@@ -106,7 +106,7 @@ function showDefaultCharts(timeFilter) {
     fetchTotalAutomationCoverage_ColumnChart(timeFilter);
     //fetchTotalP2Coverage_ColumnChart(timeFilter);
     fetchTestcaseDistribution_ColumnChart(timeFilter);
-    
+
 }
 
 function showProjectCharts(projectName, timeFilter) {
@@ -120,9 +120,11 @@ function fetchP0CoverageChange_ColumnChart(timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
-        data: {functionname: 'getP0CoverageChange', arguments: [timeFilter]},
-        success: function(result) 
-        {
+        data: {
+            functionname: 'getP0CoverageChange',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
             $.each(result, function (key, value) {
                 if (key === "categories")
                     categoriesData = value;
@@ -161,9 +163,11 @@ function fetchP1CoverageChange_ColumnChart(timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
-        data: {functionname: 'getP1CoverageChange', arguments: [timeFilter]},
-        success: function(result) 
-        {
+        data: {
+            functionname: 'getP1CoverageChange',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
             $.each(result, function (key, value) {
                 if (key === "categories")
                     categoriesData = value;
@@ -202,9 +206,11 @@ function fetchAutomatedCountChange_ColumnChart(timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
-        data: {functionname: 'getAutomatedCountChange', arguments: [timeFilter]},
-        success: function(result) 
-        {
+        data: {
+            functionname: 'getAutomatedCountChange',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
             $.each(result, function (key, value) {
                 if (key === "categories")
                     categoriesData = value;
@@ -243,11 +249,11 @@ function fetchTotalP0Coverage_ColumnChart(timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
-        data: {functionname: 'getTotalP0Coverage'},
-        success: function(result) 
-        {
-            var chartProperties = 
-            {
+        data: {
+            functionname: 'getTotalP0Coverage'
+        },
+        success: function (result) {
+            var chartProperties = {
                 "caption": "P0 Automation Coverage for " + currentYear + " [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
@@ -275,11 +281,11 @@ function fetchTotalP1Coverage_ColumnChart(timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
-        data: {functionname: 'getTotalP1Coverage'},
-        success: function(result) 
-        {
-            var chartProperties = 
-            {
+        data: {
+            functionname: 'getTotalP1Coverage'
+        },
+        success: function (result) {
+            var chartProperties = {
                 "caption": "P1 Automation Coverage for " + currentYear + " [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
@@ -307,11 +313,11 @@ function fetchTotalAutomationCoverage_ColumnChart(timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
-        data: {functionname: 'getTotalAutomationCoverage'},
-        success: function(result) 
-        {
-            var chartProperties = 
-            {
+        data: {
+            functionname: 'getTotalAutomationCoverage'
+        },
+        success: function (result) {
+            var chartProperties = {
                 "caption": "Full Automation Coverage for " + currentYear + " [All Projects]",
                 "plottooltext": "$label: $dataValue% automated",
                 "xAxisName": "Project Name",
@@ -340,11 +346,11 @@ function fetchTotalP2Coverage_ColumnChart(timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
-        data: {functionname: 'getTotalP2Coverage'},
-        success: function(result) 
-        {
-            var chartProperties = 
-            {
+        data: {
+            functionname: 'getTotalP2Coverage'
+        },
+        success: function (result) {
+            var chartProperties = {
                 "caption": "P2 Automation Coverage for " + currentYear + " [All Projects]",
                 "plottooltext": "$seriesName: $dataValue%",
                 "xAxisName": "Project Name",
@@ -416,27 +422,26 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
-        data: {functionname: 'getCoverageNumbers_Project', arguments: [projectName, timeFilter]},
-        success: function(result) 
-        {
+        data: {
+            functionname: 'getCoverageNumbers_Project',
+            arguments: [projectName, timeFilter]
+        },
+        success: function (result) {
             var resultValue1 = 0;
             var resultValue2 = 0;
             var resultValue3 = 0;
-            for (i=0;i<result.length;i++)
-            {
-                $.each(result[i], function(key, value)
-                {
-                    if(key==="totalCoverage")
+            for (i = 0; i < result.length; i++) {
+                $.each(result[i], function (key, value) {
+                    if (key === "totalCoverage")
                         resultValue1 = value;
-                    if(key==="P0Coverage")
+                    if (key === "P0Coverage")
                         resultValue2 = value;
-                    if(key==="P1Coverage")
+                    if (key === "P1Coverage")
                         resultValue3 = value;
                 });
             }
 
-            var chartProperties1 = 
-            {
+            var chartProperties1 = {
                 "caption": "",
                 "lowerLimit": "0",
                 "upperLimit": "100",
@@ -454,8 +459,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties1,
-                    "colorRange": 
-                    {
+                    "colorRange": {
                         "color": [{
                             "minValue": "0",
                             "maxValue": "50",
@@ -470,8 +474,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
                             "code": "#62B58F"
                         }]
                     },
-                    "dials": 
-                    {
+                    "dials": {
                         "dial": [{
                             "value": resultValue1
                         }]
@@ -480,8 +483,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
             });
             apiChart1.render();
 
-            var chartProperties2 = 
-            {
+            var chartProperties2 = {
                 "caption": "",
                 "lowerLimit": "0",
                 "upperLimit": "100",
@@ -499,8 +501,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties2,
-                    "colorRange": 
-                    {
+                    "colorRange": {
                         "color": [{
                             "minValue": "0",
                             "maxValue": "50",
@@ -515,8 +516,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
                             "code": "#62B58F"
                         }]
                     },
-                    "dials": 
-                    {
+                    "dials": {
                         "dial": [{
                             "value": resultValue2
                         }]
@@ -525,8 +525,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
             });
             apiChart2.render();
 
-            var chartProperties3 = 
-            {
+            var chartProperties3 = {
                 "caption": "",
                 "lowerLimit": "0",
                 "upperLimit": "100",
@@ -544,8 +543,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties3,
-                    "colorRange": 
-                    {
+                    "colorRange": {
                         "color": [{
                             "minValue": "0",
                             "maxValue": "50",
@@ -560,8 +558,7 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
                             "code": "#62B58F"
                         }]
                     },
-                    "dials": 
-                    {
+                    "dials": {
                         "dial": [{
                             "value": resultValue3
                         }]
@@ -627,7 +624,7 @@ function fetchTestcaseCountTrend_LineChart(projectName, timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Trend of Testcase Count for last " + timeFilter + " days for "+projectName,
+                "caption": "Trend of Testcase Count for last " + timeFilter + " days for " + projectName,
                 "subCaption": "",
                 "plottooltext": "$seriesName - $dataValue",
                 "yAxisName": "Total Testcases",
