@@ -25,3 +25,7 @@ To Start Web Server: `php -S localhost:8282`
 
 ### Bug Metrics Page for one Project:
 ![Bugs Page](screenshots/bugs2.png "Bug Metrics Page for one Project")
+
+
+References:
+This dashboard has been creating by using public services of [Fusion Charts](https://www.fusioncharts.com/). A big Thanks to Fusion Charts team for putting such a wonderful documentation which helped me in swift integration.
