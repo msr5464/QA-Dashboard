@@ -4,10 +4,10 @@ To Start Web Server - `php -S localhost:8282`
 
 
 # Examples1
-[Home Page](examples/index.png)
-[Results Page](examples/results1.png)
-[Testrail Page](examples/testrail1.png)
-[Bugs Page](examples/bugs1.png)
+![Home Page](examples/index.png)
+![Results Page](examples/results1.png)
+![Testrail Page](examples/testrail1.png)
+![Bugs Page](examples/bugs1.png)
 
 
 # Examples2
