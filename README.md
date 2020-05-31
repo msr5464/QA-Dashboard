@@ -3,7 +3,7 @@ To Start Web Server: `php -S localhost:8282`
 
 
 
-# Screenshots
+## Screenshots
 
 ### Home Page of QA Dashboard:
 ![Home Page](screenshots/homePage.png "Home Page")
