@@ -1,4 +1,4 @@
-# QA Dashboard
+# QUALITY DASHBOARD (QA DASHBOARD)
 To Start Web Server: `php -S localhost:8282`
 
 
