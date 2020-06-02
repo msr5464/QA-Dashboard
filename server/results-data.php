@@ -50,12 +50,12 @@ if (!isset($jsonArray['error']))
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
             $counter = 1;
-            $sql = "select buildTag,percentage,Date(createdAt) as createdAt from results where projectName='" . $_GET['arguments'][0] . "' order by id desc limit " . $_GET['arguments'][1];
+            $sql = "select buildTag,resultsLink,percentage,Date(createdAt) as createdAt from results where projectName='" . $_GET['arguments'][0] . "' order by id desc limit " . $_GET['arguments'][1];
 
             foreach ($dbo->query($sql) as $row)
             {
                 $jsonArrayItem = array();
-                $jsonArrayItem['label'] = $row['createdAt'] . "\n" . $row['buildTag'];
+                $jsonArrayItem['label'] = $row['createdAt'] . "\n" . $row['buildTag']. ", link- " .$row['resultsLink'];
                 $jsonArrayItem['value'] = $row['percentage'];
                 array_push($jsonArray, $jsonArrayItem);
             }

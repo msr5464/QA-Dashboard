@@ -350,6 +350,9 @@ function fetchLastSevenResults_ColumnChart(projectName, timeFilter) {
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
+            var linkSeperator = ", link- ";
+            const fullData = JSON.parse(JSON.stringify(result));
+
             var chartProperties = {
                 "caption": "Details of last " + timeFilter + " Automation Builds",
                 "yAxisName": "Percentage",
@@ -366,28 +369,21 @@ function fetchLastSevenResults_ColumnChart(projectName, timeFilter) {
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "data": result
-                },
                 "events": {
+                    "beforeInitialize": function (eventObj, dataObj) {
+                        for (var dataS in Object.entries(result)) {
+                            result.find(v => v.label.toString().includes(linkSeperator)).label = result.find(v => v.label.toString().includes(linkSeperator)).label.toString().split(linkSeperator)[0];
+                        }
+                    },
                     "beforeRender": function (e, d) {
                         var messageBlock = document.createElement('p');
                         messageBlock.style.textAlign = "center";
                         var activatedMessage = 'Click on the plot to access the Results Link';
-
                         var getClickedMessage = function (categoryLabel, displayValue) {
-                            var temp = "";
+                            var fullLabel = fullData.find(v => v.label.toString().includes(categoryLabel)).label;
+                            var resultsLink = fullLabel.split(linkSeperator)[1];
                             categoryLabel = categoryLabel.substring(categoryLabel.lastIndexOf("\n") + 1);
-                            if (categoryLabel.includes("Golabs")) {
-                                temp = categoryLabel.replace("Golabs-", "");
-                            } else {
-                                temp = categoryLabel.replace("Jenkins", projectName);
-                                var position = temp.lastIndexOf("-");
-                                temp = temp.substring(0, position) + "-Automation" + temp.substring(position);
-                            }
-                            var resultsLink = "http://52.221.7.215/" + projectName + "/" + temp + "/html/index.html";
-                            return 'Results Url of <B>"' + categoryLabel + '"</B> - <a style="color:yellow" href="' + resultsLink + '" target="_blank">' + resultsLink + '</a>';
+                            return 'Results Link for <B>"' + categoryLabel + '"</B> - <a style="color:yellow" href="' + resultsLink + '" target="_blank">' + resultsLink + '</a>';
                         };
                         e.data.container.appendChild(messageBlock);
 
@@ -401,7 +397,11 @@ function fetchLastSevenResults_ColumnChart(projectName, timeFilter) {
                         messageBlock.innerText = activatedMessage;
                         e.sender.addEventListener('dataplotclick', dataPlotClickListener);
                     }
-                }
+                },
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                },
             });
 
             apiChart.render();
