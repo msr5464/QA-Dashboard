@@ -58,5 +58,4 @@ A big Thanks to Fusion Charts team for putting such a wonderful documentation wh
 
 
 ### Created By
-Mukesh Singh Rajput, linkedin profile: https://www.linkedin.com/in/mukesh-rajput 
-For any further questions, contact [@mukesh.rajput](https://www.linkedin.com/in/mukesh-rajput)
+Mukesh Singh Rajput, For any further questions, contact [@mukesh.rajput](https://www.linkedin.com/in/mukesh-rajput)
