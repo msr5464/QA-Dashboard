@@ -23,7 +23,7 @@ if (!isset($jsonArray['error']))
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
             $jsonArraySubSet3 = array();
-            $sql = "SELECT a.projectName,a.totalTicketsTested as newTotalTicketsTested,b.totalTicketsTested as oldTotalTicketsTested, a.totalBugs as newTotalBugs,b.totalBugs as oldTotalBugs,a.totalProdBugs as newTotalProdBugs,b.totalProdBugs as oldTotalProdBugs FROM jira a JOIN jira b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN jira c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL " . $_GET['arguments'][0] . " + 1 DAY) group by projectName order by (a.totalBugs - b.totalBugs) desc;";
+            $sql = "SELECT a.projectName,a.totalTicketsTested as newTotalTicketsTested,b.totalTicketsTested as oldTotalTicketsTested, a.totalBugs as newTotalBugs,b.totalBugs as oldTotalBugs,a.totalProdBugs as newTotalProdBugs,b.totalProdBugs as oldTotalProdBugs FROM jira a JOIN jira b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN jira c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL " . $_GET['arguments'][0] . " + 1 DAY) and (a.totalBugs-b.totalBugs >0) group by projectName order by (a.totalBugs - b.totalBugs) desc;";
 
             foreach ($dbo->query($sql) as $row)
             {

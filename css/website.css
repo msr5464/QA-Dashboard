@@ -167,9 +167,9 @@ body {
 }
 
 .left-options li.active>a {
-	border-right: 3px solid #83e8a2;
-	-webkit-box-shadow: 1px #83e8a2 inset;
-	box-shadow: inset 1px #83e8a2;
+	border-right: 3px solid #00ff00;
+	-webkit-box-shadow: 1px #00ff00 inset;
+	box-shadow: inset 1px #00ff00;
 	color: #fdfdfd
 }
 
@@ -388,6 +388,12 @@ body {
 img.dashboardImage {
 	height: 20%;
 	width: 20%;
+}
+
+img.logo {
+	height: 50%;
+	width: 70%;
+	filter: brightness(65%);
 }
 
 .project-dropdown {

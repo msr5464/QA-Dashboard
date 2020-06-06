@@ -2,7 +2,7 @@
  <div class="row">
     <div class="col-md-12 col-8">
        <div class="text-sm-left text-md-center logo">
-          <a href='/'>QUALITY DASHBOARD</a>
+          <a href='/' style="color: #00ff00;">QUALITY DASHBOARD</a>
        </div>
     </div>
     <div class="col-md-12 col-4 text-right">
@@ -31,6 +31,12 @@
           Bug Metrics
           </a>
        </li>
+       <li class="left-option">
+       </li>
+       <li class="left-option active">
+          <img class="logo" src="images/ThanosLogo.png" title="Powered by Thanos and created by Mukesh Rajput">
+       </li>
     </ul>
  </nav>
+          
 </div>
