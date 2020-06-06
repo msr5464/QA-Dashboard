@@ -51,6 +51,6 @@ Incase your mysql server is not able to execute some of the queries and showing 
  Then run this query in the mysql terminal or UI: `set global sql_mode='';` and start the sql connection again, please remember that if you restart the mysql server or your laptop then you might need to execute this cmd again.
 
 
-### References:
+## References:
 This dashboard has been creating by using public services of [Fusion Charts](https://www.fusioncharts.com/).
 A big Thanks to Fusion Charts team for putting such a wonderful documentation which helped me in swift integration.
