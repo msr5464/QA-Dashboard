@@ -58,4 +58,4 @@ A big Thanks to Fusion Charts team for putting such a wonderful documentation wh
 
 
 ## Creator:
-Mukesh Singh Rajput, For any further questions, contact [@mukesh.rajput](https://www.linkedin.com/in/mukesh-rajput)
+Mukesh Rajput, For any further questions, contact [@mukesh.rajput](https://www.linkedin.com/in/mukesh-rajput)
