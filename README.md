@@ -3,16 +3,16 @@
 
 ## Prerequisites
 
-#### Install php server in your machine
+#### 1. Install php server in your machine
 If its Mac, php server comes installed by default, just run this cmd to start server: `php -S localhost:8282`
 
-#### Install mysql server
+#### 2. Install mysql server
 And then start the server using: `mysql.server start`
 
-#### Setup Database and tables
+#### 3. Setup Database and tables
 Use [this basic mysql dump file](server/mysql-dump.sql "mysql-dump.sql") to create database and insert few dummy entries, on successful execution of this script you should get 3 tables (results, jira, testrail) created inside db name as `thanos`
 
-#### Clone this repo in your machine
+#### 4. Clone this repo in your machine
 After cloning the repo, using terminal navigate to the downloaded folder path and start php server using `php -S localhost:8282`
 
 
@@ -51,6 +51,6 @@ Incase your mysql server is not able to execute some of the queries and showing 
  Then run this query in the mysql terminal or UI: `set global sql_mode='';` and start the sql connection again, please remember that if you restart the mysql server or your laptop then you might need to execute this cmd again.
 
 
-#### References:
+### References:
 This dashboard has been creating by using public services of [Fusion Charts](https://www.fusioncharts.com/).
 A big Thanks to Fusion Charts team for putting such a wonderful documentation which helped me in swift integration.
