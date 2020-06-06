@@ -1,4 +1,4 @@
-![Home Page](images/ThanosLogo.png "Powered by Thanos and created by Mukesh Rajput" | height="100")
+![Home Page](images/ThanosLogo.png "Powered by Thanos and created by Mukesh Rajput" height="100")
 
 # QUALITY DASHBOARD
 
