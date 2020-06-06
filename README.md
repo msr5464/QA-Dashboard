@@ -2,7 +2,7 @@
 
 # QUALITY DASHBOARD
 
-## Prerequisites
+## Prerequisites:
 
 #### 1. Install php server in your machine
 If its Mac, php server comes installed by default, just run this cmd to start server: `php -S localhost:8282`
@@ -17,11 +17,11 @@ Use [this basic mysql dump file](server/mysql-dump.sql "mysql-dump.sql") to crea
 After cloning the repo, using terminal navigate to the downloaded folder path and start php server using `php -S localhost:8282`
 
 
-## Start Server
+## Start Web Server:
 Start the php server and navigate to `http://localhost:8282`, you should see the home page as shown in screenshots below.
 
 
-## Screenshots
+## Screenshots:
 
 ### Home Page of QA Dashboard:
 ![Home Page](screenshots/homePage.png "Home Page")
@@ -45,7 +45,7 @@ Start the php server and navigate to `http://localhost:8282`, you should see the
 ![Bugs Page](screenshots/bugsPage2.png "Bug Metrics Page for one Project")
 
 
-## Debugging
+## Debugging:
 Incase your mysql server is not able to execute some of the queries and showing error something like: 
 `Error Code: 1055. Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'thanos.a.totalTicketsTested' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by`
 
