@@ -1,5 +1,6 @@
-# QUALITY DASHBOARD
+![Home Page](images/ThanosLogo.png "Powered by Thanos and created by Mukesh Rajput")
 
+# QUALITY DASHBOARD
 
 ## Prerequisites
 
