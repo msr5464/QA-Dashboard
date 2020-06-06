@@ -1,7 +1,4 @@
-![Home Page](images/ThanosLogo.png "Powered by Thanos and created by Mukesh Rajput"){:height="100px" width="400px"}
-
-<img src="https://raw.githubusercontent.com/msr5464/BasicFramework/master/Drivers/ThanosLogo.png" height="100">
-
+<img src="https://raw.githubusercontent.com/msr5464/BasicFramework/master/Drivers/ThanosLogo.png" title="Powered by Thanos and created by Mukesh Rajput" height="100">
 
 # QUALITY DASHBOARD
 
