@@ -46,10 +46,9 @@ Start the php server and navigate to `http://localhost:8282`, you should see the
 
 ## Debugging
 Incase your mysql server is not able to execute some of the queries and showing error something like: 
-` Error Code: 1055. Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'thanos.a.totalTicketsTested' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
- `
- Then run this query in the mysql terminal or UI: `set global sql_mode='';
-` and start the connection again, please remember that if you restart the mysql server or your laptop then you might need to execute this cmd again
+`Error Code: 1055. Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'thanos.a.totalTicketsTested' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by`
+
+ Then run this query in the mysql terminal or UI: `set global sql_mode='';` and start the sql connection again, please remember that if you restart the mysql server or your laptop then you might need to execute this cmd again.
 
 
 #### References:
