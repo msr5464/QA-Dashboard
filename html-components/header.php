@@ -13,7 +13,7 @@
       </ul>
    </div>
    <div class="col-md-5 text-right date-indicator">
-      <label class="handLink" id="projectName"><?php echo $_POST["projectName"]; ?></label>
+      <label class="handLink" id="projectName"><?php echo $_POST['projectName'] ?? ''; ?></label>
       <div id="selectProject" class="project-dropdown">
          <?php
             echo "<form name='testform' method='POST' action='".$pageName.".php'>";
