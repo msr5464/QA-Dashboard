@@ -2,7 +2,10 @@
 
 # QUALITY DASHBOARD
 
-## WANT TO SEE LIVE DEMO DASHBOARD - https://qa-dashboard.000webhostapp.com/
+
+## CHECKOUT LIVE DEMO DASHBOARD:
+Want to see running demo for qa dashboard, visit this site: https://qa-dashboard.000webhostapp.com/
+
 
 ## Prerequisites:
 
