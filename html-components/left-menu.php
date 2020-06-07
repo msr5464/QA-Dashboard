@@ -18,7 +18,7 @@
     <ul class="left-options">
        <li class="left-option <?php echo $activateResultPage; ?>" id="results">
           <a href="results.php">
-          Thanos Results
+          Automation Results
           </a>
        </li>
        <li class="left-option <?php echo $activateTestrailPage; ?>" id="testrail">

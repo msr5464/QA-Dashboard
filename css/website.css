@@ -392,8 +392,8 @@ img.dashboardImage {
 
 img.logo {
 	height: 50%;
-	width: 70%;
-	filter: brightness(65%);
+	width: 75%;
+	filter: brightness(50%);
 }
 
 .project-dropdown {

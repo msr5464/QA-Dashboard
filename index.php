@@ -28,7 +28,7 @@
                      <div class="row mt-3 db-chart">
                         <div id="parent1" class="col-lg-6 col-xl-4">
                            <div class="chart-card mb-4">
-                              <div class="chart-title" id="text2">FOR THANOS DATA</div>
+                              <div class="chart-title" id="text2">FOR RESULTS DATA</div>
                               <div id="chart1" class="project-dropdown">
                                  <form name="testform" method="POST" action="results.php">
                                     <center><br>
