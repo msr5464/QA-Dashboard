@@ -45,7 +45,7 @@ Start the php server and navigate to `http://localhost:8282`, you should see the
 ![Bugs Page](screenshots/bugsPage2.png "Bug Metrics Page for one Project")
 
 
-## How I am populating data in mysql tables
+## How I am populating data in mysql tables:
 1. For `results table` - I have updated my automation framework to insert required data in `results` table at the end of each automation execution.
 
 2. For `testrail table` - Don't be confused with the table name, it is not only limited to testrail numbers, but these numbers can also be fetched from any testcase management tool. I have used APIs of Testrail to fetch all the required numbers from Testrail and then inserting them in the `testrail` table twice a week.
