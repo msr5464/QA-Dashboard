@@ -3,7 +3,7 @@
 # QUALITY DASHBOARD
 
 
-## CHECKOUT LIVE DEMO DASHBOARD:
+## Checkout Live Dashboard:
 Want to see running demo for qa dashboard, visit this site: https://qa-dashboard.000webhostapp.com/
 
 
