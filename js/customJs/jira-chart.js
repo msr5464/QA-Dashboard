@@ -135,8 +135,8 @@ function fetchTotalBugsFound_ColumnChart(timeFilter) {
                 "divlineColor": "#999999",
                 "divLineDashed": "1",
                 "theme": "fusion",
-                "showValues": "1",
-                "showsum": "0"
+                "showValues": "0",
+                "showsum": "1"
             };
 
             apiChart = new FusionCharts({

@@ -192,7 +192,7 @@ function fetchAvgExecutionTimeStg_ColumnChart(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "Thanos - Average Execution Time for last " + timeFilter + " days [All Projects]",
+                "caption": "Thanos - Average Staging Execution Time for last " + timeFilter + " days [All Projects]",
                 "yAxisName": "Time Taken (in minutes)",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",

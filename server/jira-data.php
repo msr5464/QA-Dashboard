@@ -163,7 +163,7 @@ if (!isset($jsonArray['error']))
             $jsonArrayDataSet = array();
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
-            $sql = "SELECT DATE(createdAt) as createdAt, max(bugPercentage) as bugPercentage, max(prodBugPercentage) as prodBugPercentage FROM `jira` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB(now() , INTERVAL " . $_GET['arguments'][1] . " + 1 DAY) GROUP BY DATE(createdAt);";
+            $sql = "SELECT DATE(createdAt) as createdAt, max(bugPercentage) as bugPercentage, max(prodBugPercentage) as prodBugPercentage FROM `jira` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB((select max(createdAt) from jira) , INTERVAL " . $_GET['arguments'][1] . " + 1 DAY) GROUP BY DATE(createdAt);";
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -212,7 +212,7 @@ if (!isset($jsonArray['error']))
             $jsonArraySubSet5 = array();
             $jsonArraySubSet6 = array();
             $jsonArraySubSet7 = array();
-            $sql = "SELECT DATE(createdAt) as createdAt, max(totalTicketsTested) as totalTicketsTested, max(totalBugs) as totalBugs, max(totalProdBugs) as totalProdBugs, max(totalP0Bugs) as totalP0Bugs, max(p0ProdBugs) as p0ProdBugs,max(totalP1Bugs) as totalP1Bugs, max(p1ProdBugs) as p1ProdBugs FROM `jira` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB(now() , INTERVAL " . $_GET['arguments'][1] . " + 1 DAY) GROUP BY DATE(createdAt);";
+            $sql = "SELECT DATE(createdAt) as createdAt, max(totalTicketsTested) as totalTicketsTested, max(totalBugs) as totalBugs, max(totalProdBugs) as totalProdBugs, max(totalP0Bugs) as totalP0Bugs, max(p0ProdBugs) as p0ProdBugs,max(totalP1Bugs) as totalP1Bugs, max(p1ProdBugs) as p1ProdBugs FROM `jira` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB((select max(createdAt) from jira) , INTERVAL " . $_GET['arguments'][1] . " + 1 DAY) GROUP BY DATE(createdAt);";
 
             foreach ($dbo->query($sql) as $row)
             {

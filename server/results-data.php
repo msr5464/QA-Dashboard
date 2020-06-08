@@ -17,7 +17,7 @@ if (!isset($jsonArray['error']))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
-            $sql = "select projectName,round(AVG(percentage),0) as percentage from results where environment='" . $_GET['arguments'][1] . "' and groupName='" . $_GET['arguments'][2] . "' and createdAt>=DATE_SUB(now(), INTERVAL " . $_GET['arguments'][0] . " DAY) group by projectName order by projectName desc;";
+            $sql = "select projectName,round(AVG(percentage),0) as percentage from results where environment='" . $_GET['arguments'][1] . "' and groupName='" . $_GET['arguments'][2] . "' and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][0] . " DAY) group by projectName order by projectName desc;";
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -33,7 +33,7 @@ if (!isset($jsonArray['error']))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
-            $sql = "select projectName,round(AVG(TIME_TO_SEC(duration))/60,2) as duration from results where environment='" . $_GET['arguments'][1] . "' and groupName='" . $_GET['arguments'][2] . "' and createdAt>=DATE_SUB(now(), INTERVAL " . $_GET['arguments'][0] . " DAY) group by projectName order by projectName desc;";
+            $sql = "select projectName,round(AVG(TIME_TO_SEC(duration))/60,2) as duration from results where environment='" . $_GET['arguments'][1] . "' and groupName='" . $_GET['arguments'][2] . "' and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][0] . " DAY) group by projectName order by projectName desc;";
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -66,7 +66,7 @@ if (!isset($jsonArray['error']))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
-            $sql = "select environment,round(AVG(percentage),0) as percentage from results where projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB(now(), INTERVAL " . $_GET['arguments'][1] . " DAY) group by environment;";
+            $sql = "select environment,round(AVG(percentage),0) as percentage from results where projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][1] . " DAY) group by environment;";
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -102,7 +102,7 @@ if (!isset($jsonArray['error']))
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
             $jsonArraySubSet3 = array();
-            $sql = "SELECT  DATE(createdAt) as createdAt, avg(percentage) as percentage, environment FROM `results` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB(now(), INTERVAL " . $_GET['arguments'][1] . " DAY) GROUP BY DATE(createdAt),environment;";
+            $sql = "SELECT  DATE(createdAt) as createdAt, avg(percentage) as percentage, environment FROM `results` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][1] . " DAY) GROUP BY DATE(createdAt),environment;";
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -199,7 +199,7 @@ if (!isset($jsonArray['error']))
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
             $jsonArraySubSet3 = array();
-            $sql = "SELECT  DATE(createdAt) as createdAt, round(AVG(TIME_TO_SEC(duration))/60,2) as duration, environment FROM `results` WHERE projectName='" . $_GET['arguments'][0] . "' and groupName in (" . $_GET['arguments'][2] . ") and createdAt>=DATE_SUB(now(), INTERVAL " . $_GET['arguments'][1] . " DAY) GROUP BY DATE(createdAt),environment;";
+            $sql = "SELECT  DATE(createdAt) as createdAt, round(AVG(TIME_TO_SEC(duration))/60,2) as duration, environment FROM `results` WHERE projectName='" . $_GET['arguments'][0] . "' and groupName in (" . $_GET['arguments'][2] . ") and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][1] . " DAY) GROUP BY DATE(createdAt),environment;";
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -296,7 +296,7 @@ if (!isset($jsonArray['error']))
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
             $jsonArraySubSet3 = array();
-            $sql = "SELECT  DATE(createdAt) as createdAt, max(totalCases) as totalCases, groupName FROM `results` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB(now(), INTERVAL " . $_GET['arguments'][1] . " DAY) GROUP BY DATE(createdAt),groupName;";
+            $sql = "SELECT  DATE(createdAt) as createdAt, max(totalCases) as totalCases, groupName FROM `results` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][1] . " DAY) GROUP BY DATE(createdAt),groupName;";
 
             foreach ($dbo->query($sql) as $row)
             {

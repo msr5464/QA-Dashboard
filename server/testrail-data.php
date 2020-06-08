@@ -23,7 +23,7 @@ if (!isset($jsonArray['error']))
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
             $jsonArraySubSet3 = array();
-            $sql = "SELECT a.projectName as projectName, a.p0CoveragePerc as newP0CoveragePerc,b.p0CoveragePerc as oldP0CoveragePerc FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL " . $_GET['arguments'][0] . " + 1 DAY) and (a.p0CoveragePerc > b.p0CoveragePerc or a.p0CoveragePerc < b.p0CoveragePerc) group by projectName;";
+            $sql = "SELECT a.projectName as projectName, a.p0CoveragePerc as newP0CoveragePerc,b.p0CoveragePerc as oldP0CoveragePerc FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL " . $_GET['arguments'][0] . " + 1 DAY) and (a.p0CoveragePerc > b.p0CoveragePerc or a.p0CoveragePerc < b.p0CoveragePerc) group by projectName order by (a.p0CoveragePerc - b.p0CoveragePerc) desc;";
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -83,7 +83,7 @@ if (!isset($jsonArray['error']))
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
             $jsonArraySubSet3 = array();
-            $sql = "SELECT a.projectName as projectName, a.p1CoveragePerc as newP1CoveragePerc,b.p1CoveragePerc as oldP1CoveragePerc FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL " . $_GET['arguments'][0] . " + 1 DAY) and (a.p1CoveragePerc > b.p1CoveragePerc or a.p1CoveragePerc < b.p1CoveragePerc) group by projectName";
+            $sql = "SELECT a.projectName as projectName, a.p1CoveragePerc as newP1CoveragePerc,b.p1CoveragePerc as oldP1CoveragePerc FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL " . $_GET['arguments'][0] . " + 1 DAY) and (a.p1CoveragePerc > b.p1CoveragePerc or a.p1CoveragePerc < b.p1CoveragePerc) group by projectName order by (a.p1CoveragePerc - b.p1CoveragePerc) desc";
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -143,7 +143,7 @@ if (!isset($jsonArray['error']))
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
             $jsonArraySubSet3 = array();
-            $sql = "SELECT a.projectName as projectName, a.alreadyAutomated as newAlreadyAutomated,b.alreadyAutomated as oldAlreadyAutomated FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL " . $_GET['arguments'][0] . " + 1 DAY) and (a.alreadyAutomated > b.alreadyAutomated or a.alreadyAutomated < b.alreadyAutomated) group by projectName;";
+            $sql = "SELECT a.projectName as projectName, a.alreadyAutomated as newAlreadyAutomated,b.alreadyAutomated as oldAlreadyAutomated FROM testrail a JOIN testrail b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN testrail c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from testrail group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL " . $_GET['arguments'][0] . " + 1 DAY) and (a.alreadyAutomated > b.alreadyAutomated or a.alreadyAutomated < b.alreadyAutomated) group by projectName order by (a.alreadyAutomated - b.alreadyAutomated) desc;";
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -193,7 +193,7 @@ if (!isset($jsonArray['error']))
         break;
 
         case 'getTotalP0Coverage':
-            $sql = "select * from testrail where id in(select max(id) from testrail group by projectName);";
+            $sql = "select * from testrail where id in(select max(id) from testrail group by projectName) order by p0CoveragePerc desc;";
             foreach ($dbo->query($sql) as $row)
             {
                 $jsonArrayItem = array();
@@ -204,7 +204,7 @@ if (!isset($jsonArray['error']))
         break;
 
         case 'getTotalP1Coverage':
-            $sql = "select * from testrail where id in(select max(id) from testrail group by projectName);";
+            $sql = "select * from testrail where id in(select max(id) from testrail group by projectName) order by p1CoveragePerc desc;";
             foreach ($dbo->query($sql) as $row)
             {
                 $jsonArrayItem = array();
@@ -215,7 +215,7 @@ if (!isset($jsonArray['error']))
         break;
 
         case 'getTotalP2Coverage':
-            $sql = "select * from testrail where id in(select max(id) from testrail group by projectName);";
+            $sql = "select * from testrail where id in(select max(id) from testrail group by projectName) order by p2CoveragePerc desc;";
             foreach ($dbo->query($sql) as $row)
             {
                 $jsonArrayItem = array();
@@ -226,7 +226,7 @@ if (!isset($jsonArray['error']))
         break;
 
         case 'getTotalAutomationCoverage':
-            $sql = "select * from testrail where id in(select max(id) from testrail group by projectName);";
+            $sql = "select * from testrail where id in(select max(id) from testrail group by projectName) order by automationCoveragePerc desc;";
             foreach ($dbo->query($sql) as $row)
             {
                 $jsonArrayItem = array();
@@ -241,7 +241,7 @@ if (!isset($jsonArray['error']))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
-            $sql = "select * from testrail where id in(select max(id) from testrail group by projectName) and createdAt>=DATE_SUB(now() , INTERVAL " . $_GET['arguments'][0] . " DAY);";
+            $sql = "select * from testrail where id in(select max(id) from testrail group by projectName) and createdAt>=DATE_SUB((select max(createdAt) from testrail) , INTERVAL " . $_GET['arguments'][0] . " DAY) order by totalCases desc;";
             $jsonArrayCategory = array();
             $jsonArraySubCategory = array();
             $jsonArrayDataSet = array();
@@ -356,7 +356,7 @@ if (!isset($jsonArray['error']))
             $jsonArraySubSet5 = array();
             $jsonArraySubSet6 = array();
             $jsonArraySubSet7 = array();
-            $sql = "SELECT  DATE(createdAt) as createdAt, max(totalCases) as totalCases, max(totalAutomationCases) as totalAutomationCases, max(p0Cases) as p0Cases, max(p1Cases) as p1Cases, max(p2Cases) as p2Cases FROM `testrail` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB(now() , INTERVAL " . $_GET['arguments'][1] . "+1 DAY) GROUP BY DATE(createdAt);";
+            $sql = "SELECT  DATE(createdAt) as createdAt, max(totalCases) as totalCases, max(totalAutomationCases) as totalAutomationCases, max(p0Cases) as p0Cases, max(p1Cases) as p1Cases, max(p2Cases) as p2Cases FROM `testrail` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB((select max(createdAt) from testrail) , INTERVAL " . $_GET['arguments'][1] . "+1 DAY) GROUP BY DATE(createdAt);";
 
             foreach ($dbo->query($sql) as $row)
             {
