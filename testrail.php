@@ -17,7 +17,6 @@
                   ?>
                   <div id="content-body" class="col-12 col-md-9 col-xl-10 pl-4 pr-4 bd-content">
                      <?php
-                        $pageName = "testrail";
                         require "html-components/header.php";
                      ?>
                      <div class="row mt-3 db-chart">

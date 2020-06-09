@@ -94,6 +94,7 @@
                         </center>
                      </div>
                      <?php
+                     $pageName = "results";
                         require "html-components/footer.php";
                      ?>
                   </div>

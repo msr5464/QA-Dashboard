@@ -100,6 +100,7 @@ function showDefaultCharts(timeFilter) {
     hideProjectCharts();
     fetchAvgPercentageProd_ColumnChart(timeFilter);
     fetchAvgPercentageStg_ColumnChart(timeFilter);
+    fetchAvgExecutionTimeProd_ColumnChart(timeFilter);
     fetchAvgExecutionTimeStg_ColumnChart(timeFilter);
 }
 
@@ -122,7 +123,7 @@ function fetchAvgPercentageProd_ColumnChart(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "Thanos - Average Production Percentage for last " + timeFilter + " days [All Projects]",
+                "caption": "Thanos - Average Prod Percentage for last " + timeFilter + " days [All Projects]",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -182,6 +183,41 @@ function fetchAvgPercentageStg_ColumnChart(timeFilter) {
     });
 };
 
+function fetchAvgExecutionTimeProd_ColumnChart(timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getAvgExecutionTime',
+            arguments: [timeFilter, 'Production', 'production']
+        },
+        success: function (result) {
+            var chartProperties = {
+                "caption": "Thanos - Average Prod Execution Time for last " + timeFilter + " days [All Projects]",
+                "yAxisName": "Time Taken (in minutes)",
+                "placevaluesinside": "1",
+                "rotatevalues": "0",
+                "showvalues": "1",
+                "plottooltext": "$label: $dataValue minutes",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container3',
+                width: '96%',
+                height: '350',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
 function fetchAvgExecutionTimeStg_ColumnChart(timeFilter) {
     $.ajax({
         url: backend,
@@ -203,7 +239,7 @@ function fetchAvgExecutionTimeStg_ColumnChart(timeFilter) {
 
             apiChart = new FusionCharts({
                 type: 'column2d',
-                renderAt: 'column-chart-container3',
+                renderAt: 'column-chart-container4',
                 width: '96%',
                 height: '350',
                 dataFormat: 'json',
@@ -365,7 +401,7 @@ function fetchLastSevenResults_ColumnChart(projectName, timeFilter) {
 
             apiChart = new FusionCharts({
                 type: 'column3d',
-                renderAt: 'column-chart-container4',
+                renderAt: 'column-chart-container5',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',

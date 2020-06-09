@@ -17,7 +17,6 @@
                   ?>
                   <div id="content-body" class="col-12 col-md-9 col-xl-10 pl-4 pr-4 bd-content">
                      <?php
-                        $pageName = "results";
                         require "html-components/header.php";
                      ?>
                      <div class="row mt-3 db-chart">
@@ -70,9 +69,13 @@
                               <br>
                               <label id="column-chart-container3">Chart is loading here...</label>
                            </div>
-                           <div class="projectChart">
+                           <div class="defaultChart">
                               <br>
                               <label id="column-chart-container4">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="column-chart-container5">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
                               <br>
