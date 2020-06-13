@@ -257,7 +257,7 @@ function fetchTotalP0Coverage_ColumnChart(timeFilter) {
                 "caption": "P0 Automation Coverage for " + currentYear + " [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
-                "rotatevalues": "3",
+                "rotatevalues": "0",
                 "theme": "candy"
             };
 
@@ -289,7 +289,7 @@ function fetchTotalP1Coverage_ColumnChart(timeFilter) {
                 "caption": "P1 Automation Coverage for " + currentYear + " [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
-                "rotatevalues": "3",
+                "rotatevalues": "0",
                 "theme": "candy"
             };
 
@@ -322,7 +322,7 @@ function fetchTotalAutomationCoverage_ColumnChart(timeFilter) {
                 "plottooltext": "$label: $dataValue% automated",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
-                "rotatevalues": "3",
+                "rotatevalues": "0",
                 "theme": "candy"
             };
 
@@ -355,7 +355,7 @@ function fetchTotalP2Coverage_ColumnChart(timeFilter) {
                 "plottooltext": "$seriesName: $dataValue%",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
-                "rotatevalues": "3",
+                "rotatevalues": "0",
                 "theme": "candy"
             };
 
