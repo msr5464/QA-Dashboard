@@ -4,11 +4,11 @@
 The purpose of creating this dashboard is to track the overall progress of QA activities in any organization which has a lot of teams and so its difficult to track each team individually.
 
 ### This Dashboard can help to track:
-1. Daily progress report of Automation Results and Execution time for each team
+1. Daily progress report of `Automation Results` and Execution time for each team
 
-2. Progress in terms of testcases in testrail (or in any other testcase manamgement tool), like how may total testcases we have, distribution is terms of manual/automation etc, distribution in terms of priority testcases, automation coverage
+2. Progress in terms of `Testcases in Testrail` (or in any other testcase management tool), like how many total testcases we have, distribution in terms of manual/automation etc, distribution in terms of priority testcases, automation coverage
 
-3. Progress in terms of total tickets tested along with numbers of bugs found in Jira (or any other ticket managment tool), how may bugs are from production, what is the priority etc.
+3. Progress in terms of total tickets tested along with numbers of `Bugs found reported in Jira` (or any other ticket management tool), how many bugs are from the production/staging, what is the priority etc.
 
 
 #### Checkout Live QA Dashboard:
