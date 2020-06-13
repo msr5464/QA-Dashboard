@@ -27,7 +27,7 @@ And then start the server using: `mysql.server start`
 Use [this basic mysql dump file](server/mysql-dump.sql "mysql-dump.sql") to create database and insert few dummy entries, on the successful execution of this script you should get 3 tables (results, jira, testrail) created inside a database named as `thanos`
 
 #### 4. Clone this repo in your machine
-After cloning the repo, using terminal navigate to the `server` folder and update database credentails in [this db config file](server/db-config.php "db-config.php")
+After cloning the repo, navigate to the `server` folder and update database credentails in [this db config file](server/db-config.php "db-config.php")
 
 ## Start Web Server:
 Start the php server and navigate to `http://localhost:8282`, you should see the home page as shown in screenshots below.
