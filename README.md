@@ -73,6 +73,8 @@ Point is, no matter if you insert data manually or via automation scripts, till
 
 2. If you are seeing `Error!: SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: NO)` on the dashboard it means your db credentials are incorrect, you need to modify them in [this db config file](server/db-config.php "db-config.php")
 
+Incase there are some more bugs/issues, you can report to `Issues` section of this repo.
+
 
 ## References:
 This dashboard has been creating by using public services of [Fusion Charts](https://www.fusioncharts.com/).
