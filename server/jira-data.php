@@ -77,33 +77,55 @@ if (!isset($jsonArray['error']))
             $jsonArrayDataSet = array();
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
-            $sql = "SELECT * FROM `jira` WHERE id in(select max(id) from jira GROUP BY projectName) order by bugPercentage desc;";
+            $jsonArraySubSet3 = array();
+            $sql = "SELECT a.projectName,a.totalTicketsTested as newTotalTicketsTested,b.totalTicketsTested as oldTotalTicketsTested, a.totalBugs as newTotalBugs,b.totalBugs as oldTotalBugs,a.totalProdBugs as newTotalProdBugs,b.totalProdBugs as oldTotalProdBugs FROM jira a JOIN jira b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN jira c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from jira group by projectName) and b.createdAt>=DATE_SUB(a.createdAt, INTERVAL " . $_GET['arguments'][0] . " + 1 DAY) and (a.totalBugs-b.totalBugs >0) group by projectName order by (a.totalBugs - b.totalBugs) desc;";
 
             foreach ($dbo->query($sql) as $row)
             {
                 $jsonArrayItem = array();
                 $jsonArrayItem1 = array();
                 $jsonArrayItem2 = array();
+                $jsonArrayItem3 = array();
 
                 $jsonArrayItem['label'] = $row['projectName'];
                 array_push($jsonArraySubCategory, $jsonArrayItem);
 
-                $jsonArrayItem1['value'] = $row['bugPercentage'];
-                $jsonArrayItem2['value'] = $row['prodBugPercentage'];
+                $totalTicketsTested = $row['newTotalTicketsTested'] - $row['oldTotalTicketsTested'];
+                $increasedBugs = $row['newTotalBugs'] - $row['oldTotalBugs'];
+                $increasedProdBugs = $row['newTotalProdBugs'] - $row['oldTotalProdBugs'];
+
+                if($totalTicketsTested<=0)
+                    $totalTicketsTested = 1;
+                
+                $bugPercentage = ($increasedBugs*100) / $totalTicketsTested;
+
+                if($increasedProdBugs >= 1)
+                    $bugPercentageProd = ($increasedProdBugs*100) / $totalTicketsTested;
+                else
+                    $bugPercentageProd = 0;
+
+                $jsonArrayItem1['value'] = $totalTicketsTested;
+                $jsonArrayItem2['value'] = round($bugPercentage);
+                $jsonArrayItem3['value'] = round($bugPercentageProd);
                 array_push($jsonArraySubSet1, $jsonArrayItem1);
                 array_push($jsonArraySubSet2, $jsonArrayItem2);
+                array_push($jsonArraySubSet3, $jsonArrayItem3);
+
             }
             array_push($jsonArrayCategory, array(
                 "category" => $jsonArraySubCategory
             ));
+
+            //array_push($jsonArrayDataSet, array("seriesname"=>"Tickets Tested", "data"=>$jsonArraySubSet1));
+
             array_push($jsonArrayDataSet, array(
                 "seriesname" => "Total Bug Percentage",
-                "data" => $jsonArraySubSet1
+                "data" => $jsonArraySubSet2
             ));
             array_push($jsonArrayDataSet, array(
                 "seriesname" => "Production Bug Percentage",
                 "renderas" => "line",
-                "data" => $jsonArraySubSet2
+                "data" => $jsonArraySubSet3
             ));
             $jsonArray = array(
                 "categories" => $jsonArrayCategory,

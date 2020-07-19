@@ -1,100 +1,4 @@
-var defaultFilter = "30";
-var currentYear = "2020";
-var projectName = 0;
 var backend = "server/testrail-data.php";
-
-$(function () {
-    activateFilter();
-});
-
-$(document).ready(function () {
-    $("#projectName").click(function () {
-        $("#selectProject").show();
-        showDefaultCharts(getFilter());
-        $("#projectName").hide();
-    });
-
-    $(".filter").click(function () {
-        $(".filter").removeClass("active");
-        $(this).addClass("active");
-    });
-
-    $("#weeklyData").click(function () {
-        saveFilter("7");
-        validateAndExecute(getFilter());
-    });
-
-    $("#monthlyData").click(function () {
-        saveFilter("30");
-        validateAndExecute(getFilter());
-    });
-
-    $("#quarterlyData").click(function () {
-        saveFilter("90");
-        validateAndExecute(getFilter());
-    });
-
-    $("#yearlyData").click(function () {
-        saveFilter("365");
-        validateAndExecute(getFilter());
-    });
-});
-
-function activateFilter() {
-    var currentFilter = getFilter();
-    if (!currentFilter) {
-        saveFilter(defaultFilter);
-        currentFilter = defaultFilter;
-    }
-    switch (currentFilter) {
-        case '7':
-            document.getElementById("week").classList.add("active");
-            break;
-        case '30':
-            document.getElementById("month").classList.add("active");
-            break;
-        case '90':
-            document.getElementById("quarter").classList.add("active");
-            break;
-        case '365':
-            document.getElementById("year").classList.add("active");
-            break;
-    }
-    validateAndExecute(currentFilter);
-}
-
-function saveFilter(value) {
-    localStorage.setItem("appiledFilter", value);
-}
-
-function getFilter() {
-    return localStorage.getItem("appiledFilter");
-}
-
-function hideProjectCharts() {
-    $(".defaultChart").show();
-    $("#projectName").hide();
-    $(".projectChart").hide();
-    $("#warning").show();
-    $("#selectProject").show();
-    $("#projectName").html("");
-    $(".gauge").html("Project not selected.<br>No data to display!");
-}
-
-function hideDefaultCharts() {
-    $("#selectProject").hide();
-    $("#warning").hide();
-    $(".defaultChart").hide();
-}
-
-function validateAndExecute(timeFilter) {
-    projectName = $("#projectName").html();
-    if (projectName.length != 0) {
-        showProjectCharts(projectName, timeFilter);
-    } else {
-        showDefaultCharts(timeFilter);
-    }
-}
 
 function showDefaultCharts(timeFilter) {
     hideProjectCharts();
@@ -254,7 +158,7 @@ function fetchTotalP0Coverage_ColumnChart(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "P0 Automation Coverage for " + currentYear + " [All Projects]",
+                "caption": "Overall P0 Automation Coverage [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
                 "rotatevalues": "0",
@@ -286,7 +190,7 @@ function fetchTotalP1Coverage_ColumnChart(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "P1 Automation Coverage for " + currentYear + " [All Projects]",
+                "caption": "Overall P1 Automation Coverage [All Projects]",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
                 "rotatevalues": "0",
@@ -318,7 +222,7 @@ function fetchTotalAutomationCoverage_ColumnChart(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "Full Automation Coverage for " + currentYear + " [All Projects]",
+                "caption": "Full Automation Coverage [All Projects]",
                 "plottooltext": "$label: $dataValue% automated",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
@@ -351,7 +255,7 @@ function fetchTotalP2Coverage_ColumnChart(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "P2 Automation Coverage for " + currentYear + " [All Projects]",
+                "caption": "Overall P2 Automation Coverage [All Projects]",
                 "plottooltext": "$seriesName: $dataValue%",
                 "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
@@ -394,7 +298,7 @@ function fetchTestcaseDistribution_ColumnChart(timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Total Testcase Distribution Metrics for " + currentYear + " [All Projects]",
+                "caption": "Overall Testcase Distribution Metrics [All Projects]",
                 "placevaluesinside": "0",
                 "showvalues": "0",
                 "plottooltext": "$seriesName: $dataValue",
@@ -581,7 +485,7 @@ function fetchAutomationCasesBreakdown_PieChart(projectName, timeFilter) {
         success: function (result) {
 
             var chartProperties = {
-                "caption": projectName + " Automation Cases Breakdown for " + currentYear,
+                "caption": "Automation Cases Breakdown for " + projectName,
                 "showpercentvalues": "1",
                 "defaultcenterlabel": "Automation Testcases",
                 "aligncaptionwithcanvas": "0",

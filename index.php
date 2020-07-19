@@ -83,7 +83,7 @@
                      </div>
                      <div id="chart-container">
                         <center>
-                              <p class="paragraph1">This dashboard helps to track the overall QA progress at once centralised place!
+                              <p class="paragraph1">This dashboard is created to track the overall QA progress at one centralised place!
                               </p>
                               <br>
                               <p class="paragraph2">To fetch the numbers/metrics, please select your respective project!
