@@ -2,13 +2,13 @@ var backend = "server/testrail-data.php";
 
 function showDefaultCharts(timeFilter) {
     hideProjectCharts();
-    fetchP0CoverageChange_ColumnChart(timeFilter);
-    fetchP1CoverageChange_ColumnChart(timeFilter);
-    fetchAutomatedCountChange_ColumnChart(timeFilter);
+    fetchTotalAutomationCoverage_ColumnChart(timeFilter);
     fetchTotalP0Coverage_ColumnChart(timeFilter);
     fetchTotalP1Coverage_ColumnChart(timeFilter);
-    fetchTotalAutomationCoverage_ColumnChart(timeFilter);
     //fetchTotalP2Coverage_ColumnChart(timeFilter);
+    fetchAutomatedCountChange_ColumnChart(timeFilter);
+    fetchP0CoverageChange_ColumnChart(timeFilter);
+    fetchP1CoverageChange_ColumnChart(timeFilter);
     fetchTestcaseDistribution_ColumnChart(timeFilter);
 
 }
@@ -16,9 +16,185 @@ function showDefaultCharts(timeFilter) {
 function showProjectCharts(projectName, timeFilter) {
     hideDefaultCharts();
     fetchCoverageNumbers_GaugeChart(projectName, timeFilter);
-    fetchAutomationCasesBreakdown_PieChart(projectName, timeFilter);
+    fetchTestCasesBreakdown_PieChart(projectName, timeFilter);
+    fetchTotalvsAutomatedCount_ColumnChart(projectName, timeFilter);
     fetchTestcaseCountTrend_LineChart(projectName, timeFilter);
 }
+
+function fetchTotalAutomationCoverage_ColumnChart(timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getTotalAutomationCoverage'
+        },
+        success: function (result) {
+            var chartProperties = {
+                "caption": "Full Automation Coverage Percentage [All Projects]",
+                "plottooltext": "$label: $dataValue% automated",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "rotatevalues": "0",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container1',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchTotalP0Coverage_ColumnChart(timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getTotalP0Coverage'
+        },
+        success: function (result) {
+            var chartProperties = {
+                "caption": "Only P0 Automation Coverage Percentage [All Projects]",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "rotatevalues": "0",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container2',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchTotalP1Coverage_ColumnChart(timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getTotalP1Coverage'
+        },
+        success: function (result) {
+            var chartProperties = {
+                "caption": "Only P1 Automation Coverage Percentage [All Projects]",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "rotatevalues": "0",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container3',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchTotalP2Coverage_ColumnChart(timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getTotalP2Coverage'
+        },
+        success: function (result) {
+            var chartProperties = {
+                "caption": "Only P2 Automation Coverage Percentage [All Projects]",
+                "plottooltext": "$seriesName: $dataValue%",
+                "xAxisName": "Project Name",
+                "yAxisName": "Percentage",
+                "rotatevalues": "0",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container4',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": result
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+
+function fetchAutomatedCountChange_ColumnChart(timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getAutomatedCountChange',
+            arguments: [timeFilter]
+        },
+        success: function (result) {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = {
+                "caption": "Count of testcases automated in last " + timeFilter + " days [All Projects]",
+                "plottooltext": "$seriesName: $dataValue cases",
+                "yAxisName": "Testcase Count",
+                "divlineColor": "#999999",
+                "divLineDashed": "1",
+                "theme": "fusion",
+                "showValues": "1",
+                "showsum": "1"
+            };
+            apiChart = new FusionCharts({
+                type: 'stackedcolumn2dline',
+                renderAt: 'column-chart-container5',
+                width: '96%',
+                height: '350',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
 
 function fetchP0CoverageChange_ColumnChart(timeFilter) {
     $.ajax({
@@ -37,7 +213,7 @@ function fetchP0CoverageChange_ColumnChart(timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "P0 Coverage changes  in last " + timeFilter + " days [All Projects]",
+                "caption": "Change in P0 Automation Percentage in last " + timeFilter + " days [All Projects]",
                 "plottooltext": "$seriesName: $dataValue%",
                 "yAxisName": "Percentage",
                 "divlineColor": "#999999",
@@ -48,7 +224,7 @@ function fetchP0CoverageChange_ColumnChart(timeFilter) {
             };
             apiChart = new FusionCharts({
                 type: 'stackedcolumn2dline',
-                renderAt: 'column-chart-container1',
+                renderAt: 'column-chart-container6',
                 width: '96%',
                 height: '350',
                 dataFormat: 'json',
@@ -80,7 +256,7 @@ function fetchP1CoverageChange_ColumnChart(timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "P1 Coverage changes in last " + timeFilter + " days [All Projects]",
+                "caption": "Change in P1 Automation Percentage in last " + timeFilter + " days [All Projects]",
                 "plottooltext": "$seriesName: $dataValue%",
                 "yAxisName": "Percentage",
                 "divlineColor": "#999999",
@@ -91,187 +267,14 @@ function fetchP1CoverageChange_ColumnChart(timeFilter) {
             };
             apiChart = new FusionCharts({
                 type: 'stackedcolumn2dline',
-                renderAt: 'column-chart-container2',
-                width: '96%',
-                height: '350',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "dataset": datasetData,
-                    "categories": categoriesData
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchAutomatedCountChange_ColumnChart(timeFilter) {
-    $.ajax({
-        url: backend,
-        type: 'GET',
-        data: {
-            functionname: 'getAutomatedCountChange',
-            arguments: [timeFilter]
-        },
-        success: function (result) {
-            $.each(result, function (key, value) {
-                if (key === "categories")
-                    categoriesData = value;
-                if (key === "dataset")
-                    datasetData = value;
-            });
-
-            var chartProperties = {
-                "caption": "Total Testcases automated in last " + timeFilter + " days [All Projects]",
-                "plottooltext": "$seriesName: $dataValue cases",
-                "yAxisName": "Testcase Count",
-                "divlineColor": "#999999",
-                "divLineDashed": "1",
-                "theme": "fusion",
-                "showValues": "1",
-                "showsum": "1"
-            };
-            apiChart = new FusionCharts({
-                type: 'stackedcolumn2dline',
-                renderAt: 'column-chart-container3',
-                width: '96%',
-                height: '350',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "dataset": datasetData,
-                    "categories": categoriesData
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchTotalP0Coverage_ColumnChart(timeFilter) {
-    $.ajax({
-        url: backend,
-        type: 'GET',
-        data: {
-            functionname: 'getTotalP0Coverage'
-        },
-        success: function (result) {
-            var chartProperties = {
-                "caption": "Overall P0 Automation Coverage [All Projects]",
-                "xAxisName": "Project Name",
-                "yAxisName": "Percentage",
-                "rotatevalues": "0",
-                "theme": "candy"
-            };
-
-            apiChart = new FusionCharts({
-                type: 'column2d',
-                renderAt: 'column-chart-container4',
-                width: '96%',
-                height: '400',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "data": result
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchTotalP1Coverage_ColumnChart(timeFilter) {
-    $.ajax({
-        url: backend,
-        type: 'GET',
-        data: {
-            functionname: 'getTotalP1Coverage'
-        },
-        success: function (result) {
-            var chartProperties = {
-                "caption": "Overall P1 Automation Coverage [All Projects]",
-                "xAxisName": "Project Name",
-                "yAxisName": "Percentage",
-                "rotatevalues": "0",
-                "theme": "candy"
-            };
-
-            apiChart = new FusionCharts({
-                type: 'column2d',
-                renderAt: 'column-chart-container5',
-                width: '96%',
-                height: '400',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "data": result
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchTotalAutomationCoverage_ColumnChart(timeFilter) {
-    $.ajax({
-        url: backend,
-        type: 'GET',
-        data: {
-            functionname: 'getTotalAutomationCoverage'
-        },
-        success: function (result) {
-            var chartProperties = {
-                "caption": "Full Automation Coverage [All Projects]",
-                "plottooltext": "$label: $dataValue% automated",
-                "xAxisName": "Project Name",
-                "yAxisName": "Percentage",
-                "rotatevalues": "0",
-                "theme": "candy"
-            };
-
-            apiChart = new FusionCharts({
-                type: 'column2d',
-                renderAt: 'column-chart-container6',
-                width: '96%',
-                height: '400',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "data": result
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchTotalP2Coverage_ColumnChart(timeFilter) {
-    $.ajax({
-        url: backend,
-        type: 'GET',
-        data: {
-            functionname: 'getTotalP2Coverage'
-        },
-        success: function (result) {
-            var chartProperties = {
-                "caption": "Overall P2 Automation Coverage [All Projects]",
-                "plottooltext": "$seriesName: $dataValue%",
-                "xAxisName": "Project Name",
-                "yAxisName": "Percentage",
-                "rotatevalues": "0",
-                "theme": "candy"
-            };
-
-            apiChart = new FusionCharts({
-                type: 'column2d',
                 renderAt: 'column-chart-container7',
                 width: '96%',
-                height: '400',
+                height: '350',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
-                    "data": result
+                    "dataset": datasetData,
+                    "categories": categoriesData
                 }
             });
             apiChart.render();
@@ -298,7 +301,7 @@ function fetchTestcaseDistribution_ColumnChart(timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Overall Testcase Distribution Metrics [All Projects]",
+                "caption": "Overall Testcase Distribution in Testrail [All Projects]",
                 "placevaluesinside": "0",
                 "showvalues": "0",
                 "plottooltext": "$seriesName: $dataValue",
@@ -474,18 +477,28 @@ function fetchCoverageNumbers_GaugeChart(projectName, timeFilter) {
     });
 };
 
-function fetchAutomationCasesBreakdown_PieChart(projectName, timeFilter) {
+function fetchTestCasesBreakdown_PieChart(projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
-            functionname: 'getAutomationCasesBreakdown_Project',
+            functionname: 'getTestCasesBreakdown_Project',
             arguments: [projectName, timeFilter]
         },
         success: function (result) {
+            var resultValue1 = 0;
+            var resultValue2 = 0;
+            for (i = 0; i < result.length; i++) {
+                $.each(result[i], function (key, value) {
+                    if (key === "totalCases")
+                        resultValue1 = value;
+                    if (key === "fullResult")
+                        resultValue2 = value;
+                });
+            }
 
             var chartProperties = {
-                "caption": "Automation Cases Breakdown for " + projectName,
+                "caption": "Testcases Breakdown in tags for " + projectName,
                 "showpercentvalues": "1",
                 "defaultcenterlabel": "Automation Testcases",
                 "aligncaptionwithcanvas": "0",
@@ -503,7 +516,55 @@ function fetchAutomationCasesBreakdown_PieChart(projectName, timeFilter) {
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
-                    "data": result
+                    "data": resultValue2
+                },
+                "events": {
+                    "beforeInitialize": function () {
+                        if (resultValue1) {
+                            var passPercentage = resultValue1[1].value;
+                            chartProperties.defaultcenterlabel = "Total Cases: " + resultValue1;
+                        }
+                    }
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchTotalvsAutomatedCount_ColumnChart(projectName, timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getTotalvsAutomatedCount_Project',
+            arguments: [projectName, timeFilter]
+        },
+        success: function (result) {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = {
+                "caption": "Already Automated vs Total Automation cases for " + projectName,
+                "yAxisName": "Testcase Count",
+                "plottooltext": "$seriesName - $dataValue",
+                "showValues": "1",
+                "theme": "fusion"
+            };
+            apiChart = new FusionCharts({
+                type: 'overlappedColumn2d',
+                renderAt: 'column-chart-container9',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
                 }
             });
             apiChart.render();

@@ -119,11 +119,11 @@ if (!isset($jsonArray['error']))
             //array_push($jsonArrayDataSet, array("seriesname"=>"Tickets Tested", "data"=>$jsonArraySubSet1));
 
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Total Bug Percentage",
+                "seriesname" => "Total Bug Ratio",
                 "data" => $jsonArraySubSet2
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Production Bug Percentage",
+                "seriesname" => "Only Production Bug Ratio",
                 "renderas" => "line",
                 "data" => $jsonArraySubSet3
             ));
@@ -206,11 +206,11 @@ if (!isset($jsonArray['error']))
                 "category" => $jsonArraySubCategory
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Bug Percentage",
+                "seriesname" => "Total Bug Ratio",
                 "data" => $jsonArraySubSet1
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Production Bug Percentage",
+                "seriesname" => "Only Production Bug Ratio",
                 "data" => $jsonArraySubSet2
             ));
             $jsonArray = array(

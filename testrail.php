@@ -69,10 +69,10 @@
                               <br>
                               <label id="column-chart-container3">Chart is loading here...</label>
                            </div>
-                           <div class="defaultChart">
+                           <!--div class="defaultChart">
                               <br>
                               <label id="column-chart-container4">Chart is loading here...</label>
-                           </div>
+                           </div-->
                            <div class="defaultChart">
                               <br>
                               <label id="column-chart-container5">Chart is loading here...</label>
@@ -81,10 +81,10 @@
                               <br>
                               <label id="column-chart-container6">Chart is loading here...</label>
                            </div>
-                           <!--div class="defaultChart">
+                           <div class="defaultChart">
                               <br>
                               <label id="column-chart-container7">Chart is loading here...</label>
-                           </div-->
+                           </div>
                            <div class="defaultChart">
                               <br>
                               <label id="column-chart-container8">Chart is loading here...</label>
@@ -92,6 +92,10 @@
                            <div class="projectChart">
                               <br>
                               <label id="pie-chart-container1">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="column-chart-container9">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
                               <br>

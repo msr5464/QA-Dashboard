@@ -27,7 +27,7 @@ function fetchAvgPercentageProd_ColumnChart(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "Thanos - Average Prod Percentage for last " + timeFilter + " days [All Projects]",
+                "caption": "Thanos Automation - Average Prod Percentage for last " + timeFilter + " days [All Projects]",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -62,7 +62,7 @@ function fetchAvgPercentageStg_ColumnChart(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "Thanos - Average Staging Percentage for last " + timeFilter + " days [All Projects]",
+                "caption": "Thanos Automation - Average Staging Percentage for last " + timeFilter + " days [All Projects]",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -97,7 +97,7 @@ function fetchAvgExecutionTimeProd_ColumnChart(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "Thanos - Average Prod Execution Time for last " + timeFilter + " days [All Projects]",
+                "caption": "Thanos Automation - Average Prod Execution Time for last " + timeFilter + " days [All Projects]",
                 "yAxisName": "Time Taken (in minutes)",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -132,7 +132,7 @@ function fetchAvgExecutionTimeStg_ColumnChart(timeFilter) {
         },
         success: function (result) {
             var chartProperties = {
-                "caption": "Thanos - Average Staging Execution Time for last " + timeFilter + " days [All Projects]",
+                "caption": "Thanos Automation - Average Staging Execution Time for last " + timeFilter + " days [All Projects]",
                 "yAxisName": "Time Taken (in minutes)",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -448,7 +448,7 @@ function fetchTotalCasesGroupwise_LineChart(projectName, timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "GroupName wise total cases for last " + timeFilter + " days for " + projectName,
+                "caption": "Tag/Group wise total cases for last " + timeFilter + " days for " + projectName,
                 "subCaption": "",
                 "plottooltext": "$seriesName - $dataValue",
                 "yAxisName": "Total Testcases",

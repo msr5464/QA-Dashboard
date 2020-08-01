@@ -73,9 +73,9 @@ function fetchBugPercentage_ColumnChart(timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Bug Percentage for last " + timeFilter + " days [All Projects]",
-                "plottooltext": "$seriesName - $dataValue%",
-                "yAxisName": "Percentage",
+                "caption": "Bug Ratio (per 100 tickets) for last " + timeFilter + " days [All Projects]",
+                "plottooltext": "$seriesName - $dataValue",
+                "yAxisName": "Ratio per 100 tickets",
                 "rotatevalues": "0",
                 "theme": "zune",
                 "showValues": "1"
@@ -188,10 +188,10 @@ function fetchBugPercentageTrend_ColumnChart(projectName, timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Trend of Bug Percentage for last " + timeFilter + " days for " + projectName,
+                "caption": "Trend of Bug Ratio (per 100 tickets) for last " + timeFilter + " days for " + projectName,
                 "subCaption": "",
                 "plottooltext": "$seriesName - $dataValue%",
-                "yAxisName": "Percentage",
+                "yAxisName": "Ratio per 100 tickets",
                 "theme": "fusion",
                 "showValues": "1"
             };

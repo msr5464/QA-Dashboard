@@ -276,19 +276,19 @@ if (!isset($jsonArray['error']))
                 "category" => $jsonArraySubCategory
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "P0 Cases",
+                "seriesname" => "P0 Automation Cases",
                 "data" => $jsonArraySubSet1
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "P1 Cases",
+                "seriesname" => "P1 Automation Cases",
                 "data" => $jsonArraySubSet2
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "P2 Cases",
+                "seriesname" => "P2 Automation Cases",
                 "data" => $jsonArraySubSet3
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Low Priority",
+                "seriesname" => "Low Priority Automation Cases",
                 "data" => $jsonArraySubSet4
             ));
             array_push($jsonArrayDataSet, array(
@@ -316,29 +316,42 @@ if (!isset($jsonArray['error']))
             }
         break;
 
-        case 'getAutomationCasesBreakdown_Project':
+        case 'getTestCasesBreakdown_Project':
             if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 1))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
             $sql = "select * from testrail where id = (select max(id) from testrail where projectName='" . $_GET['arguments'][0] . "');";
+
+            $totalCases = 0;
+            $jsonArrayInternal = array();
+
             foreach ($dbo->query($sql) as $row)
             {
                 $jsonArrayItem = array();
-                $jsonArrayItem['label'] = "P0 Cases";
+                $jsonArrayItem['label'] = "P0 Automation Cases";
                 $jsonArrayItem['value'] = $row['p0Cases'];
-                array_push($jsonArray, $jsonArrayItem);
-                $jsonArrayItem['label'] = "P1 Cases";
+                array_push($jsonArrayInternal, $jsonArrayItem);
+                $jsonArrayItem['label'] = "P1 Automation Cases";
                 $jsonArrayItem['value'] = $row['p1Cases'];
-                array_push($jsonArray, $jsonArrayItem);
-                $jsonArrayItem['label'] = "P2 Cases";
+                array_push($jsonArrayInternal, $jsonArrayItem);
+                $jsonArrayItem['label'] = "P2 Automation Cases";
                 $jsonArrayItem['value'] = $row['p2Cases'];
-                array_push($jsonArray, $jsonArrayItem);
+                array_push($jsonArrayInternal, $jsonArrayItem);
                 $otherCases = $row['totalAutomationCases'] - ($row['p0Cases'] + $row['p1Cases'] + $row['p2Cases']);
-                $jsonArrayItem['label'] = "Low Priority";
+                $jsonArrayItem['label'] = "Low Priority Automation Cases";
                 $jsonArrayItem['value'] = $otherCases;
-                array_push($jsonArray, $jsonArrayItem);
+                array_push($jsonArrayInternal, $jsonArrayItem);
+                $onlyManualCases = $row['totalCases'] - $row['totalAutomationCases'];
+                $jsonArrayItem['label'] = "Manual Cases";
+                $jsonArrayItem['value'] = $onlyManualCases;
+                array_push($jsonArrayInternal, $jsonArrayItem);
+                $totalCases = $row['totalCases'];
             }
+                array_push($jsonArray, array(
+                "totalCases" => $totalCases,
+                "fullResult" => $jsonArrayInternal
+            ));
         break;
 
         case 'getTestcaseCountTrend_Project':
@@ -393,27 +406,28 @@ if (!isset($jsonArray['error']))
             array_push($jsonArrayCategory, array(
                 "category" => $jsonArraySubCategory
             ));
-            array_push($jsonArrayDataSet, array(
-                "seriesname" => "Total Cases",
+     /*       array_push($jsonArrayDataSet, array(
+                "seriesname" => "Overall Testcases Count",
                 "data" => $jsonArraySubSet1
             ));
+     */
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Manual Cases",
+                "seriesname" => "Total Manual Cases",
                 "data" => $jsonArraySubSet7
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Automation Cases",
+                "seriesname" => "Total Automation Cases",
                 "data" => $jsonArraySubSet2
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "P0 Cases",
+                "seriesname" => "P0 Automation Cases",
                 "data" => $jsonArraySubSet3
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "P1 Cases",
+                "seriesname" => "P1 Automation Cases",
                 "data" => $jsonArraySubSet4
             ));
-            array_push($jsonArrayDataSet, array(
+     /*       array_push($jsonArrayDataSet, array(
                 "seriesname" => "P2 Cases",
                 "data" => $jsonArraySubSet5
             ));
@@ -421,6 +435,77 @@ if (!isset($jsonArray['error']))
                 "seriesname" => "Other Cases",
                 "data" => $jsonArraySubSet6
             ));
+     */       
+            $jsonArray = array(
+                "categories" => $jsonArrayCategory,
+                "dataset" => $jsonArrayDataSet
+            );
+        break;
+
+        case 'getTotalvsAutomatedCount_Project':
+            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 2))
+            {
+                $jsonArray['error'] = 'Error in passed arguments!';
+            }
+            $jsonArrayCategory = array();
+            $jsonArraySubCategory = array();
+            $jsonArrayDataSet = array();
+            $jsonArraySubSet1 = array();
+            $jsonArraySubSet2 = array();
+            $jsonArrayItem = array();
+            $jsonArrayItem['label'] = "P0 Automation cases";
+            array_push($jsonArraySubCategory, $jsonArrayItem);
+            $jsonArrayItem['label'] = "P1 Automation cases";
+            array_push($jsonArraySubCategory, $jsonArrayItem);
+            $jsonArrayItem['label'] = "P2 Automation cases";
+            array_push($jsonArraySubCategory, $jsonArrayItem);
+            $jsonArrayItem['label'] = "Other Automation cases";
+            array_push($jsonArraySubCategory, $jsonArrayItem);
+
+            $sql = "select * from testrail where id = (select max(id) from testrail where projectName='" . $_GET['arguments'][0] . "');";
+
+            foreach ($dbo->query($sql) as $row)
+            {
+                $jsonArrayItem1 = array();
+                $jsonArrayItem2 = array();
+                $jsonArrayItem3 = array();
+                $jsonArrayItem4 = array();
+                $jsonArrayItem1['value'] = $row['p0Cases'];
+                $jsonArrayItem2['value'] = $row['p1Cases'];
+                $jsonArrayItem3['value'] = $row['p2Cases'];
+                $otherCases = $row['totalAutomationCases'] - ($row['p0Cases'] + $row['p1Cases'] + $row['p2Cases']);
+                $jsonArrayItem4['value'] = $otherCases;
+                array_push($jsonArraySubSet1, $jsonArrayItem1);
+                array_push($jsonArraySubSet1, $jsonArrayItem2);
+                array_push($jsonArraySubSet1, $jsonArrayItem3);
+                array_push($jsonArraySubSet1, $jsonArrayItem4);
+
+                $jsonArrayItem5 = array();
+                $jsonArrayItem6 = array();
+                $jsonArrayItem7 = array();
+                $jsonArrayItem8 = array();
+                $jsonArrayItem5['value'] = $row['p0AutomatedCases'];
+                $jsonArrayItem6['value'] = $row['p1AutomatedCases'];
+                $jsonArrayItem7['value'] = $row['p2AutomatedCases'];
+                $otherCases = $row['alreadyAutomated'] - ($row['p0AutomatedCases'] + $row['p1AutomatedCases'] + $row['p2AutomatedCases']);
+                $jsonArrayItem8['value'] = $otherCases;
+                array_push($jsonArraySubSet2, $jsonArrayItem5);
+                array_push($jsonArraySubSet2, $jsonArrayItem6);
+                array_push($jsonArraySubSet2, $jsonArrayItem7);
+                array_push($jsonArraySubSet2, $jsonArrayItem8);
+            }
+            array_push($jsonArrayCategory, array(
+                "category" => $jsonArraySubCategory
+            ));
+            array_push($jsonArrayDataSet, array(
+                "seriesname" => "Total Automation Cases",
+                "data" => $jsonArraySubSet1
+            ));
+            array_push($jsonArrayDataSet, array(
+                "seriesname" => "Already Automated Count",
+                "data" => $jsonArraySubSet2
+            ));
+
             $jsonArray = array(
                 "categories" => $jsonArrayCategory,
                 "dataset" => $jsonArrayDataSet
