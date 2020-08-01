@@ -12,5 +12,5 @@
 <script src="js/themes/fusioncharts.theme.zune.js"></script>
 <script src="js/themes/fusioncharts.theme.carbon.js"></script>
 <script src="js/themes/fusioncharts.theme.gammel.js"></script>
-<script src="js/customJs/<?php echo $pageName; ?>-chart.js"></script>
-<script src="js/customJs/index-chart.js"></script>
+<script src="js/customJs/<?php echo $pageName; ?>-chart.js?1000"></script>
+<script src="js/customJs/index-chart.js?1000"></script>
