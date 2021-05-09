@@ -24,7 +24,7 @@ If its Mac, php server comes installed by default, just run this cmd to start se
 And then start the server using: `mysql.server start`
 
 #### 3. Setup Database and tables
-Use [this basic mysql dump file](server/mysql-dump.sql "mysql-dump.sql") to create database and insert few dummy entries, on the successful execution of this script you should get minimum 3 tables (<verticalName>_results, <verticalName>_jira, <verticalName>_testrail) created inside a database named as `thanos`
+Use [this basic mysql dump file](server/mysql-dump.sql "mysql-dump.sql") to create database and insert few dummy entries, on the successful execution of this script you should get minimum 3 tables (`<verticalName>_results`, `<verticalName>_jira`, `<verticalName>_testrail`) created inside a database named as `thanos`
 
 #### 4. Clone this repo in your machine
 After cloning the repo, navigate to the `server` folder and update database credentails in [this db config file](server/db-config.php "db-config.php")
