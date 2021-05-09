@@ -24,7 +24,7 @@ If its Mac, php server comes installed by default, just run this cmd to start se
 And then start the server using: `mysql.server start`
 
 #### 3. Setup Database and tables
-Use [this basic mysql dump file](server/mysql-dump.sql "mysql-dump.sql") to create database and insert few dummy entries, on the successful execution of this script you should get 3 tables (results, jira, testrail) created inside a database named as `thanos`
+Use [this basic mysql dump file](server/mysql-dump.sql "mysql-dump.sql") to create database and insert few dummy entries, on the successful execution of this script you should get minimum 3 tables (<verticalName>_results, <verticalName>_jira, <verticalName>_testrail) created inside a database named as `thanos`
 
 #### 4. Clone this repo in your machine
 After cloning the repo, navigate to the `server` folder and update database credentails in [this db config file](server/db-config.php "db-config.php")
@@ -65,11 +65,11 @@ Start the php server and navigate to `http://localhost:8282`, you should see the
 
 
 ## How I am populating data in mysql tables:
-1. For `results table` - I have updated my automation framework to insert required data in `results` table at the end of each automation execution.
+1. For `<verticalName>_results table` - I have updated my automation framework to insert required data in `results` table at the end of each automation execution.
 
-2. For `testrail table` - Please don't be confused with the table name, it is not only limited to testrail numbers, but these numbers can also be fetched from any testcase management tool. I have used APIs of Testrail to fetch all the required numbers from Testrail and then inserting them in the `testrail` table twice a week.
+2. For `<verticalName>_testrail table` - Please don't be confused with the table name, it is not only limited to testrail numbers, but these numbers can also be fetched from any testcase management tool. I have used APIs of Testrail to fetch all the required numbers from Testrail and then inserting them in the `testrail` table twice a week.
 
-3. For `jira table` - Again don't be confused with the table name, it is not only limited to jira numbers, but these numbers can also be fetched from any ticket management tool. I have used APIs of Jira to fetch all the required numbers from Jira and then inserting them in the `jira` table twice a week.
+3. For `<verticalName>_jira table` - Again don't be confused with the table name, it is not only limited to jira numbers, but these numbers can also be fetched from any ticket management tool. I have used APIs of Jira to fetch all the required numbers from Jira and then inserting them in the `jira` table twice a week.
 
 Point is, no matter if you insert data manually or via automation scripts, till the time you are able to add data in these 3 tables daily/weekly, your dashboard will keep showing updated data and graphs.
 
