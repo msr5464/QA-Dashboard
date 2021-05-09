@@ -1,33 +1,50 @@
 var backend = "server/results-data.php";
+var pageName = "results.php";
 
-function showDefaultCharts(timeFilter) {
+function showDefaultCharts(verticalName, timeFilter) {
     hideProjectCharts();
-    fetchAvgPercentageProd_ColumnChart(timeFilter);
-    fetchAvgPercentageStg_ColumnChart(timeFilter);
-    fetchAvgExecutionTimeProd_ColumnChart(timeFilter);
-    fetchAvgExecutionTimeStg_ColumnChart(timeFilter);
+    fetchAvgPercentageForRegression_ColumnChart(verticalName, timeFilter);
+    fetchAvgPercentageForSanity_ColumnChart(verticalName, timeFilter);
+    fetchAvgPercentageForProduction_ColumnChart(verticalName, timeFilter);
+    fetchAvgExecutionTimeForRegression_ColumnChart(verticalName, timeFilter);
+    fetchAvgExecutionTimeForSanity_ColumnChart(verticalName, timeFilter);
+    fetchAvgExecutionTimeForProduction_ColumnChart(verticalName, timeFilter);
 }
 
-function showProjectCharts(projectName, timeFilter) {
+function showProjectCharts(verticalName, projectName, timeFilter) {
     hideDefaultCharts();
-    fetchAvgPercentage_GaugeChart(projectName, timeFilter);
-    fetchLastSevenResults_ColumnChart(projectName, timeFilter);
-    fetchAvgDailyPercentage_LineChart(projectName, timeFilter);
-    fetchAvgDailyExecutionTime_LineChart(projectName, timeFilter);
-    fetchTotalCasesGroupwise_LineChart(projectName, timeFilter);
+    fetchAvgPercentage_GaugeChart(verticalName, projectName, timeFilter);
+    fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter);
+    fetchAvgDailyPercentage_LineChart(verticalName, projectName, timeFilter);
+    fetchAvgDailyExecutionTime_LineChart(verticalName, projectName, timeFilter);
+    fetchTotalCasesGroupwise_LineChart(verticalName, projectName, timeFilter);
 }
 
-function fetchAvgPercentageProd_ColumnChart(timeFilter) {
+function fetchAvgPercentageForRegression_ColumnChart(verticalName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getAvgPercentage',
-            arguments: [timeFilter, 'Production', 'production']
+            arguments: [verticalName, timeFilter, 'environment1', 'regression']
         },
         success: function (result) {
+            var resultsData = 0;
+            var environmentValue = 0;
+            var groupNameValue = 0;
+            for (i = 0; i < result.length; i++) {
+                $.each(result[i], function (key, value) {
+                    if (key === "resultsData")
+                        resultsData = value;
+                    if (key === "environmentValue")
+                        environmentValue = value;
+                    if (key === "groupNameValue")
+                        groupNameValue = value;
+                });
+            }
+
             var chartProperties = {
-                "caption": "Thanos Automation - Average Prod Percentage for last " + timeFilter + " days [All Projects]",
+                "caption": "Average '"+groupNameValue+"' percentage for last " + timeFilter + " days [on "+environmentValue+"]",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -44,7 +61,7 @@ function fetchAvgPercentageProd_ColumnChart(timeFilter) {
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
-                    "data": result
+                    "data": resultsData
                 }
             });
             apiChart.render();
@@ -52,17 +69,31 @@ function fetchAvgPercentageProd_ColumnChart(timeFilter) {
     });
 };
 
-function fetchAvgPercentageStg_ColumnChart(timeFilter) {
+function fetchAvgPercentageForSanity_ColumnChart(verticalName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getAvgPercentage',
-            arguments: [timeFilter, 'Staging', 'regression']
+            arguments: [verticalName, timeFilter, 'environment1', 'sanity']
         },
         success: function (result) {
+            var resultsData = 0;
+            var environmentValue = 0;
+            var groupNameValue = 0;
+            for (i = 0; i < result.length; i++) {
+                $.each(result[i], function (key, value) {
+                    if (key === "resultsData")
+                        resultsData = value;
+                    if (key === "environmentValue")
+                        environmentValue = value;
+                    if (key === "groupNameValue")
+                        groupNameValue = value;
+                });
+            }
+
             var chartProperties = {
-                "caption": "Thanos Automation - Average Staging Percentage for last " + timeFilter + " days [All Projects]",
+                "caption": "Average '"+groupNameValue+"' percentage for last " + timeFilter + " days [on "+environmentValue+"]",
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -79,7 +110,7 @@ function fetchAvgPercentageStg_ColumnChart(timeFilter) {
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
-                    "data": result
+                    "data": resultsData
                 }
             });
             apiChart.render();
@@ -87,34 +118,48 @@ function fetchAvgPercentageStg_ColumnChart(timeFilter) {
     });
 };
 
-function fetchAvgExecutionTimeProd_ColumnChart(timeFilter) {
+function fetchAvgPercentageForProduction_ColumnChart(verticalName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
-            functionname: 'getAvgExecutionTime',
-            arguments: [timeFilter, 'Production', 'production']
+            functionname: 'getAvgPercentage',
+            arguments: [verticalName, timeFilter, 'environment2', 'production']
         },
         success: function (result) {
+            var resultsData = 0;
+            var environmentValue = 0;
+            var groupNameValue = 0;
+            for (i = 0; i < result.length; i++) {
+                $.each(result[i], function (key, value) {
+                    if (key === "resultsData")
+                        resultsData = value;
+                    if (key === "environmentValue")
+                        environmentValue = value;
+                    if (key === "groupNameValue")
+                        groupNameValue = value;
+                });
+            }
+
             var chartProperties = {
-                "caption": "Thanos Automation - Average Prod Execution Time for last " + timeFilter + " days [All Projects]",
-                "yAxisName": "Time Taken (in minutes)",
+                "caption": "Average '"+groupNameValue+"' percentage for last " + timeFilter + " days [on "+environmentValue+"]",
+                "yAxisName": "Percentage",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
                 "showvalues": "1",
-                "plottooltext": "$label: $dataValue minutes",
-                "theme": "candy"
+                "plottooltext": "$label: $dataValue%",
+                "theme": "zune"
             };
 
             apiChart = new FusionCharts({
-                type: 'column2d',
+                type: 'column3d',
                 renderAt: 'column-chart-container3',
                 width: '96%',
                 height: '350',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
-                    "data": result
+                    "data": resultsData
                 }
             });
             apiChart.render();
@@ -122,17 +167,30 @@ function fetchAvgExecutionTimeProd_ColumnChart(timeFilter) {
     });
 };
 
-function fetchAvgExecutionTimeStg_ColumnChart(timeFilter) {
+function fetchAvgExecutionTimeForRegression_ColumnChart(verticalName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getAvgExecutionTime',
-            arguments: [timeFilter, 'Staging', 'regression']
+            arguments: [verticalName, timeFilter, 'environment1', 'regression']
         },
         success: function (result) {
+            var resultsData = 0;
+            var environmentValue = 0;
+            var groupNameValue = 0;
+            for (i = 0; i < result.length; i++) {
+                $.each(result[i], function (key, value) {
+                    if (key === "resultsData")
+                        resultsData = value;
+                    if (key === "environmentValue")
+                        environmentValue = value;
+                    if (key === "groupNameValue")
+                        groupNameValue = value;
+                });
+            }
             var chartProperties = {
-                "caption": "Thanos Automation - Average Staging Execution Time for last " + timeFilter + " days [All Projects]",
+                "caption": "Average '"+groupNameValue+"' execution time for last " + timeFilter + " days [on "+environmentValue+"]",
                 "yAxisName": "Time Taken (in minutes)",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -149,7 +207,7 @@ function fetchAvgExecutionTimeStg_ColumnChart(timeFilter) {
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
-                    "data": result
+                    "data": resultsData
                 }
             });
             apiChart.render();
@@ -157,13 +215,109 @@ function fetchAvgExecutionTimeStg_ColumnChart(timeFilter) {
     });
 };
 
-function fetchAvgPercentage_GaugeChart(projectName, timeFilter) {
+function fetchAvgExecutionTimeForSanity_ColumnChart(verticalName, timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getAvgExecutionTime',
+            arguments: [verticalName, timeFilter, 'environment1', 'sanity']
+        },
+        success: function (result) {
+            var resultsData = 0;
+            var environmentValue = 0;
+            var groupNameValue = 0;
+            for (i = 0; i < result.length; i++) {
+                $.each(result[i], function (key, value) {
+                    if (key === "resultsData")
+                        resultsData = value;
+                    if (key === "environmentValue")
+                        environmentValue = value;
+                    if (key === "groupNameValue")
+                        groupNameValue = value;
+                });
+            }
+            var chartProperties = {
+                "caption": "Average '"+groupNameValue+"' execution time for last " + timeFilter + " days [on "+environmentValue+"]",
+                "yAxisName": "Time Taken (in minutes)",
+                "placevaluesinside": "1",
+                "rotatevalues": "0",
+                "showvalues": "1",
+                "plottooltext": "$label: $dataValue minutes",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container5',
+                width: '96%',
+                height: '350',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": resultsData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchAvgExecutionTimeForProduction_ColumnChart(verticalName, timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getAvgExecutionTime',
+            arguments: [verticalName, timeFilter, 'environment2', 'production']
+        },
+        success: function (result) {
+            var resultsData = 0;
+            var environmentValue = 0;
+            var groupNameValue = 0;
+            for (i = 0; i < result.length; i++) {
+                $.each(result[i], function (key, value) {
+                    if (key === "resultsData")
+                        resultsData = value;
+                    if (key === "environmentValue")
+                        environmentValue = value;
+                    if (key === "groupNameValue")
+                        groupNameValue = value;
+                });
+            }
+            var chartProperties = {
+                "caption": "Average '"+groupNameValue+"' execution time for last " + timeFilter + " days [on "+environmentValue+"]",
+                "yAxisName": "Time Taken (in minutes)",
+                "placevaluesinside": "1",
+                "rotatevalues": "0",
+                "showvalues": "1",
+                "plottooltext": "$label: $dataValue minutes",
+                "theme": "candy"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'column2d',
+                renderAt: 'column-chart-container6',
+                width: '96%',
+                height: '350',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "data": resultsData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchAvgPercentage_GaugeChart(verticalName, projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getAvgPercentage_Project',
-            arguments: [projectName, timeFilter]
+            arguments: [verticalName, projectName, timeFilter, "'regression','production'"]
         },
         success: function (result) {
             var resultValue1 = 0;
@@ -281,20 +435,20 @@ function fetchAvgPercentage_GaugeChart(projectName, timeFilter) {
     });
 };
 
-function fetchLastSevenResults_ColumnChart(projectName, timeFilter) {
+function fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getLast7Records',
-            arguments: [projectName, timeFilter]
+            arguments: [verticalName, projectName, "30"]
         },
         success: function (result) {
             var linkSeperator = ", link- ";
             const fullData = JSON.parse(JSON.stringify(result));
 
             var chartProperties = {
-                "caption": "Details of last " + timeFilter + " Automation Builds for " + projectName,
+                "caption": "Details of last " + 30 + " Automation Builds for " + projectName,
                 "yAxisName": "Percentage",
                 "placevaluesinside": "1",
                 "rotatevalues": "0",
@@ -305,7 +459,7 @@ function fetchLastSevenResults_ColumnChart(projectName, timeFilter) {
 
             apiChart = new FusionCharts({
                 type: 'column3d',
-                renderAt: 'column-chart-container5',
+                renderAt: 'column-chart-container7',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',
@@ -349,13 +503,13 @@ function fetchLastSevenResults_ColumnChart(projectName, timeFilter) {
     });
 };
 
-function fetchAvgDailyPercentage_LineChart(projectName, timeFilter) {
+function fetchAvgDailyPercentage_LineChart(verticalName, projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getDailyAvgPercentage_Project',
-            arguments: [projectName, timeFilter]
+            arguments: [verticalName, projectName, timeFilter]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -390,13 +544,13 @@ function fetchAvgDailyPercentage_LineChart(projectName, timeFilter) {
     });
 };
 
-function fetchAvgDailyExecutionTime_LineChart(projectName, timeFilter) {
+function fetchAvgDailyExecutionTime_LineChart(verticalName, projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getDailyAvgExecutionTime_Project',
-            arguments: [projectName, timeFilter, "'regression','production'"]
+            arguments: [verticalName, projectName, timeFilter]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -431,13 +585,13 @@ function fetchAvgDailyExecutionTime_LineChart(projectName, timeFilter) {
     });
 };
 
-function fetchTotalCasesGroupwise_LineChart(projectName, timeFilter) {
+function fetchTotalCasesGroupwise_LineChart(verticalName, projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTotalCasesGroupwise_Project',
-            arguments: [projectName, timeFilter]
+            arguments: [verticalName, projectName, timeFilter]
         },
         success: function (result) {
             $.each(result, function (key, value) {

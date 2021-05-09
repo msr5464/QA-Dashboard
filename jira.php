@@ -19,6 +19,10 @@
                      <?php
                         require "html-components/header.php";
                      ?>
+                     <div id="warning" class="center">
+                        <label class="paragraph1" style="color:yellow">Currently showing graphs combining all the projects together!</label><br>
+                        <label class="paragraph2" style="color:orange">For any project specific data points, first select any project from the above shown dropdown!</label>
+                     </div>
                      <div class="row mt-3 db-chart">
                         <div id="parent1" class="col-lg-6 col-xl-4">
                            <div class="chart-card mb-4">
@@ -53,10 +57,6 @@
                      </div>
                      <div id="chart-container">
                         <center>
-                           <div id="warning">
-                              <label class="paragraph1" style="color:yellow">Currently showing graphs combining all the projects together!</label><br>
-                              <label class="paragraph2" style="color:orange">For any project specific data points, first select any project from the above shown dropdown!</label>
-                           </div>
                            <div class="defaultChart">
                               <br>
                               <label id="column-chart-container1">Chart is loading here...</label>
@@ -64,6 +64,14 @@
                            <div class="defaultChart">
                               <br>
                               <label id="column-chart-container2">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container3">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container4">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
                               <br>

@@ -1,33 +1,55 @@
 var backend = "server/jira-data.php";
+var pageName = "jira.php";
 
-function showDefaultCharts(timeFilter) {
+function showDefaultCharts(verticalName, timeFilter) {
     hideProjectCharts();
-    fetchTotalBugsFound_ColumnChart(timeFilter);
-    fetchBugPercentage_ColumnChart(timeFilter);
+    fetchTotalBugsFound_ColumnChart(verticalName, timeFilter);
+    fetchBugPercentage_ColumnChart(verticalName, timeFilter);
+    fetchProductionBugsFound_ColumnChart(verticalName, timeFilter);
+    fetchProdBugPercentage_ColumnChart(verticalName, timeFilter);
 }
 
-function showProjectCharts(projectName, timeFilter) {
+function showProjectCharts(verticalName, projectName, timeFilter) {
     hideDefaultCharts();
-    fetchTotalTicketsTested_GaugeChart(projectName, timeFilter);
-    fetchBugPriorityBreakdown_PieChart(projectName, timeFilter);
-    fetchBugPercentageTrend_ColumnChart(projectName, timeFilter);
-    fetchBugCountTrend_ColumnChart(projectName, timeFilter);
+    fetchTotalTicketsTested_GaugeChart(verticalName, projectName, timeFilter);
+    fetchBugPriorityBreakdown_PieChart(verticalName, projectName, timeFilter);
+    fetchBugPercentageTrend_ColumnChart(verticalName, projectName, timeFilter);
+    fetchBugCountTrend_ColumnChart(verticalName, projectName, timeFilter);
 }
 
-function fetchTotalBugsFound_ColumnChart(timeFilter) {
+function fetchTotalBugsFound_ColumnChart(verticalName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTotalBugsFound',
-            arguments: [timeFilter]
+            arguments: [verticalName, timeFilter]
         },
         success: function (result) {
+            var resultValue1 = 0;
+            var resultValue2 = 0;
+            var resultValue3 = 0;
             $.each(result, function (key, value) {
                 if (key === "categories")
                     categoriesData = value;
                 if (key === "dataset")
                     datasetData = value;
+                if (key === "totalTicketsTested_sum")
+                    resultValue1 = value;
+                if (key === "totalBugs_sum")
+                    resultValue2 = value;
+                if (key === "totalProdBugs_sum")
+                    resultValue3 = value;
+
+            document.getElementById("gauge-chart-container1").innerHTML = resultValue1;
+            document.getElementById("gauge-chart-container1").classList.remove('custom-text-2');
+            document.getElementById("gauge-chart-container1").classList.add('bigFont');
+            document.getElementById("gauge-chart-container2").innerHTML = resultValue2;
+            document.getElementById("gauge-chart-container2").classList.remove('custom-text-2');
+            document.getElementById("gauge-chart-container2").classList.add('bigFont');
+            document.getElementById("gauge-chart-container3").innerHTML = resultValue3;
+            document.getElementById("gauge-chart-container3").classList.remove('custom-text-2');
+            document.getElementById("gauge-chart-container3").classList.add('bigFont');
             });
 
             var chartProperties = {
@@ -56,13 +78,13 @@ function fetchTotalBugsFound_ColumnChart(timeFilter) {
     });
 };
 
-function fetchBugPercentage_ColumnChart(timeFilter) {
+function fetchBugPercentage_ColumnChart(verticalName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getBugPercentage',
-            arguments: [timeFilter]
+            arguments: [verticalName, timeFilter]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -73,7 +95,7 @@ function fetchBugPercentage_ColumnChart(timeFilter) {
             });
 
             var chartProperties = {
-                "caption": "Bug Ratio (per 100 tickets) for last " + timeFilter + " days [All Projects]",
+                "caption": "Total Bug Ratio (per 100 tickets) for last " + timeFilter + " days [All Projects]",
                 "plottooltext": "$seriesName - $dataValue",
                 "yAxisName": "Ratio per 100 tickets",
                 "rotatevalues": "0",
@@ -98,13 +120,99 @@ function fetchBugPercentage_ColumnChart(timeFilter) {
     });
 };
 
-function fetchTotalTicketsTested_GaugeChart(projectName, timeFilter) {
+
+function fetchProductionBugsFound_ColumnChart(verticalName, timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getProductionBugsFound',
+            arguments: [verticalName, timeFilter]
+        },
+        success: function (result) {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = {
+                "caption": "Production Bugs found in last " + timeFilter + " days [All Projects]",
+                "plottooltext": "$seriesName: $dataValue",
+                "yAxisName": "Number of Bugs",
+                "theme": "candy",
+                "showValues": "1",
+                "rotatevalues": "0"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'mscombi3d',
+                renderAt: 'column-chart-container3',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+
+function fetchProdBugPercentage_ColumnChart(verticalName, timeFilter) {
+    $.ajax({
+        url: backend,
+        type: 'GET',
+        data: {
+            functionname: 'getProdBugPercentage',
+            arguments: [verticalName, timeFilter]
+        },
+        success: function (result) {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var chartProperties = {
+                "caption": "Production Bug Ratio (per 100 tickets) for last " + timeFilter + " days [All Projects]",
+                "plottooltext": "$seriesName - $dataValue",
+                "yAxisName": "Ratio per 100 tickets",
+                "rotatevalues": "0",
+                "theme": "zune",
+                "showValues": "1"
+            };
+
+            apiChart = new FusionCharts({
+                type: 'mscombi2d',
+                renderAt: 'column-chart-container4',
+                width: '96%',
+                height: '400',
+                dataFormat: 'json',
+                dataSource: {
+                    "chart": chartProperties,
+                    "dataset": datasetData,
+                    "categories": categoriesData
+                }
+            });
+            apiChart.render();
+        }
+    });
+};
+
+function fetchTotalTicketsTested_GaugeChart(verticalName, projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTotalTicketsTested_Project',
-            arguments: [projectName, timeFilter]
+            arguments: [verticalName, projectName, timeFilter]
         },
         success: function (result) {
             var resultValue1 = 0;
@@ -134,13 +242,13 @@ function fetchTotalTicketsTested_GaugeChart(projectName, timeFilter) {
 };
 
 
-function fetchBugPriorityBreakdown_PieChart(projectName, timeFilter) {
+function fetchBugPriorityBreakdown_PieChart(verticalName, projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getBugPriorityBreakdown_Project',
-            arguments: [projectName, timeFilter]
+            arguments: [verticalName, projectName, timeFilter]
         },
         success: function (result) {
 
@@ -171,13 +279,13 @@ function fetchBugPriorityBreakdown_PieChart(projectName, timeFilter) {
     });
 };
 
-function fetchBugPercentageTrend_ColumnChart(projectName, timeFilter) {
+function fetchBugPercentageTrend_ColumnChart(verticalName, projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getBugPercentageTrend_Project',
-            arguments: [projectName, timeFilter]
+            arguments: [verticalName, projectName, timeFilter]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -212,13 +320,13 @@ function fetchBugPercentageTrend_ColumnChart(projectName, timeFilter) {
     });
 };
 
-function fetchBugCountTrend_ColumnChart(projectName, timeFilter) {
+function fetchBugCountTrend_ColumnChart(verticalName, projectName, timeFilter) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getBugCountTrend_Project',
-            arguments: [projectName, timeFilter]
+            arguments: [verticalName, projectName, timeFilter]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -231,8 +339,8 @@ function fetchBugCountTrend_ColumnChart(projectName, timeFilter) {
             var chartProperties = {
                 "caption": "Trend of Bug Count for last " + timeFilter + " days for " + projectName,
                 "subCaption": "",
-                "plottooltext": "$seriesName - $dataValue%",
-                "yAxisName": "Percentage",
+                "plottooltext": "$seriesName - $dataValue",
+                "yAxisName": "Count",
                 "theme": "fusion",
                 "showValues": "1"
             };

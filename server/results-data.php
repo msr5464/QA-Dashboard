@@ -10,47 +10,89 @@ if (!isset($_GET['functionname']))
 
 if (!isset($jsonArray['error']))
 {
+    $tableName = str_replace(" ", "_", strtolower($_GET['arguments'][0])."_results");
+
     switch ($_GET['functionname'])
     {
-        case 'getAvgPercentage':
-            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 3))
+        case 'getProjectNames':
+            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 1))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
-            $sql = "select projectName,round(AVG(percentage),0) as percentage from results where environment='" . $_GET['arguments'][1] . "' and groupName='" . $_GET['arguments'][2] . "' and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][0] . " DAY) group by projectName order by projectName desc;";
+            $sql = "select projectName from $tableName group by projectName order by projectName asc;";
 
             foreach ($dbo->query($sql) as $row)
             {
-                $jsonArrayItem = array();
-                $jsonArrayItem['label'] = $row['projectName'];
-                $jsonArrayItem['value'] = $row['percentage'];
-                array_push($jsonArray, $jsonArrayItem);
+                array_push($jsonArray, $row['projectName']);
             }
         break;
-
-        case 'getAvgExecutionTime':
-            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 3))
+        case 'getAvgPercentage':
+            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 4))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
-            $sql = "select projectName,round(AVG(TIME_TO_SEC(duration))/60,2) as duration from results where environment='" . $_GET['arguments'][1] . "' and groupName='" . $_GET['arguments'][2] . "' and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][0] . " DAY) group by projectName order by projectName desc;";
+            $sql = "select environment,groupName,projectName,round(AVG(percentage),0) as percentage from $tableName where environment=".getMyEnvironment($tableName, $_GET['arguments'][2])." and groupName='" . $_GET['arguments'][3] . "' and createdAt>=DATE_SUB((select max(createdAt) from $tableName), INTERVAL " . $_GET['arguments'][1] . " DAY) group by projectName order by projectName desc;";
+            $environmentValue = "";
+            $groupNameValue = "";
+            $jsonArraySubSet1 = array();
+            foreach ($dbo->query($sql) as $row)
+            {   
+                $jsonArrayItem = array();
+                $jsonArrayItem['label'] = $row['projectName'];
+                $jsonArrayItem['value'] = $row['percentage'];
+                $environmentValue = $row['environment'];
+                $groupNameValue = $row['groupName'];
+                array_push($jsonArraySubSet1, $jsonArrayItem);
 
+            }
+            array_push($jsonArray, array(
+                    "resultsData" => $jsonArraySubSet1
+                ));
+            array_push($jsonArray, array(
+                    "environmentValue" => $environmentValue
+                ));
+            array_push($jsonArray, array(
+                    "groupNameValue" => $groupNameValue
+                ));
+        break;
+
+        case 'getAvgExecutionTime':
+            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 4))
+            {
+                $jsonArray['error'] = 'Error in passed arguments!';
+            }
+            $sql = "select environment,groupName,projectName,round(AVG(TIME_TO_SEC(duration))/60,2) as duration from $tableName where environment=".getMyEnvironment($tableName, $_GET['arguments'][2])." and groupName='" . $_GET['arguments'][3] . "' and createdAt>=DATE_SUB((select max(createdAt) from $tableName), INTERVAL " . $_GET['arguments'][1] . " DAY) group by projectName order by projectName desc;";
+            $environmentValue = "";
+            $groupNameValue = "";
+            $jsonArraySubSet1 = array();
             foreach ($dbo->query($sql) as $row)
             {
                 $jsonArrayItem = array();
                 $jsonArrayItem['label'] = $row['projectName'];
                 $jsonArrayItem['value'] = $row['duration'];
-                array_push($jsonArray, $jsonArrayItem);
+                $environmentValue = $row['environment'];
+                $groupNameValue = $row['groupName'];
+                array_push($jsonArraySubSet1, $jsonArrayItem);
+
             }
+            array_push($jsonArray, array(
+                    "resultsData" => $jsonArraySubSet1
+                ));
+            array_push($jsonArray, array(
+                    "environmentValue" => $environmentValue
+                ));
+            array_push($jsonArray, array(
+                    "groupNameValue" => $groupNameValue
+                ));
         break;
 
         case 'getLast7Records':
-            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 2))
+            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 3))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
             $counter = 1;
-            $sql = "select buildTag,resultsLink,percentage,Date(createdAt) as createdAt from results where projectName='" . $_GET['arguments'][0] . "' order by id desc limit " . $_GET['arguments'][1];
+            $sql = "select buildTag,resultsLink,percentage,Date(createdAt) as createdAt from $tableName where projectName='" . $_GET['arguments'][1] . "' order by id desc limit " . $_GET['arguments'][2];
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -62,11 +104,11 @@ if (!isset($jsonArray['error']))
         break;
 
         case 'getAvgPercentage_Project':
-            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 2))
+            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 4))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
-            $sql = "select environment,round(AVG(percentage),0) as percentage from results where projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][1] . " DAY) group by environment;";
+            $sql = "select environment,round(AVG(percentage),0) as percentage from $tableName where projectName='" . $_GET['arguments'][1] . "' and groupName in (" . $_GET['arguments'][3] . ") and createdAt>=DATE_SUB((select max(createdAt) from $tableName), INTERVAL " . $_GET['arguments'][2] . " DAY) group by environment;";
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -88,21 +130,22 @@ if (!isset($jsonArray['error']))
         break;
 
         case 'getDailyAvgPercentage_Project':
-            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 2))
+            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 3))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
             $lastDate = '2010-01-01';
-            $lastProd = 0;
-            $lastSbx = 0;
-            $lastStg = 0;
+            $lastRegression = 0;
+            $lastProduction = 0;
+            $lastSanity = 0;
             $jsonArrayCategory = array();
             $jsonArraySubCategory = array();
             $jsonArrayDataSet = array();
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
             $jsonArraySubSet3 = array();
-            $sql = "SELECT  DATE(createdAt) as createdAt, avg(percentage) as percentage, environment FROM `results` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][1] . " DAY) GROUP BY DATE(createdAt),environment;";
+            $sql = "SELECT  DATE(createdAt) as createdAt, avg(percentage) as percentage, groupName FROM $tableName WHERE projectName='" . $_GET['arguments'][1] . "' and (environment=".getMyEnvironment($tableName, 'environment1')." or environment=".getMyEnvironment($tableName, 'environment2').") and createdAt>=DATE_SUB((select max(createdAt) from $tableName), INTERVAL " . $_GET['arguments'][2] . " DAY) GROUP BY DATE(createdAt),groupName;";
+            $sql = updateGroupBy($sql, $_GET['arguments'][2]);
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -113,24 +156,24 @@ if (!isset($jsonArray['error']))
 
                 if ($lastDate == $row['createdAt'])
                 {
-                    if ($row['environment'] == "Production")
+                    if ($row['groupName'] == "regression")
                     {
                         $jsonArrayItem1['value'] = $row['percentage'];
-                        $lastProd = $row['percentage'];
+                        $lastRegression = $row['percentage'];
                         array_pop($jsonArraySubSet1);
                         array_push($jsonArraySubSet1, $jsonArrayItem1);
                     }
-                    else if ($row['environment'] == "Sandbox")
+                    else if ($row['groupName'] == "production")
                     {
                         $jsonArrayItem2['value'] = $row['percentage'];
-                        $lastSbx = $row['percentage'];
+                        $lastProduction = $row['percentage'];
                         array_pop($jsonArraySubSet2);
                         array_push($jsonArraySubSet2, $jsonArrayItem2);
                     }
-                    else if ($row['environment'] == "Staging")
+                    else if ($row['groupName'] == "sanity")
                     {
                         $jsonArrayItem3['value'] = $row['percentage'];
-                        $lastStg = $row['percentage'];
+                        $lastSanity = $row['percentage'];
                         array_pop($jsonArraySubSet3);
                         array_push($jsonArraySubSet3, $jsonArrayItem3);
                     }
@@ -141,23 +184,23 @@ if (!isset($jsonArray['error']))
                     $jsonArrayItem['label'] = $row['createdAt'];
                     array_push($jsonArraySubCategory, $jsonArrayItem);
 
-                    if ($row['environment'] == "Production")
+                    if ($row['groupName'] == "regression")
                     {
-                        $lastProd = $row['percentage'];
+                        $lastRegression = $row['percentage'];
                     }
 
-                    if ($row['environment'] == "Sandbox")
+                    if ($row['groupName'] == "production")
                     {
-                        $lastSbx = $row['percentage'];
+                        $lastProduction = $row['percentage'];
                     }
 
-                    if ($row['environment'] == "Staging")
+                    if ($row['groupName'] == "sanity")
                     {
-                        $lastStg = $row['percentage'];
+                        $lastSanity = $row['percentage'];
                     }
-                    $jsonArrayItem1['value'] = $lastProd;
-                    $jsonArrayItem2['value'] = $lastSbx;
-                    $jsonArrayItem3['value'] = $lastStg;
+                    $jsonArrayItem1['value'] = $lastRegression;
+                    $jsonArrayItem2['value'] = $lastProduction;
+                    $jsonArrayItem3['value'] = $lastSanity;
                     array_push($jsonArraySubSet1, $jsonArrayItem1);
                     array_push($jsonArraySubSet2, $jsonArrayItem2);
                     array_push($jsonArraySubSet3, $jsonArrayItem3);
@@ -167,39 +210,40 @@ if (!isset($jsonArray['error']))
                 "category" => $jsonArraySubCategory
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Production",
+                "seriesname" => "Sanity",
+                "data" => $jsonArraySubSet3
+            ));
+            array_push($jsonArrayDataSet, array(
+                "seriesname" => "Regression",
                 "data" => $jsonArraySubSet1
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Sandbox",
+                "seriesname" => "Production",
                 "data" => $jsonArraySubSet2
             ));
-            array_push($jsonArrayDataSet, array(
-                "seriesname" => "Staging",
-                "data" => $jsonArraySubSet3
-            ));
+            
             $jsonArray = array(
                 "categories" => $jsonArrayCategory,
                 "dataset" => $jsonArrayDataSet
             );
             break;
-
         case 'getDailyAvgExecutionTime_Project':
             if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 3))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
             $lastDate = '2010-01-01';
-            $lastProd = 0;
-            $lastSbx = 0;
-            $lastStg = 0;
+            $lastRegression = 0;
+            $lastProduction = 0;
+            $lastSanity = 0;
             $jsonArrayCategory = array();
             $jsonArraySubCategory = array();
             $jsonArrayDataSet = array();
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
             $jsonArraySubSet3 = array();
-            $sql = "SELECT  DATE(createdAt) as createdAt, round(AVG(TIME_TO_SEC(duration))/60,2) as duration, environment FROM `results` WHERE projectName='" . $_GET['arguments'][0] . "' and groupName in (" . $_GET['arguments'][2] . ") and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][1] . " DAY) GROUP BY DATE(createdAt),environment;";
+            $sql = "SELECT  DATE(createdAt) as createdAt, round(AVG(TIME_TO_SEC(duration))/60,2) as duration, groupName FROM $tableName WHERE projectName='" . $_GET['arguments'][1] . "' and (environment=".getMyEnvironment($tableName, 'environment1')." or environment=".getMyEnvironment($tableName, 'environment2').") and createdAt>=DATE_SUB((select max(createdAt) from $tableName), INTERVAL " . $_GET['arguments'][2] . " DAY) GROUP BY DATE(createdAt),groupName;";
+            $sql = updateGroupBy($sql, $_GET['arguments'][2]);
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -210,24 +254,24 @@ if (!isset($jsonArray['error']))
 
                 if ($lastDate == $row['createdAt'])
                 {
-                    if ($row['environment'] == "Production")
+                    if ($row['groupName'] == "regression")
                     {
                         $jsonArrayItem1['value'] = $row['duration'];
-                        $lastProd = $row['duration'];
+                        $lastRegression = $row['duration'];
                         array_pop($jsonArraySubSet1);
                         array_push($jsonArraySubSet1, $jsonArrayItem1);
                     }
-                    else if ($row['environment'] == "Sandbox")
+                    else if ($row['groupName'] == "production")
                     {
                         $jsonArrayItem2['value'] = $row['duration'];
-                        $lastSbx = $row['duration'];
+                        $lastProduction = $row['duration'];
                         array_pop($jsonArraySubSet2);
                         array_push($jsonArraySubSet2, $jsonArrayItem2);
                     }
-                    else if ($row['environment'] == "Staging")
+                    else if ($row['groupName'] == "sanity")
                     {
                         $jsonArrayItem3['value'] = $row['duration'];
-                        $lastStg = $row['duration'];
+                        $lastSanity = $row['duration'];
                         array_pop($jsonArraySubSet3);
                         array_push($jsonArraySubSet3, $jsonArrayItem3);
                     }
@@ -238,23 +282,23 @@ if (!isset($jsonArray['error']))
                     $jsonArrayItem['label'] = $row['createdAt'];
                     array_push($jsonArraySubCategory, $jsonArrayItem);
 
-                    if ($row['environment'] == "Production")
+                    if ($row['groupName'] == "regression")
                     {
-                        $lastProd = $row['duration'];
+                        $lastRegression = $row['duration'];
                     }
 
-                    if ($row['environment'] == "Sandbox")
+                    if ($row['groupName'] == "production")
                     {
-                        $lastSbx = $row['duration'];
+                        $lastProduction = $row['duration'];
                     }
 
-                    if ($row['environment'] == "Staging")
+                    if ($row['groupName'] == "sanity")
                     {
-                        $lastStg = $row['duration'];
+                        $lastSanity = $row['duration'];
                     }
-                    $jsonArrayItem1['value'] = $lastProd;
-                    $jsonArrayItem2['value'] = $lastSbx;
-                    $jsonArrayItem3['value'] = $lastStg;
+                    $jsonArrayItem1['value'] = $lastRegression;
+                    $jsonArrayItem2['value'] = $lastProduction;
+                    $jsonArrayItem3['value'] = $lastSanity;
                     array_push($jsonArraySubSet1, $jsonArrayItem1);
                     array_push($jsonArraySubSet2, $jsonArrayItem2);
                     array_push($jsonArraySubSet3, $jsonArrayItem3);
@@ -264,17 +308,18 @@ if (!isset($jsonArray['error']))
                 "category" => $jsonArraySubCategory
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Production",
+                "seriesname" => "Sanity",
+                "data" => $jsonArraySubSet3
+            ));
+            array_push($jsonArrayDataSet, array(
+                "seriesname" => "Regression",
                 "data" => $jsonArraySubSet1
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Sandbox",
+                "seriesname" => "Production",
                 "data" => $jsonArraySubSet2
             ));
-            array_push($jsonArrayDataSet, array(
-                "seriesname" => "Staging",
-                "data" => $jsonArraySubSet3
-            ));
+            
             $jsonArray = array(
                 "categories" => $jsonArrayCategory,
                 "dataset" => $jsonArrayDataSet
@@ -282,21 +327,22 @@ if (!isset($jsonArray['error']))
             break;
 
         case 'getTotalCasesGroupwise_Project':
-            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 2))
+            if (!is_array($_GET['arguments']) || (count($_GET['arguments']) < 3))
             {
                 $jsonArray['error'] = 'Error in passed arguments!';
             }
             $lastDate = '2010-01-01';
             $lastRegression = 0;
             $lastProduction = 0;
-            $lastP0 = 0;
+            $lastSanity = 0;
             $jsonArrayCategory = array();
             $jsonArraySubCategory = array();
             $jsonArrayDataSet = array();
             $jsonArraySubSet1 = array();
             $jsonArraySubSet2 = array();
             $jsonArraySubSet3 = array();
-            $sql = "SELECT  DATE(createdAt) as createdAt, max(totalCases) as totalCases, groupName FROM `results` WHERE projectName='" . $_GET['arguments'][0] . "' and createdAt>=DATE_SUB((select max(createdAt) from results), INTERVAL " . $_GET['arguments'][1] . " DAY) GROUP BY DATE(createdAt),groupName;";
+            $sql = "SELECT  DATE(createdAt) as createdAt, max(totalCases) as totalCases, groupName FROM $tableName WHERE projectName='" . $_GET['arguments'][1] . "' and (environment=".getMyEnvironment($tableName, 'environment1')." or environment=".getMyEnvironment($tableName, 'environment2').") and createdAt>=DATE_SUB((select max(createdAt) from $tableName), INTERVAL " . $_GET['arguments'][2] . " DAY) GROUP BY DATE(createdAt),groupName;";
+            $sql = updateGroupBy($sql, $_GET['arguments'][2]);
 
             foreach ($dbo->query($sql) as $row)
             {
@@ -321,10 +367,10 @@ if (!isset($jsonArray['error']))
                         array_pop($jsonArraySubSet2);
                         array_push($jsonArraySubSet2, $jsonArrayItem2);
                     }
-                    else if ($row['groupName'] == "p0")
+                    else if ($row['groupName'] == "sanity")
                     {
                         $jsonArrayItem3['value'] = $row['totalCases'];
-                        $lastP0 = $row['totalCases'];
+                        $lastSanity = $row['totalCases'];
                         array_pop($jsonArraySubSet3);
                         array_push($jsonArraySubSet3, $jsonArrayItem3);
                     }
@@ -345,13 +391,13 @@ if (!isset($jsonArray['error']))
                         $lastProduction = $row['totalCases'];
                     }
 
-                    if ($row['groupName'] == "p0")
+                    if ($row['groupName'] == "sanity")
                     {
-                        $lastP0 = $row['totalCases'];
+                        $lastSanity = $row['totalCases'];
                     }
                     $jsonArrayItem1['value'] = $lastRegression;
                     $jsonArrayItem2['value'] = $lastProduction;
-                    $jsonArrayItem3['value'] = $lastP0;
+                    $jsonArrayItem3['value'] = $lastSanity;
                     array_push($jsonArraySubSet1, $jsonArrayItem1);
                     array_push($jsonArraySubSet2, $jsonArrayItem2);
                     array_push($jsonArraySubSet3, $jsonArrayItem3);
@@ -360,13 +406,16 @@ if (!isset($jsonArray['error']))
             array_push($jsonArrayCategory, array(
                 "category" => $jsonArraySubCategory
             ));
-            //array_push($jsonArrayDataSet, array("seriesname"=>"PO Cases", "data"=>$jsonArraySubSet3));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Regression Cases",
+                "seriesname"=>"Sanity", 
+                "data"=>$jsonArraySubSet3)
+            );
+            array_push($jsonArrayDataSet, array(
+                "seriesname" => "Regression",
                 "data" => $jsonArraySubSet1
             ));
             array_push($jsonArrayDataSet, array(
-                "seriesname" => "Production Cases",
+                "seriesname" => "Production",
                 "data" => $jsonArraySubSet2
             ));
             $jsonArray = array(
@@ -377,4 +426,23 @@ if (!isset($jsonArray['error']))
         }
         echo json_encode($jsonArray);
     }
+
+    function updateGroupBy($sql, $filter)
+    {
+        $updatedSql = $sql;
+        if($filter == 90)
+            $updatedSql = str_replace("GROUP BY DATE", "GROUP BY WEEK", $sql);
+        else if($filter == 365)
+            $updatedSql = str_replace("GROUP BY DATE", "GROUP BY MONTH", $sql);
+        return $updatedSql;
+    }
+
+    function getMyEnvironment($tableName, $envCount)
+    {
+        $updatedSql = "(Select " . $envCount . " from vertical where tableName='".str_replace("_results", "", $tableName)."')";
+        return $updatedSql;
+    }
+
 ?>
+
+

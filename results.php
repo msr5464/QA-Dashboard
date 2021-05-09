@@ -22,7 +22,7 @@
                      <div class="row mt-3 db-chart">
                         <div id="parent1" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title">Average Production Percentage</div>
+                              <div class="chart-title">Production Percentage [production]</div>
                               <div id="chart1" class="">
                                  <center>
                                     <label class="gauge custom-text-2" id="gauge-chart-container1">Project not selected.<br>No data to display!</label>
@@ -32,7 +32,7 @@
                         </div>
                         <div id="parent2" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title">Average Sandbox Percentage</div>
+                              <div class="chart-title">Sandbox Percentage [regression]</div>
                               <div id="chart2" class="">
                                  <center>
                                     <label class="gauge custom-text-2" id="gauge-chart-container2">Project not selected.<br>No data to display!</label>
@@ -42,7 +42,7 @@
                         </div>
                         <div id="parent3" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
                            <div class="chart-card mb-4">
-                              <div class="chart-title">Average Staging Percentage</div>
+                              <div class="chart-title">Staging Percentage [regression]</div>
                               <div id="chart3" class="">
                                  <center>
                                     <label class="gauge custom-text-2" id="gauge-chart-container3">Project not selected.<br>No data to display!</label>
@@ -73,9 +73,17 @@
                               <br>
                               <label id="column-chart-container4">Chart is loading here...</label>
                            </div>
-                           <div class="projectChart">
+                           <div class="defaultChart">
                               <br>
                               <label id="column-chart-container5">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container6">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="column-chart-container7">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
                               <br>

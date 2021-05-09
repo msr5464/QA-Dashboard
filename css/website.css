@@ -183,20 +183,22 @@ body {
 	display: -ms-inline-flexbox;
 	display: inline-flex;
 	width: auto;
-	border-radius: 50px;
-	background-color: hsla(0, 0%, 100%, .13)
+	border-radius: 15px;
+	background-color: hsla(0, 0%, 100%, .13);
+	overflow-y: hidden;
+	max-width: 337px;
+	white-space: nowrap;
 }
 
 .buttonwrapper li {
 	display: block;
 	float: left;
-	margin-left: 35px;
+	margin-left: 25px;
 	height: 35px;
-	width: 80px
 }
 
 .buttonwrapper li:first-child {
-	margin-left: 0
+	margin-left: 0px
 }
 
 .buttonwrapper label {
@@ -386,8 +388,8 @@ body {
 }
 
 img.dashboardImage {
-	height: 20%;
-	width: 20%;
+	height: 18%;
+	width: 18%;
 }
 
 img.logo {
@@ -423,7 +425,7 @@ img.logo {
 	margin: 0;
 	font-family: Helvetica, Arial, sans-serif;
 	color: #ffffff;
-	font-size: 20px;
+	font-size: 22px;
 	font-weight: normal;
 	text-decoration: none;
 	letter-spacing: 0em;
@@ -454,4 +456,16 @@ img.logo {
 	text-decoration: all;
 	letter-spacing: 0em;
 	line-height: 2;
+}
+
+.center{
+	text-align: center;
+	align-content: center;
+	align-self: center;
+	align-items: center;
+	margin: auto;
+}
+
+.hide{
+	display: none;
 }

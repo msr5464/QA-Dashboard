@@ -16,17 +16,17 @@
  </div>
  <nav class="bd-links collapse" id="bd-docs-nav">
     <ul class="left-options">
-       <li class="left-option <?php echo $activateResultPage; ?>" id="results">
+       <li class="hide left-option <?php echo $activateResultPage; ?>" id="results">
           <a href="results.php">
           Automation Results
           </a>
        </li>
-       <li class="left-option <?php echo $activateTestrailPage; ?>" id="testrail">
+       <li class="hide left-option <?php echo $activateTestrailPage; ?>" id="testrail">
           <a href="testrail.php">
           Testrail Numbers
           </a>
        </li>
-       <li class="left-option <?php echo $activateJiraPage; ?>" id="jira">
+       <li class="hide left-option <?php echo $activateJiraPage; ?>" id="jira">
           <a href="jira.php">
           Bug Metrics
           </a>
@@ -37,6 +37,5 @@
           <img class="logo" src="images/ThanosLogo.png" title="Powered by Thanos and created by Mukesh Rajput">
        </li>
     </ul>
- </nav>
-          
+ </nav>     
 </div>
