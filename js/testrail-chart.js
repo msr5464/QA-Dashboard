@@ -1,34 +1,30 @@
-var backend = "server/testrail-data.php";
+var backend = "utils/testrail-data.php";
 var pageName = "testrail.php";
 
-function showDefaultCharts(verticalName, timeFilter) {
+function showDefaultCharts(verticalName, timeFilter, startDate, endDate) {
     hideProjectCharts();
-    fetchCoverageNumbers_GaugeChart_All(verticalName, timeFilter);
-    fetchAutomatedCountChange_ColumnChart(verticalName, timeFilter);
-    fetchP0CoverageChange_ColumnChart(verticalName, timeFilter);
-    fetchP1CoverageChange_ColumnChart(verticalName, timeFilter);
-    fetchTotalAutomationCoverage_ColumnChart(verticalName, timeFilter);
-    fetchTotalP0Coverage_ColumnChart(verticalName, timeFilter);
-    fetchTotalP1Coverage_ColumnChart(verticalName, timeFilter);
-    //fetchTotalP2Coverage_ColumnChart(verticalName, timeFilter);
-    fetchTestcaseDistribution_ColumnChart(verticalName, timeFilter);
+    fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, isPodDataActive);
+    fetchAutomatedCountChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
+    //fetchP0CoverageChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
+    //fetchP1CoverageChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
+    fetchFullCoverageData_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
+    fetchTestcaseDistribution_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
 }
 
-function showProjectCharts(verticalName, projectName, timeFilter) {
+function showProjectCharts(verticalName, projectName, timeFilter, startDate, endDate) {
     hideDefaultCharts();
-    fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter);
-    fetchTestCasesBreakdown_PieChart(verticalName, projectName, timeFilter);
-    fetchTotalvsAutomatedCount_ColumnChart(verticalName, projectName, timeFilter);
-    fetchTestcaseCountTrend_LineChart(verticalName, projectName, timeFilter);
+    fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter, startDate, endDate);
+    fetchTotalvsAutomatedCount_ColumnChart(verticalName, projectName, timeFilter, startDate, endDate);
+    fetchTestcaseCountTrend_LineChart(verticalName, projectName, timeFilter, startDate, endDate);
 }
 
-function fetchCoverageNumbers_GaugeChart_All(verticalName, timeFilter) {
+function fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getCoverageNumbers_All',
-            arguments: [verticalName, timeFilter]
+            arguments: [verticalName, startDate, endDate,isPodDataActive]
         },
         success: function (result) {
             var resultValue1 = 0;
@@ -58,8 +54,8 @@ function fetchCoverageNumbers_GaugeChart_All(verticalName, timeFilter) {
             apiChart1 = new FusionCharts({
                 type: 'angulargauge',
                 renderAt: 'gauge-chart-container1',
-                width: '88%',
-                height: '160',
+                width: '92%',
+                height: '150',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties1,
@@ -100,8 +96,8 @@ function fetchCoverageNumbers_GaugeChart_All(verticalName, timeFilter) {
             apiChart2 = new FusionCharts({
                 type: 'angulargauge',
                 renderAt: 'gauge-chart-container2',
-                width: '88%',
-                height: '160',
+                width: '92%',
+                height: '150',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties2,
@@ -142,8 +138,8 @@ function fetchCoverageNumbers_GaugeChart_All(verticalName, timeFilter) {
             apiChart3 = new FusionCharts({
                 type: 'angulargauge',
                 renderAt: 'gauge-chart-container3',
-                width: '88%',
-                height: '160',
+                width: '92%',
+                height: '150',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties3,
@@ -175,13 +171,13 @@ function fetchCoverageNumbers_GaugeChart_All(verticalName, timeFilter) {
 };
 
 
-function fetchAutomatedCountChange_ColumnChart(verticalName, timeFilter) {
+function fetchAutomatedCountChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getAutomatedCountChange',
-            arguments: [verticalName, timeFilter]
+            arguments: [verticalName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -219,13 +215,13 @@ function fetchAutomatedCountChange_ColumnChart(verticalName, timeFilter) {
 };
 
 
-function fetchP0CoverageChange_ColumnChart(verticalName, timeFilter) {
+function fetchP0CoverageChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getP0CoverageChange',
-            arguments: [verticalName, timeFilter]
+            arguments: [verticalName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -262,13 +258,13 @@ function fetchP0CoverageChange_ColumnChart(verticalName, timeFilter) {
     });
 };
 
-function fetchP1CoverageChange_ColumnChart(verticalName, timeFilter) {
+function fetchP1CoverageChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getP1CoverageChange',
-            arguments: [verticalName, timeFilter]
+            arguments: [verticalName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -305,33 +301,51 @@ function fetchP1CoverageChange_ColumnChart(verticalName, timeFilter) {
     });
 };
 
-function fetchTotalAutomationCoverage_ColumnChart(verticalName, timeFilter) {
+function fetchFullCoverageData_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
-            functionname: 'getTotalAutomationCoverage',
-            arguments: [verticalName]
+            functionname: 'getFullCoverageData',
+            arguments: [verticalName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
+            $.each(result, function (key, value) {
+                if (key === "categories")
+                    categoriesData = value;
+                if (key === "dataset")
+                    datasetData = value;
+            });
+
+            var today = new Date().toISOString().slice(0, 10);
+            if(today === endDate)
+                endDate = "'today'";
             var chartProperties = {
-                "caption": "Full Automation Coverage Percentage [All Projects]",
+                "caption": "Automation Coverage Percentage as on " + endDate + " [All Projects]",
                 "plottooltext": "$label: $dataValue% automated",
-                "xAxisName": "Project Name",
                 "yAxisName": "Percentage",
-                "rotatevalues": "0",
-                "theme": "candy"
+                "placevaluesinside": "1",
+                "rotatevalues": "1",
+                "showvalues": "1",
+                numbersuffix: "%",
+                "flatscrollbars": "0",
+                "scrollheight": "10",
+                "scrollColor": "#fff",
+                "numvisibleplot": "50",
+                "drawCrossLine": "1",
+                "theme": "fusion"
             };
 
             apiChart = new FusionCharts({
-                type: 'column2d',
+                type: 'scrollcolumn2d',
                 renderAt: 'column-chart-container4',
                 width: '96%',
-                height: '400',
+                height: '450',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
-                    "data": result
+                    "dataset": datasetData,
+                    "categories": categoriesData
                 }
             });
             apiChart.render();
@@ -339,113 +353,13 @@ function fetchTotalAutomationCoverage_ColumnChart(verticalName, timeFilter) {
     });
 };
 
-function fetchTotalP0Coverage_ColumnChart(verticalName, timeFilter) {
-    $.ajax({
-        url: backend,
-        type: 'GET',
-        data: {
-            functionname: 'getTotalP0Coverage',
-            arguments: [verticalName]
-        },
-        success: function (result) {
-            var chartProperties = {
-                "caption": "Only P0 Automation Coverage Percentage [All Projects]",
-                "xAxisName": "Project Name",
-                "yAxisName": "Percentage",
-                "rotatevalues": "0",
-                "theme": "candy"
-            };
-
-            apiChart = new FusionCharts({
-                type: 'column2d',
-                renderAt: 'column-chart-container5',
-                width: '96%',
-                height: '400',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "data": result
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchTotalP1Coverage_ColumnChart(verticalName, timeFilter) {
-    $.ajax({
-        url: backend,
-        type: 'GET',
-        data: {
-            functionname: 'getTotalP1Coverage',
-            arguments: [verticalName]
-        },
-        success: function (result) {
-            var chartProperties = {
-                "caption": "Only P1 Automation Coverage Percentage [All Projects]",
-                "xAxisName": "Project Name",
-                "yAxisName": "Percentage",
-                "rotatevalues": "0",
-                "theme": "candy"
-            };
-
-            apiChart = new FusionCharts({
-                type: 'column2d',
-                renderAt: 'column-chart-container6',
-                width: '96%',
-                height: '400',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "data": result
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchTotalP2Coverage_ColumnChart(verticalName, timeFilter) {
-    $.ajax({
-        url: backend,
-        type: 'GET',
-        data: {
-            functionname: 'getTotalP2Coverage',
-            arguments: [verticalName]
-        },
-        success: function (result) {
-            var chartProperties = {
-                "caption": "Only P2 Automation Coverage Percentage [All Projects]",
-                "plottooltext": "$seriesName: $dataValue%",
-                "xAxisName": "Project Name",
-                "yAxisName": "Percentage",
-                "rotatevalues": "0",
-                "theme": "candy"
-            };
-
-            apiChart = new FusionCharts({
-                type: 'column2d',
-                renderAt: 'column-chart-container7',
-                width: '96%',
-                height: '400',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "data": result
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchTestcaseDistribution_ColumnChart(verticalName, timeFilter) {
+function fetchTestcaseDistribution_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTestcaseCountDistribution',
-            arguments: [verticalName, timeFilter]
+            arguments: [verticalName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             var resultValue2 = 0;
@@ -457,17 +371,21 @@ function fetchTestcaseDistribution_ColumnChart(verticalName, timeFilter) {
                     datasetData = value;
             });
 
+            var today = new Date().toISOString().slice(0, 10);
+            if(today === endDate)
+                endDate = "'today'";
             var chartProperties = {
-                "caption": "Overall Testcase Distribution in Testrail [All Projects]",
+                "caption": "Overall Testcase Distribution as on " + endDate + " [All Projects]",
                 "placevaluesinside": "0",
                 "showvalues": "0",
+                "drawCrossLine": "1",
                 "plottooltext": "$seriesName: $dataValue",
                 "theme": "fusion",
                 "showsum": "1"
             };
             apiChart = new FusionCharts({
                 type: 'stackedcolumn2d',
-                renderAt: 'column-chart-container8',
+                renderAt: 'column-chart-container5',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',
@@ -482,13 +400,13 @@ function fetchTestcaseDistribution_ColumnChart(verticalName, timeFilter) {
     });
 };
 
-function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter) {
+function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter, startDate, endDate) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getCoverageNumbers_Project',
-            arguments: [verticalName, projectName, timeFilter]
+            arguments: [verticalName, projectName, startDate, endDate]
         },
         success: function (result) {
             var resultValue1 = 0;
@@ -518,8 +436,8 @@ function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter) 
             apiChart1 = new FusionCharts({
                 type: 'angulargauge',
                 renderAt: 'gauge-chart-container1',
-                width: '88%',
-                height: '160',
+                width: '92%',
+                height: '150',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties1,
@@ -560,8 +478,8 @@ function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter) 
             apiChart2 = new FusionCharts({
                 type: 'angulargauge',
                 renderAt: 'gauge-chart-container2',
-                width: '88%',
-                height: '160',
+                width: '92%',
+                height: '150',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties2,
@@ -602,8 +520,8 @@ function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter) 
             apiChart3 = new FusionCharts({
                 type: 'angulargauge',
                 renderAt: 'gauge-chart-container3',
-                width: '88%',
-                height: '160',
+                width: '92%',
+                height: '150',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties3,
@@ -634,68 +552,13 @@ function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter) 
     });
 };
 
-function fetchTestCasesBreakdown_PieChart(verticalName, projectName, timeFilter) {
-    $.ajax({
-        url: backend,
-        type: 'GET',
-        data: {
-            functionname: 'getTestCasesBreakdown_Project',
-            arguments: [verticalName, projectName, timeFilter]
-        },
-        success: function (result) {
-            var resultValue1 = 0;
-            var resultValue2 = 0;
-            for (i = 0; i < result.length; i++) {
-                $.each(result[i], function (key, value) {
-                    if (key === "totalCases")
-                        resultValue1 = value;
-                    if (key === "fullResult")
-                        resultValue2 = value;
-                });
-            }
-
-            var chartProperties = {
-                "caption": "Testcases Breakdown in tags for " + projectName,
-                "showpercentvalues": "1",
-                "defaultcenterlabel": "Automation Testcases",
-                "aligncaptionwithcanvas": "0",
-                "captionpadding": "0",
-                "decimals": "1",
-                "plottooltext": "$label: $dataValue",
-                "centerlabel": "$label: $value",
-                "theme": "candy"
-            };
-            apiChart = new FusionCharts({
-                type: 'doughnut2d',
-                renderAt: 'pie-chart-container1',
-                width: '96%',
-                height: '400',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "data": resultValue2
-                },
-                "events": {
-                    "beforeInitialize": function () {
-                        if (resultValue1) {
-                            var passPercentage = resultValue1[1].value;
-                            chartProperties.defaultcenterlabel = "Total Cases: " + resultValue1;
-                        }
-                    }
-                }
-            });
-            apiChart.render();
-        }
-    });
-};
-
-function fetchTotalvsAutomatedCount_ColumnChart(verticalName, projectName, timeFilter) {
+function fetchTotalvsAutomatedCount_ColumnChart(verticalName, projectName, timeFilter, startDate, endDate) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTotalvsAutomatedCount_Project',
-            arguments: [verticalName, projectName, timeFilter]
+            arguments: [verticalName, projectName, startDate, endDate]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -705,8 +568,11 @@ function fetchTotalvsAutomatedCount_ColumnChart(verticalName, projectName, timeF
                     datasetData = value;
             });
 
+            var today = new Date().toISOString().slice(0, 10);
+            if(today === endDate)
+                endDate = "'today'";
             var chartProperties = {
-                "caption": "Already Automated vs Total Automation cases for " + projectName,
+                "caption": "Already Automated vs Total Automation cases as on " + endDate + " [" + projectName + "]",
                 "yAxisName": "Testcase Count",
                 "plottooltext": "$seriesName - $dataValue",
                 "showValues": "1",
@@ -714,7 +580,7 @@ function fetchTotalvsAutomatedCount_ColumnChart(verticalName, projectName, timeF
             };
             apiChart = new FusionCharts({
                 type: 'overlappedColumn2d',
-                renderAt: 'column-chart-container9',
+                renderAt: 'column-chart-container6',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',
@@ -729,13 +595,13 @@ function fetchTotalvsAutomatedCount_ColumnChart(verticalName, projectName, timeF
     });
 };
 
-function fetchTestcaseCountTrend_LineChart(verticalName, projectName, timeFilter) {
+function fetchTestcaseCountTrend_LineChart(verticalName, projectName, timeFilter, startDate, endDate) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTestcaseCountTrend_Project',
-            arguments: [verticalName, projectName, timeFilter]
+            arguments: [verticalName, projectName, startDate, endDate]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -746,7 +612,7 @@ function fetchTestcaseCountTrend_LineChart(verticalName, projectName, timeFilter
             });
 
             var chartProperties = {
-                "caption": "Trend of Testcase Count for last " + timeFilter + " days for " + projectName,
+                "caption": "Trend of Testcase Count for last " + timeFilter + " days [" + projectName + "]",
                 "subCaption": "",
                 "plottooltext": "$seriesName - $dataValue",
                 "yAxisName": "Count",

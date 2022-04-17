@@ -1,13 +1,14 @@
 var defaultFilter = "7";
 var verticalName = "";
 var projectName = "";
+var isPodDataActive = "";
 
 $(function () {
     verticalName = $("#verticalName").html().trim();
     if (verticalName != "" && verticalName != null) {
-        saveVertical(verticalName);
+        setDataIntoStorage("selectedVertical", verticalName);
     } else {
-        verticalName = getVertical();
+        verticalName = getDataFromStorage("selectedVertical");
         if (verticalName != "" && verticalName != null) {
             $("#verticalName").html(verticalName);
         } else {
@@ -17,16 +18,16 @@ $(function () {
 
     selectedYear = $("#selectedYear").html().trim();
     if (selectedYear != "" && selectedYear != null) {
-        saveYear(selectedYear);
+        setDataIntoStorage("selectedYear", selectedYear);
     } else {
-        selectedYear = getYear();
+        selectedYear = getDataFromStorage("selectedYear");
         $("#selectedYear").html(selectedYear);
     }
-
+    setStartEndDates();
+    isPodDataActive = getDataFromVerticalTable(verticalName, "isPodDataActive");
     fetchActiveTabs(verticalName);
-    fetchProjectNames(verticalName);
+    fetchProjectNames(verticalName, isPodDataActive);
     activateFilter(verticalName);
-    window.setTimeout(hideBlankCharts, 2500);
 });
 
 $(document).ready(function () {
@@ -35,11 +36,15 @@ $(document).ready(function () {
     });
 
     $("#verticalName").click(function () {
-        saveVertical("");
+        setDataIntoStorage("selectedVertical", "");
+        setDataIntoStorage("startDate", "");
+        setDataIntoStorage("endDate", "");
+        saveFilter("7");
+        document.getElementById("selectedYear").innerHTML = "";
+        document.getElementById("dash").innerHTML = "";
         document.getElementById("verticalName").style.textTransform = "lowercase";
         $("#verticalName").html("<b><font color='yellow'>Redirecting back to select a vertical first...</font></b>");
         window.setTimeout(redirectToHomePage, 1000);
-
     });
 
     $(".filter").click(function () {
@@ -72,13 +77,8 @@ $(document).ready(function () {
         validateAndExecute(verticalName, getFilter());
     });
 
-    $("#last180days").click(function () {
-        saveFilter("180");
-        validateAndExecute(verticalName, getFilter());
-    });
-
-    $("#last365days").click(function () {
-        saveFilter("365");
+    $("#applyDateFilter").click(function () {
+        saveFilter("N");
         validateAndExecute(verticalName, getFilter());
     });
 });
@@ -111,21 +111,12 @@ function activateFilter(verticalName) {
             document.getElementById("last90days").classList.add("active");
             $("#filters").animate({scrollLeft: $('#last90days').position().left}, 500);
             break;
-        case '180':
-            document.getElementById("last180days").classList.add("active");
-            $("#filters").animate({scrollLeft: $('#last180days').position().left}, 500);
-            break;
-        case '365':
-            document.getElementById("last365days").classList.add("active");
-            $("#filters").animate({scrollLeft: $('#last365days').position().left}, 500);
+        case 'N':
+            document.getElementById("lastNdays").classList.add("active");
+            $("#filters").animate({scrollLeft: $('#lastNdays').position().left}, 500);
             break;
     }
     validateAndExecute(verticalName, currentFilter);
-}
-
-function saveVertical(value) {
-    localStorage.setItem("selectedVertical", value);
-    setCookie("selectedVertical", value);
 }
 
 function setCookie(cname, cvalue) {
@@ -135,25 +126,31 @@ function setCookie(cname, cvalue) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-function getVertical() {
-    return localStorage.getItem("selectedVertical");
-}
-
-function saveYear(value) {
-    localStorage.setItem("selectedYear", value);
-    setCookie("selectedYear", value);
-}
-
-function getYear() {
-    return localStorage.getItem("selectedYear");
+function getCookie(cname) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${cname}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
 function saveFilter(value) {
-    localStorage.setItem("selectedFilter", value);
+    setDataIntoStorage("selectedFilter", value);
 }
 
 function getFilter() {
-    return localStorage.getItem("selectedFilter");
+    return getDataFromStorage("selectedFilter");
+}
+
+function setDataIntoStorage(key, value) {
+    localStorage.setItem(key, value);
+    setCookie(key, value);
+}
+
+function getDataFromStorage(value) {
+    var localValue = localStorage.getItem(value);
+    if (localValue != "" && localValue != null)
+        return localValue;
+    else
+        return getCookie(value);
 }
 
 function hideProjectCharts() {
@@ -186,50 +183,89 @@ function hideBlankCharts() {
 }
 
 function validateAndExecute(verticalName, timeFilter) {
+    if(timeFilter === "N") {
+        var s = new Date(document.getElementById("startDate").value);
+        var e = new Date(document.getElementById("endDate").value);
+        setDataIntoStorage("startDate", s);
+        setDataIntoStorage("endDate", e);
+    }
+    else {
+        var today = new Date();
+        today.setDate(today.getDate() - timeFilter);
+        var s = today;
+        var e = new Date();;
+    }
+    var startDate = s.toISOString().slice(0, 10);
+    var endDate = e.toISOString().slice(0, 10);
+
     projectName = $("#projectName").html().trim();
     if (projectName.length != 0) {
-        showProjectCharts(verticalName, projectName, timeFilter);
+        showProjectCharts(verticalName, projectName, timeFilter, startDate, endDate);
     } else {
-        showDefaultCharts(verticalName, timeFilter);
+        showDefaultCharts(verticalName, timeFilter, startDate, endDate);
     }
 }
 
-function fetchProjectNames(verticalName) {
+function fetchProjectNames(verticalName, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getProjectNames',
-            arguments: [verticalName]
+            arguments: [verticalName, isPodDataActive]
         },
         success: function (result) {
-
             $.each(result, function (key, value) {
-                $("#projectNames").append($("<option />").val(value).text(value));
+                $("#projectNamesDropdown").append($("<option />").val(value).text(value));
             });
+            $(".chosen-select").chosen();
         }
     });
 };
 
 function fetchActiveTabs(verticalName) {
-    $.ajax({
-        url: "server/index-data.php",
-        type: 'GET',
-        data: {
-            functionname: 'getActiveTabs',
-            arguments: [verticalName]
-        },
-        success: function (result) {
-            for (i = 0; i < result.length; i++) {
-                $.each(result[i], function (key, value) {
-                    if (key === "isResultsActive" && value === "1")
-                        $("#results").show();
-                    if (key === "isTestrailActive" && value === "1")
-                        $("#testrail").show();
-                    if (key === "isJiraActive" && value === "1")
-                        $("#jira").show();
+    if (getDataFromVerticalTable(verticalName, "isResultsActive") == 1)
+        $("#results").show();
+    if (getDataFromVerticalTable(verticalName, "isTestrailActive") == 1)
+        $("#testrail").show();
+    if (getDataFromVerticalTable(verticalName, "isJiraActive") == 1)
+        $("#jira").show();
+    if (getDataFromVerticalTable(verticalName, "isUnitTestsActive") == 1)
+        $("#units").show();
+};
+
+function getDataFromVerticalTable(verticalName, columnName) {
+    var columnValue="";
+    for (i = 0; i < verticalTableData.length; i++) {
+        $.each(verticalTableData[i], function (key, value) {
+            if(key === "verticalName" && value === verticalName) {
+                $.each(verticalTableData[i], function (key, value) {
+                if (key === columnName)
+                    columnValue = value;
                 });
             }
+        });
+    }
+    return columnValue;
+};
+
+function setStartEndDates() {
+    var finalStartDate = new Date();
+    var finalEndDate = new Date();
+    var cachedStartDate = getDataFromStorage("startDate");
+    var cachedEndDate = getDataFromStorage("endDate");
+    if (cachedStartDate != "" && cachedStartDate != null) {
+        finalStartDate = new Date(cachedStartDate);
+        if (cachedEndDate != "" && cachedEndDate != null) {
+            finalEndDate = new Date(cachedEndDate);
         }
-    });
+    }
+    else {
+        finalStartDate.setMonth(finalStartDate.getMonth() - 6);
+    }
+
+    var startDate = document.getElementById("startDate");
+    startDate.setAttribute("value", finalStartDate.toISOString().slice(0, 10));
+    var endDate = document.getElementById("endDate");
+    endDate.setAttribute("value", finalEndDate.toISOString().slice(0, 10));
 };

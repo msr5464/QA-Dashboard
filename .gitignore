@@ -1,0 +1,15 @@
+*.class
+.metadata/*
+.settings/*
+test-output/*
+bin/*
+target/*
+.recommenders/*
+.idea/*
+/target/
+.DS_Store
+.classpath
+.project
+/bin/
+*.iml
+src/test/test.iml

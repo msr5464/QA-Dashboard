@@ -1,9 +1,17 @@
+<?php 
+ require("utils/config.php");
+ $fullData = getVerticalTableData();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
    <head>
+      <script type='text/javascript'>
+      var verticalTableData = <?php echo json_encode($fullData); ?>;
+      </script>
       <?php
          $pageName = "results";
-         require "html-components/head-title.php";
+         require "components/head-title.php";
       ?>
    </head>
    <body data-gr-c-s-loaded="true">
@@ -13,16 +21,16 @@
                <div class="row flex-xl-nowrap">
                   <?php
                      $activateResultPage = "active";
-                     require "html-components/left-menu.php";
+                     require "components/left-menu.php";
                   ?>
                   <div id="content-body" class="col-12 col-md-9 col-xl-10 pl-4 pr-4 bd-content">
                      <?php
-                        require "html-components/header.php";
+                        require "components/header.php";
                      ?>
                      <div class="row mt-3 db-chart">
-                        <div id="parent1" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
+                        <div id="parent1" class="col-lg-6 col-xl-4 column">
                            <div class="chart-card mb-4">
-                              <div class="chart-title">Production Percentage [production]</div>
+                              <div class="chart-title">Staging Pass Percentage</div>
                               <div id="chart1" class="">
                                  <center>
                                     <label class="gauge custom-text-2" id="gauge-chart-container1">Project not selected.<br>No data to display!</label>
@@ -30,9 +38,9 @@
                               </div>
                            </div>
                         </div>
-                        <div id="parent2" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
+                        <div id="parent2" class="col-lg-6 col-xl-4 column">
                            <div class="chart-card mb-4">
-                              <div class="chart-title">Sandbox Percentage [regression]</div>
+                              <div class="chart-title">Sandbox Pass Percentage</div>
                               <div id="chart2" class="">
                                  <center>
                                     <label class="gauge custom-text-2" id="gauge-chart-container2">Project not selected.<br>No data to display!</label>
@@ -40,9 +48,9 @@
                               </div>
                            </div>
                         </div>
-                        <div id="parent3" class="col-lg-6 col-xl-4" style="display: block; width: auto; height: auto;">
+                        <div id="parent3" class="col-lg-6 col-xl-4 column">
                            <div class="chart-card mb-4">
-                              <div class="chart-title">Staging Percentage [regression]</div>
+                              <div class="chart-title">Production Pass Percentage</div>
                               <div id="chart3" class="">
                                  <center>
                                     <label class="gauge custom-text-2" id="gauge-chart-container3">Project not selected.<br>No data to display!</label>
@@ -53,12 +61,7 @@
                      </div>
                      <div id="chart-container">
                         <center>
-                           <div id="warning">
-                              <label class="paragraph1" style="color:yellow">Currently showing graphs combining all the projects together!</label><br>
-                              <label class="paragraph2" style="color:orange">For any project specific data points, first select any project from the above shown dropdown!</label>
-                           </div>
                            <div class="defaultChart">
-                              <br>
                               <label id="column-chart-container1">Chart is loading here...</label>
                            </div>
                            <div class="defaultChart">
@@ -73,17 +76,13 @@
                               <br>
                               <label id="column-chart-container4">Chart is loading here...</label>
                            </div>
-                           <div class="defaultChart">
-                              <br>
-                              <label id="column-chart-container5">Chart is loading here...</label>
-                           </div>
-                           <div class="defaultChart">
-                              <br>
-                              <label id="column-chart-container6">Chart is loading here...</label>
-                           </div>
                            <div class="projectChart">
                               <br>
                               <label id="column-chart-container7">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="column-chart-container8">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
                               <br>
@@ -100,7 +99,7 @@
                         </center>
                      </div>
                      <?php
-                        require "html-components/footer.php";
+                        require "components/footer.php";
                      ?>
                   </div>
                </div>
