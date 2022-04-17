@@ -41,7 +41,7 @@
                                             <div id="parent1" class="col-lg-6">
                                                 <div class="chart-card mb-4">
                                                     <center>
-                                                        <div class="chart-title" id="text2"><b>Select the name of your PDG / Vertical name:</b></div>
+                                                        <div class="chart-title" id="text2"><b>Select the name of your Team / Vertical name:</b></div>
                                                         <div id="chart1" class="project-dropdown">
                                                             <form name="testform" method="POST" action="testrail.php">
                                                                 <br>
