@@ -79,7 +79,7 @@ Start the php server and navigate to `http://localhost:8282`, you should see the
 
 3. For `<teamName>_jira table` - Again don't be confused with the table name, it is not only limited to jira numbers, but these numbers can also be fetched from any ticket management tool. I have used APIs of Jira to fetch all the required numbers from Jira and then inserting them in the `jira` table twice a week.
 
-4. For `<pdgName>_units table` - This table is used to store the code coverage data sent by developer's pipeline into GCP bucket and from ther our worker read csv files and populate data into this table everyday.
+4. For `<teamName>_units table` - This table is used to store the code coverage data sent by developer's pipeline into GCP bucket and from ther our worker read csv files and populate data into this table everyday.
 
 Point is, no matter if you insert data manually or via automation scripts, till the time you are able to add data in these 4 tables daily/weekly, your dashboard will keep showing updated data and graphs.
 
