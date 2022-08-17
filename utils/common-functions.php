@@ -53,7 +53,7 @@ function getLastUpdatedTime() {
     global $pageName;
     $vertical = $verticalName;
     if($vertical == null || $vertical == "")
-        $vertical = $_COOKIE['selectedVertical'];
+        $vertical = $_COOKIE['pdg'];
     
     if($projectName != null && $projectName != "") {
         $sql = "select createdAt from ".str_replace(" ", "_", strtolower($vertical))."_".$pageName." where projectName in (" . $projectName . ") order by id desc limit 1";
@@ -86,8 +86,7 @@ function showPodLevelData($sql, $isPodDataActive)
     $updatedSql = $sql;
     if($isPodDataActive == 1)
      {
-        $updatedSql = str_replace(" where projectName not like 'Pod%'", "", $sql);
-        $updatedSql = str_replace(" and a.projectName not like 'Pod%'", "", $updatedSql);
+        $updatedSql = str_replace("projectName not like 'Pod%'", "projectName like 'Pod%'", $sql);
      }
     return $updatedSql;
 }

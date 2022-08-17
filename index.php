@@ -9,7 +9,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="theme-color" content="#000000">
         <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/website.css?1019"> </head>
+        <link rel="stylesheet" href="css/website.css?<?php echo $version; ?>"> 
+        <script type="text/javascript" src="js/cookies.js?<?php echo $version; ?>"></script>
+    </head>
 
     <body data-gr-c-s-loaded="true">
         <div id="root">
@@ -35,23 +37,18 @@
                                     <center>
                                         <p class="paragraph1">This dashboard is created to track all QA activities at one centralised place! </p>
                                         <br>
-                                        <p id="demo" class="paragraph2">To fetch the numbers/metrics, please select your respective PDG / Vertical name! </p>
+                                        <p id="demo" class="paragraph2">To fetch the numbers/metrics, please select your respective Group / Vertical name! </p>
                                         <br>
                                         <div class="mt-3 db-chart">
                                             <div id="parent1" class="col-lg-6">
                                                 <div class="chart-card mb-4">
                                                     <center>
-                                                        <div class="chart-title" id="text2"><b>Select the name of your Team / Vertical name:</b></div>
-                                                        <div id="chart1" class="project-dropdown">
+                                                        <div class="chart-title greyBackground" id="text2"><b>Select the name of your Group / Vertical name:</b></div>
+                                                        <div id="chart1" class="project-dropdown greyBackground">
                                                             <form name="testform" method="POST" action="testrail.php">
                                                                 <br>
-                                                                <select name='selectedYear' id='selectedYear'>
-                                                                    <option value='2022'>2022</option>
-                                                                    <option value='2021'>2021</option>
-                                                                    <option value='2020'>2020</option>
-                                                                </select>
-                                                                <select name='verticalName' id='verticalName'>
-                                                                    <option value=''>Choose your vertical</option>
+                                                                <select name='verticalName' id='verticalName' style="width: 35%">
+                                                                    <option value=''>Choose your Vertical Name</option>
                                                                     <?php
                                                                         foreach ($fullData as $row) 
                                                                         {
@@ -59,7 +56,7 @@
                                                                         }
                                                                     ?>
                                                                 </select>
-                                                                <script type="text/javascript" src="js/cookies.js"></script> &nbsp;&nbsp;
+                                                                &nbsp;&nbsp;
                                                                 <button type="submit" value="submit">submit</button></form>
                                                      <br> </div>
                                                     </center>

@@ -1,12 +1,8 @@
-var x = getCookie('selectedYear');
+var x = getCookie('pdg');
 if (x)
 {
-   document.getElementById("selectedYear").value = x;
-}
-var y = getCookie('selectedVertical');
-if (y)
-{
-   document.getElementById("verticalName").value = y;
+   //document.getElementById("verticalName").value = x;
+   window.location.href = 'testrail.php';
 }
   function getCookie(name) {
     var nameEQ = name + "=";

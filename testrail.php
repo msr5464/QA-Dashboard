@@ -31,9 +31,10 @@
                         <div id="parent1" class="col-lg-6 col-xl-4 column">
                            <div class="chart-card mb-4">
                               <div class="chart-title" id="text2">Full Automation Coverage</div>
-                              <div id="chart1" class="chart">
+                              <div id="chart1" class="chart gaugeContainer">
                                  <center>
-                                    <label class="gauge custom-text-2" id="gauge-chart-container1">Project not selected.<br>No data to display!</label>
+                                    <label class="gauge custom-text-2" id="gauge-chart-container1"><img src="../images/loader.gif" height="100" /></label>
+                                    <label class="linearChart" id="linear-chart-container1"></label>
                                  </center>
                               </div>
                            </div>
@@ -41,9 +42,10 @@
                         <div id="parent2" class="col-lg-6 col-xl-4 column">
                            <div class="chart-card mb-4">
                               <div class="chart-title" id="text2">P0 Automation Coverage</div>
-                              <div id="chart2" class="chart">
+                              <div id="chart2" class="chart gaugeContainer">
                                  <center>
-                                    <label class="gauge custom-text-2" id="gauge-chart-container2">Project not selected.<br>No data to display!</label>
+                                    <label class="gauge custom-text-2" id="gauge-chart-container2"><img src="../images/loader.gif" height="100" /></label>
+                                    <label class="linearChart" id="linear-chart-container2"></label>
                                  </center>
                               </div>
                            </div>
@@ -51,9 +53,10 @@
                         <div id="parent3" class="col-lg-6 col-xl-4 column">
                            <div class="chart-card mb-4">
                               <div class="chart-title" id="text2">P1 Automation Coverage</div>
-                              <div id="chart3" class="chart">
+                              <div id="chart3" class="chart gaugeContainer">
                                  <center>
-                                    <label class="gauge custom-text-2" id="gauge-chart-container3">Project not selected.<br>No data to display!</label>
+                                    <label class="gauge custom-text-2" id="gauge-chart-container3"><img src="../images/loader.gif" height="100" /></label>
+                                    <label class="linearChart" id="linear-chart-container3"></label>
                                  </center>
                               </div>
                            </div>

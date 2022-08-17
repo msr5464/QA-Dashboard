@@ -6,11 +6,10 @@ function getTableName($verticalName) {
     return str_replace(" ", "_", strtolower($verticalName)."_jira");
 }
 
-function getProjectNames($verticalName, $isPodDataActive) {
+function getProjectNames($verticalName, $startDate, $endDate, $isPodDataActive) {
     global $DB;
     $jsonArray = array();
-    $sql = "select projectName from ".getTableName($verticalName)." where projectName not like 'Pod%' group by projectName order by projectName asc;";
-    $sql = showPodLevelData($sql, $isPodDataActive);
+    $sql = "select projectName from ".getTableName($verticalName)." where YEAR(createdAt)=YEAR('" . $startDate . "') OR YEAR(createdAt)=YEAR('" . $endDate . "') group by projectName order by projectName asc;";
 
     foreach ($DB->query($sql) as $row)
     {
@@ -41,7 +40,7 @@ function getStgBugsData($verticalName, $startDate, $endDate, $isPodDataActive) {
     $trendLineCountAvg = 0;
     $trendLinePercAvg = 0;
     $sql = "SELECT a.projectName,a.totalTicketsTested as newTotalTicketsTested,b.totalTicketsTested as oldTotalTicketsTested, a.totalStgBugs as newTotalStgBugs,b.totalStgBugs as oldTotalStgBugs, a.p0StgBugs as newP0StgBugs,b.p0StgBugs as oldP0StgBugs, a.p1StgBugs as newP1StgBugs,b.p1StgBugs as oldP1StgBugs, a.p2StgBugs as newP2StgBugs,b.p2StgBugs as oldP2StgBugs, a.pnStgBugs as newPnStgBugs,b.pnStgBugs as oldPnStgBugs, a.totalProdBugs as newTotalProdBugs,b.totalProdBugs as oldTotalProdBugs FROM ".getTableName($verticalName)." a JOIN ".getTableName($verticalName)." b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN ".getTableName($verticalName)." c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by projectName) and date(b.createdAt)>='" . $startDate . "' and date(b.createdAt)<='" . $endDate . "' and a.projectName not like 'Pod%' group by projectName order by (a.totalStgBugs - b.totalStgBugs) desc;";
-    //$sql = showPodLevelData($sql, $isPodDataActive);
+    $sql = showPodLevelData($sql, $isPodDataActive);
 
     foreach ($DB->query($sql) as $row)
     {
@@ -185,7 +184,7 @@ function getProdBugsData($verticalName, $startDate, $endDate, $isPodDataActive) 
     $trendLinePercAvg = 0;
     
     $sql = "SELECT a.projectName,a.totalTicketsTested as newTotalTicketsTested,b.totalTicketsTested as oldTotalTicketsTested, a.totalProdBugs as newTotalProdBugs,b.totalProdBugs as oldTotalProdBugs, a.p0ProdBugs as newP0ProdBugs,b.p0ProdBugs as oldP0ProdBugs, a.p1ProdBugs as newP1ProdBugs,b.p1ProdBugs as oldP1ProdBugs, a.p2ProdBugs as newP2ProdBugs,b.p2ProdBugs as oldP2ProdBugs, a.pnProdBugs as newPnProdBugs,b.pnProdBugs as oldPnProdBugs FROM ".getTableName($verticalName)." a JOIN ".getTableName($verticalName)." b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN ".getTableName($verticalName)." c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by projectName) and date(b.createdAt)>='" . $startDate . "' and date(b.createdAt)<='" . $endDate . "' and a.projectName not like 'Pod%' group by projectName order by (a.totalProdBugs - b.totalProdBugs) desc;";
-    //$sql = showPodLevelData($sql, $isPodDataActive);
+    $sql = showPodLevelData($sql, $isPodDataActive);
 
     foreach ($DB->query($sql) as $row)
     {
@@ -531,8 +530,8 @@ if (!isset($jsonArray['error']))
     switch ($_GET['functionname'])
     {
         case 'getProjectNames':
-            validateParams(2, $_GET['arguments']);
-            $jsonArray = getProjectNames($_GET['arguments'][0], $_GET['arguments'][1]);
+            validateParams(4, $_GET['arguments']);
+            $jsonArray = getProjectNames($_GET['arguments'][0], $_GET['arguments'][1], $_GET['arguments'][2], $_GET['arguments'][3]);
         break;
         case 'getStgBugsData':
             validateParams(4, $_GET['arguments']);

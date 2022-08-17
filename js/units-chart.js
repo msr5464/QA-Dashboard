@@ -37,7 +37,7 @@ function fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, i
             }
 
             var chartProperties = {
-                "plottooltext": "$label: $dataValue%",
+                "plottooltext": "$label [based on number of Lines]: $dataValue%",
                 "showBorder": "0",
                 "captionfontcolor": "#686980",
                 "captionfontsize": "15",
@@ -47,10 +47,16 @@ function fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, i
                 "use3DLighting": "0",
                 "showLabels": "0",
                 "showValues": "0",
-                "bgColor": "#ffffff",
-                "bgAlpha": "100",
+                "baseFontColor": fontColor,
+                "bgAlpha": "0",
+                "toolTipBgcolor": "#484E69",
+                "toolTipPadding": "7",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "30",
+                "tooltipBorderThickness": "0.7",
+                "toolTipColor": "#FDFDFD",
                 "canvasBgAlpha": "0",
-                "doughnutRadius": "57",
+                "doughnutRadius": "50",
                 "pieRadius": "70",
                 "enableSlicing": "0",
                 "plotBorderAlpha": "0",
@@ -68,8 +74,8 @@ function fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, i
             apiChart1 = new FusionCharts({
                 type: 'doughnut2d',
                 renderAt: 'gauge-chart-container1',
-                width: '92%',
-                height: '150',
+                width: '96%',
+                height: '160',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,
@@ -85,48 +91,6 @@ function fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, i
                 }
             });
             apiChart1.render();
-
-            apiChart2 = new FusionCharts({
-                type: 'doughnut2d',
-                renderAt: 'gauge-chart-container2',
-                width: '92%',
-                height: '150',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "data": resultValue2
-                },
-                "events": {
-                    "beforeInitialize": function () {
-                        if (resultValue2) {
-                            var passPercentage = resultValue2[1].value;
-                            chartProperties.defaultCenterLabel = passPercentage + "%";
-                        }
-                    }
-                }
-            });
-            apiChart2.render();
-
-            apiChart3 = new FusionCharts({
-                type: 'doughnut2d',
-                renderAt: 'gauge-chart-container3',
-                width: '92%',
-                height: '150',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties,
-                    "data": resultValue3
-                },
-                "events": {
-                    "beforeInitialize": function () {
-                        if (resultValue3) {
-                            var passPercentage = resultValue3[1].value;
-                            chartProperties.defaultCenterLabel = passPercentage + "%";
-                        }
-                    }
-                }
-            });
-            apiChart3.render();
         }
     });
 };
@@ -154,9 +118,15 @@ function fetchCoverageDelta_ColumnChart(verticalName, timeFilter, startDate, end
                 "yAxisName": "Percentage",
                 "divlineColor": "#999999",
                 "divLineDashed": "1",
-                "theme": "candy",
+                "theme": theme,
                 "showValues": "1",
-                "showsum": "1"
+                "showsum": "1",
+                "toolTipBgcolor": "#484E69",
+                "toolTipPadding": "7",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "30",
+                "tooltipBorderThickness": "0.7",
+                "toolTipColor": "#FDFDFD"
             };
             apiChart = new FusionCharts({
                 type: 'stackedcolumn2d',
@@ -200,7 +170,13 @@ function fetchFullCoverageData_ColumnChart(verticalName, timeFilter, startDate, 
                 "yAxisName": "Percentage",
                 "rotatevalues": "0",
                 "showValues": "1",
-                "theme": "candy"
+                "theme": theme === "fusion" ? "zune": theme,
+                "toolTipBgcolor": "#484E69",
+                "toolTipPadding": "7",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "30",
+                "tooltipBorderThickness": "0.7",
+                "toolTipColor": "#FDFDFD"
             };
 
             apiChart = new FusionCharts({
@@ -247,15 +223,23 @@ function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter, 
                 "upperLimit": "100",
                 "showValue": "1",
                 "numberSuffix": "%",
-                "theme": "fusion",
-                "showToolTip": "1"
+                "theme": theme,
+                "showToolTip": "1",
+                "plottooltext": "Line Coverage: $dataValue",
+                "toolTipBgcolor": "#484E69",
+                "toolTipPadding": "7",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "30",
+                "tooltipBorderThickness": "0.7",
+                "toolTipColor": "#FDFDFD"
+
             };
 
             apiChart1 = new FusionCharts({
                 type: 'angulargauge',
                 renderAt: 'gauge-chart-container1',
-                width: '92%',
-                height: '150',
+                width: '96%',
+                height: '200',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties1,
@@ -282,90 +266,6 @@ function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter, 
                 }
             });
             apiChart1.render();
-
-            var chartProperties2 = {
-                "caption": "",
-                "lowerLimit": "0",
-                "upperLimit": "100",
-                "showValue": "1",
-                "numberSuffix": "%",
-                "theme": "fusion",
-                "showToolTip": "1"
-            };
-
-            apiChart2 = new FusionCharts({
-                type: 'angulargauge',
-                renderAt: 'gauge-chart-container2',
-                width: '92%',
-                height: '150',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties2,
-                    "colorRange": {
-                        "color": [{
-                            "minValue": "0",
-                            "maxValue": "50",
-                            "code": "#F2726F"
-                        }, {
-                            "minValue": "50",
-                            "maxValue": "75",
-                            "code": "#FFC533"
-                        }, {
-                            "minValue": "75",
-                            "maxValue": "100",
-                            "code": "#62B58F"
-                        }]
-                    },
-                    "dials": {
-                        "dial": [{
-                            "value": resultValue2
-                        }]
-                    }
-                }
-            });
-            apiChart2.render();
-
-            var chartProperties3 = {
-                "caption": "",
-                "lowerLimit": "0",
-                "upperLimit": "100",
-                "showValue": "1",
-                "numberSuffix": "%",
-                "theme": "fusion",
-                "showToolTip": "1"
-            };
-
-            apiChart3 = new FusionCharts({
-                type: 'angulargauge',
-                renderAt: 'gauge-chart-container3',
-                width: '92%',
-                height: '150',
-                dataFormat: 'json',
-                dataSource: {
-                    "chart": chartProperties3,
-                    "colorRange": {
-                        "color": [{
-                            "minValue": "0",
-                            "maxValue": "50",
-                            "code": "#F2726F"
-                        }, {
-                            "minValue": "50",
-                            "maxValue": "75",
-                            "code": "#FFC533"
-                        }, {
-                            "minValue": "75",
-                            "maxValue": "100",
-                            "code": "#62B58F"
-                        }]
-                    },
-                    "dials": {
-                        "dial": [{
-                            "value": resultValue3
-                        }]
-                    }
-                }
-            });
-            apiChart3.render();
         }
     });
 };
@@ -395,19 +295,25 @@ function fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter
                 "rotatevalues": "0",
                 "showvalues": "1",
                 "plottooltext": "$label: $dataValue%",
-                "theme": "candy",
-                "flatscrollbars": "0",
-                "scrollheight": "10",
-                "scrollColor": "#fff",
+                "theme": theme,
+                "scrollheight": "12",
+                "flatScrollBars": "1",
+                "scrollShowButtons": "1",
                 "numvisibleplot": "15",
-                "drawCrossLine": "1"
+                "drawCrossLine": "1",
+                "toolTipBgcolor": "#484E69",
+                "toolTipPadding": "7",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "30",
+                "tooltipBorderThickness": "0.7",
+                "toolTipColor": "#FDFDFD"
             };
 
             apiChart = new FusionCharts({
                 type: 'scrollcolumn2d',
                 renderAt: 'column-chart-container3',
                 width: '96%',
-                height: '400',
+                height: '350',
                 dataFormat: 'json',
                 "events": {
                     "beforeInitialize": function (eventObj, dataObj) {
@@ -421,10 +327,23 @@ function fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter
                         messageBlock.style.textAlign = "center";
                         var activatedMessage = 'Click on the respective column to get Build Link';
                         var getClickedMessage = function (categoryLabel, displayValue) {
-                            var fullLabel = fullData.find(v => v.label.toString().includes(categoryLabel)).label;
-                            var resultsLink = fullLabel.split(linkSeperator)[1];
                             categoryLabel = categoryLabel.substring(categoryLabel.lastIndexOf("\n") + 1);
-                            return 'Results Link for <B>"' + categoryLabel + '"</B> - <a style="color:yellow" href="' + resultsLink + '" target="_blank">' + resultsLink + '</a>';
+                            var fullLabel = fullData.find(v => v.label.toString().includes(categoryLabel)).label;
+                            var resultLink = fullLabel.split(linkSeperator)[1];
+
+                            var allresultLink = resultLink.split(";");
+                            if(allresultLink.length > 1)
+                            {
+                                var msgToReturn = '<B>"' + categoryLabel + '"</B> - This build contains data from multiple modules, here are the links for all :-';
+                                for (i = 0; i < allresultLink.length; i++) {
+                                    msgToReturn = msgToReturn + '<br> <a style="color:yellow" href="' + allresultLink[i] + '" target="_blank"> Results Link-' + (i+1) + '</a>';
+                                }
+                                return msgToReturn;
+                            }
+                            else
+                            {
+                                return 'Results Link for <B>"' + categoryLabel + '"</B> - <a style="color:yellow" href="' + resultLink + '" target="_blank">' + resultLink + '</a>';
+                            }
                         };
                         e.data.container.appendChild(messageBlock);
 
@@ -472,16 +391,22 @@ function fetchTestcaseCountTrend_LineChart(verticalName, projectName, timeFilter
             var chartProperties = {
                 "caption": "Trend of Unit Test Coverage for last " + timeFilter + " days [" + projectName + "]",
                 "subCaption": "",
-                "plottooltext": "$seriesName - $dataValue",
+                "plottooltext": "$seriesName: $dataValue",
                 "yAxisName": "Count",
-                "theme": "fusion",
-                "showValues": "1"
+                "theme": theme,
+                "showValues": "1",
+                "toolTipBgcolor": "#484E69",
+                "toolTipPadding": "7",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "30",
+                "tooltipBorderThickness": "0.7",
+                "toolTipColor": "#FDFDFD"
             };
             apiChart = new FusionCharts({
                 type: 'msline',
                 renderAt: 'line-chart-container1',
                 width: '96%',
-                height: '400',
+                height: '350',
                 dataFormat: 'json',
                 dataSource: {
                     "chart": chartProperties,

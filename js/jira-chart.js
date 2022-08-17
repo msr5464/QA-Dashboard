@@ -57,8 +57,8 @@ function fetchStgBugsData_ColumnChart(verticalName, timeFilter, startDate, endDa
             document.getElementById("gauge-chart-container3").classList.remove('custom-text-2');
             document.getElementById("gauge-chart-container3").classList.add('bigFont');
             });
-            bugsFoundChart(timeFilter, datasetData1, categoriesData, trendLineCountAvg, "Priority-wise Staging Bugs found", 3);
-            bugPercantageChart(timeFilter, datasetData2, categoriesData, trendLinePercAvg, "Staging Bug Percentage", 4);
+            bugsFoundChart(timeFilter, datasetData1, categoriesData, trendLineCountAvg, "Count of 'Staging' Bugs found", 3);
+            bugPercantageChart(timeFilter, datasetData2, categoriesData, trendLinePercAvg, "Staging Bug Ratio (per 100 tickets)", 4);
         }
     });
 };
@@ -86,8 +86,8 @@ function fetchProdBugsData_ColumnChart(verticalName, timeFilter, startDate, endD
                 if (key === "trendLinePercAvg")
                     trendLinePercAvg = value;
             });
-            bugsFoundChart(timeFilter, datasetData1, categoriesData, trendLineCountAvg, "Priority-wise Production Bugs found", 1);
-            bugPercantageChart(timeFilter, datasetData2, categoriesData, trendLinePercAvg, "Production Bug Percentage", 2);
+            bugsFoundChart(timeFilter, datasetData1, categoriesData, trendLineCountAvg, "Count of 'Production' Bugs found", 1);
+            bugPercantageChart(timeFilter, datasetData2, categoriesData, trendLinePercAvg, "Production Bug Ratio (per 100 tickets)", 2);
         }
     });
 };
@@ -139,7 +139,7 @@ function fetchBugPriorityBreakdown_PieChart(verticalName, projectName, timeFilte
         success: function (result) {
 
             var chartProperties = {
-                "caption": "Priority wise Bugs Breakdown for last " + timeFilter + " days [" + projectName + "]",
+                "caption": "'Priority wise' Bugs Breakdown for last " + timeFilter + " days [" + projectName + "]",
                 "showpercentvalues": "1",
                 "defaultcenterlabel": "Bugs Found",
                 "aligncaptionwithcanvas": "0",
@@ -147,11 +147,17 @@ function fetchBugPriorityBreakdown_PieChart(verticalName, projectName, timeFilte
                 "decimals": "1",
                 "plottooltext": "$label: $dataValue",
                 "centerlabel": "$label: $value",
-                "theme": "candy"
+                "theme": theme,
+                "toolTipBgcolor": "#484E69",
+                "toolTipPadding": "7",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "30",
+                "tooltipBorderThickness": "0.7",
+                "toolTipColor": "#FDFDFD"
             };
             apiChart = new FusionCharts({
                 type: 'doughnut2d',
-                renderAt: 'pie-chart-container2',
+                renderAt: 'pie-chart-container1',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',
@@ -184,11 +190,17 @@ function fetchBugCategoryBreakdown_PieChart(verticalName, projectName, timeFilte
                 "decimals": "1",
                 "plottooltext": "$label: $dataValue",
                 "centerlabel": "$label: $value",
-                "theme": "fusion"
+                "theme": theme,
+                "toolTipBgcolor": "#484E69",
+                "toolTipPadding": "7",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "30",
+                "tooltipBorderThickness": "0.7",
+                "toolTipColor": "#FDFDFD"
             };
             apiChart = new FusionCharts({
                 type: 'doughnut2d',
-                renderAt: 'pie-chart-container1',
+                renderAt: 'pie-chart-container2',
                 width: '96%',
                 height: '400',
                 dataFormat: 'json',
@@ -223,10 +235,16 @@ function fetchBugTrend_ColumnChart(verticalName, projectName, timeFilter, startD
             var chartProperties = {
                 "caption": "Trend of Bug Percentage for last " + timeFilter + " days [" + projectName + "]",
                 "subCaption": "",
-                "plottooltext": "$seriesName - $dataValue%",
+                "plottooltext": "$seriesName: $dataValue%",
                 "yAxisName": "Percentage",
-                "theme": "fusion",
-                "showValues": "1"
+                "theme": theme,
+                "showValues": "1",
+                "toolTipBgcolor": "#484E69",
+                "toolTipPadding": "7",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "30",
+                "tooltipBorderThickness": "0.7",
+                "toolTipColor": "#FDFDFD"
             };
             apiChart = new FusionCharts({
                 type: 'msline',
@@ -245,10 +263,16 @@ function fetchBugTrend_ColumnChart(verticalName, projectName, timeFilter, startD
             var chartProperties = {
                 "caption": "Trend of Bug Count for last " + timeFilter + " days [" + projectName + "]",
                 "subCaption": "",
-                "plottooltext": "$seriesName - $dataValue",
+                "plottooltext": "$seriesName: $dataValue",
                 "yAxisName": "Count",
-                "theme": "fusion",
-                "showValues": "1"
+                "theme": theme,
+                "showValues": "1",
+                "toolTipBgcolor": "#484E69",
+                "toolTipPadding": "7",
+                "toolTipBorderRadius": "3",
+                "toolTipBorderAlpha": "30",
+                "tooltipBorderThickness": "0.7",
+                "toolTipColor": "#FDFDFD"
             };
             apiChart = new FusionCharts({
                 type: 'msline',
@@ -273,7 +297,7 @@ function bugsFoundChart(timeFilter, datasetValue, categoriesValue, trendLineCoun
         "plottooltext": "$seriesName: $dataValue",
         "yAxisName": "Number of Bugs",
         "drawCrossLine": "1",
-        "theme": "fusion",
+        "theme": theme,
         "showValues": "1",
         "showsum": "1",
         "rotatevalues": "0",
@@ -289,8 +313,20 @@ function bugsFoundChart(timeFilter, datasetValue, categoriesValue, trendLineCoun
         "trendValueBorderThickness": "2",
         "trendValueBorderDashed": "0",
         "trendValueBorderDashLen": "#123456",
-        "trendValueBorderDashGap": "1"
+        "trendValueBorderDashGap": "1",
+        "toolTipBgcolor": "#484E69",
+        "toolTipPadding": "7",
+        "toolTipBorderRadius": "3",
+        "toolTipBorderAlpha": "30",
+        "tooltipBorderThickness": "0.7",
+        "toolTipColor": "#FDFDFD"
     };
+    if(isPodDataActive == '1')
+    {
+        chartProperties.captionFontSize = "22";
+        chartProperties.valueFontSize = "22";
+        chartProperties.labelFontSize = "16";
+    }
 
     apiChart = new FusionCharts({
         type: 'stackedcolumn2d',
@@ -321,11 +357,11 @@ function bugsFoundChart(timeFilter, datasetValue, categoriesValue, trendLineCoun
 function bugPercantageChart(timeFilter, datasetValue, categoriesValue, trendLinePercAvg, message, chartNum) {
     var chartProperties = {
         "caption": message+" for last " + timeFilter + " days [All Projects]",
-        "plottooltext": "$seriesName - $dataValue%",
+        "plottooltext": "$seriesName: $dataValue%",
         "yAxisName": "Percentage",
         "drawCrossLine": "1",
         "rotatevalues": "0",
-        "theme": "zune",
+        "theme": theme === "fusion" ? "zune": theme,
         "showValues": "1",
         "trendValueFont": "Arial",
         "trendValueFontSize": "13",
@@ -339,8 +375,20 @@ function bugPercantageChart(timeFilter, datasetValue, categoriesValue, trendLine
         "trendValueBorderThickness": "2",
         "trendValueBorderDashed": "0",
         "trendValueBorderDashLen": "#123456",
-        "trendValueBorderDashGap": "1"
+        "trendValueBorderDashGap": "1",
+        "toolTipBgcolor": "#484E69",
+        "toolTipPadding": "7",
+        "toolTipBorderRadius": "3",
+        "toolTipBorderAlpha": "30",
+        "tooltipBorderThickness": "0.7",
+        "toolTipColor": "#FDFDFD"
     };
+    if(isPodDataActive == '1')
+    {
+        chartProperties.captionFontSize = "22";
+        chartProperties.valueFontSize = "22";
+        chartProperties.labelFontSize = "16";
+    }
 
     apiChart = new FusionCharts({
         type: 'mscombi3d',

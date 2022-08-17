@@ -1,20 +1,13 @@
 <div class="row">
    <div class="col-md-12 pt-4 mt-3">
       <h4>
+         <label class="handLink" id="dash">
+         Vertical - 
+          </label>
          <label class="handLink" id="verticalName">
             <?php 
             if (isset($_POST['verticalName']) && $_POST['verticalName'] != '') {
                $verticalName = $_POST['verticalName']; echo $verticalName;
-            }
-            ?> 
-         </label>
-         <label class="handLink" id="dash">
-          - 
-          </label>
-         <label class="handLink" id="selectedYear">
-            <?php 
-            if (isset($_POST['selectedYear']) && $_POST['selectedYear'] != '') {
-               $selectedYear = $_POST['selectedYear']; echo $selectedYear;
             }
             ?> 
          </label>
@@ -58,7 +51,7 @@
           <h3 class="modal-title ">Create your Custom Date Filter</h1>
         </div>
         <div class="modal-body">
-            <h6 class="modal-title ">Choose Start Date & End Date within selected year</h4>
+            <h6 class="modal-title ">Choose Start Date & End Date as per your requirements</h4>
             <label class="">Start Date:</label>
             <input type="date" id="startDate" name="startDate" value="2022-01-01">
             <br> &nbsp;

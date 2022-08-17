@@ -6,11 +6,10 @@ function getTableName($verticalName) {
     return str_replace(" ", "_", strtolower($verticalName)."_units");
 }
 
-function getProjectNames($verticalName, $isPodDataActive) {
+function getProjectNames($verticalName, $startDate, $endDate, $isPodDataActive) {
     global $DB;
     $jsonArray = array();
-    $sql = "select projectName from ".getTableName($verticalName)." where projectName not like 'Pod%' group by projectName order by projectName asc;";
-    $sql = showPodLevelData($sql, $isPodDataActive);
+    $sql = "select projectName from ".getTableName($verticalName)." where YEAR(createdAt)=YEAR('" . $startDate . "') OR YEAR(createdAt)=YEAR('" . $endDate . "') group by projectName order by projectName asc;";
 
     foreach ($DB->query($sql) as $row)
     {
@@ -22,7 +21,7 @@ function getProjectNames($verticalName, $isPodDataActive) {
 function getCoverageNumbers_All($verticalName, $startDate, $endDate, $isPodDataActive) {
     global $DB;
     $jsonArray = array();
-    $sql = "Select FLOOR((sum(f.linesCurentCount)/sum(f.linesTotalCount))*100) as linesPercentage, f.id from ( select projectName, max(id) as id from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' and projectName not like 'Pod%' group by projectName) as x inner join ".getTableName($verticalName)." as f on f.projectName = x.projectName and f.id = x.id order by id desc;";
+    $sql = "Select FLOOR((sum(f.linesCurrentCount)/sum(f.linesTotalCount))*100) as linesPercentage, f.id from ( select projectName, max(id) as id from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' and projectName not like 'Pod%' group by projectName) as x inner join ".getTableName($verticalName)." as f on f.projectName = x.projectName and f.id = x.id order by id desc;";
 
 foreach ($DB->query($sql) as $row)
     {
@@ -151,12 +150,12 @@ function getLast7Records($verticalName, $projectName, $startDate, $endDate) {
     $jsonArrayCategory = array();
     $jsonArraySubCategory = array();
     $jsonArrayForPercentage = array();
-    $sql = "(select id,buildTag,resultsLink,linesPercentage,Date(createdAt) as createdAt from ".getTableName($verticalName)." where projectName in (" . $projectName . ") and date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' order by id desc) order by id desc";
+    $sql = "(select id,buildTag,resultLink,linesPercentage,Date(createdAt) as createdAt from ".getTableName($verticalName)." where projectName in (" . $projectName . ") and date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' order by id desc) order by id desc";
 
     foreach ($DB->query($sql) as $row)
     {
         $jsonArrayItem = array();
-        $jsonArrayItem['label'] = $row['createdAt'] . "\n" . $row['buildTag']. ", link- " .$row['resultsLink'];
+        $jsonArrayItem['label'] = $row['createdAt'] . "\n" . $row['buildTag']. ", link- " .$row['resultLink'];
         array_push($jsonArraySubCategory, $jsonArrayItem);
 
         $jsonArrayItem1 = array();
@@ -197,7 +196,12 @@ function getTestcaseCountTrend_Project($verticalName, $projectName, $startDate, 
     $jsonArraySubSet6 = array();
     $jsonArraySubSet7 = array();
     $jsonArraySubSet8 = array();
-    $sql = "SELECT DATE(createdAt) as createdAt, max(linesTotalCount) as linesTotalCount, max(linesCurentCount) as linesCurentCount, max(statementsTotalCount) as statementsTotalCount, max(statementsCurentCount) as statementsCurentCount, max(branchesTotalCount) as branchesTotalCount, max(branchesCurentCount) as branchesCurentCount, max(functionsTotalCount) as functionsTotalCount, max(functionsCurentCount) as functionsCurentCount FROM ".getTableName($verticalName)." WHERE projectName=" . $projectName . " and date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' GROUP BY DATE(createdAt);";
+    $jsonArraySubSet9 = array();
+    $jsonArraySubSet10 = array();
+    $jsonArraySubSet11 = array();
+    $jsonArraySubSet12 = array();
+
+    $sql = "SELECT DATE(createdAt) as createdAt, max(linesTotalCount) as linesTotalCount, max(linesCurrentCount) as linesCurrentCount, Floor(max(linesCurrentCount)/max(linesTotalCount)*100) as linesPercentage, max(statementsTotalCount) as statementsTotalCount, max(statementsCurrentCount) as statementsCurrentCount, Floor(max(statementsCurrentCount)/max(statementsTotalCount)*100) as statementsPercentage, max(branchesTotalCount) as branchesTotalCount, max(branchesCurrentCount) as branchesCurrentCount, Floor(max(branchesCurrentCount)/max(branchesTotalCount)*100) as branchesPercentage, max(functionsTotalCount) as functionsTotalCount, max(functionsCurrentCount) as functionsCurrentCount, Floor(max(functionsCurrentCount)/max(functionsTotalCount)*100) as functionsPercentage FROM ".getTableName($verticalName)." WHERE projectName=" . $projectName . " and date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' GROUP BY DATE(createdAt);";
     $sql = updateGroupBy($sql, $startDate, $endDate);
 
     foreach ($DB->query($sql) as $row)
@@ -211,19 +215,27 @@ function getTestcaseCountTrend_Project($verticalName, $projectName, $startDate, 
         $jsonArrayItem6 = array();
         $jsonArrayItem7 = array();
         $jsonArrayItem8 = array();
+        $jsonArrayItem9 = array();
+        $jsonArrayItem10 = array();
+        $jsonArrayItem11 = array();
+        $jsonArrayItem12 = array();
 
         $jsonArrayItem = array();
         $jsonArrayItem['label'] = $row['createdAt'];
         array_push($jsonArraySubCategory, $jsonArrayItem);
 
         $jsonArrayItem1['value'] = $row['linesTotalCount'];
-        $jsonArrayItem2['value'] = $row['linesCurentCount'];
+        $jsonArrayItem2['value'] = $row['linesCurrentCount'];
         $jsonArrayItem3['value'] = $row['statementsTotalCount'];
-        $jsonArrayItem4['value'] = $row['statementsCurentCount'];
+        $jsonArrayItem4['value'] = $row['statementsCurrentCount'];
         $jsonArrayItem5['value'] = $row['branchesTotalCount'];
-        $jsonArrayItem6['value'] = $row['branchesCurentCount'];
+        $jsonArrayItem6['value'] = $row['branchesCurrentCount'];
         $jsonArrayItem7['value'] = $row['functionsTotalCount'];
-        $jsonArrayItem8['value'] = $row['functionsCurentCount'];
+        $jsonArrayItem8['value'] = $row['functionsCurrentCount'];
+        $jsonArrayItem9['value'] = $row['linesPercentage'];
+        $jsonArrayItem10['value'] = $row['statementsPercentage'];
+        $jsonArrayItem11['value'] = $row['branchesPercentage'];
+        $jsonArrayItem12['value'] = $row['functionsPercentage'];
         array_push($jsonArraySubSet1, $jsonArrayItem1);
         array_push($jsonArraySubSet2, $jsonArrayItem2);
         array_push($jsonArraySubSet3, $jsonArrayItem3);
@@ -232,9 +244,19 @@ function getTestcaseCountTrend_Project($verticalName, $projectName, $startDate, 
         array_push($jsonArraySubSet6, $jsonArrayItem6);
         array_push($jsonArraySubSet7, $jsonArrayItem7);
         array_push($jsonArraySubSet8, $jsonArrayItem8);
+        array_push($jsonArraySubSet9, $jsonArrayItem9);
+        array_push($jsonArraySubSet10, $jsonArrayItem10);
+        array_push($jsonArraySubSet11, $jsonArrayItem11);
+        array_push($jsonArraySubSet12, $jsonArrayItem12);
     }
+
     array_push($jsonArrayCategory, array(
         "category" => $jsonArraySubCategory
+    ));
+
+    array_push($jsonArrayDataSet, array(
+        "seriesname" => "Lines %",
+        "data" => $jsonArraySubSet9
     ));
     array_push($jsonArrayDataSet, array(
         "seriesname" => "Total Lines",
@@ -243,6 +265,12 @@ function getTestcaseCountTrend_Project($verticalName, $projectName, $startDate, 
     array_push($jsonArrayDataSet, array(
         "seriesname" => "Covered Lines",
         "data" => $jsonArraySubSet2
+    ));
+
+    array_push($jsonArrayDataSet, array(
+        "seriesname" => "Statements %",
+        "data" => $jsonArraySubSet10,
+        "visible" => "0"
     ));
     array_push($jsonArrayDataSet, array(
         "seriesname" => "Total Statements",
@@ -254,6 +282,12 @@ function getTestcaseCountTrend_Project($verticalName, $projectName, $startDate, 
         "data" => $jsonArraySubSet4,
         "visible" => "0"
     ));
+
+    array_push($jsonArrayDataSet, array(
+        "seriesname" => "Branches %",
+        "data" => $jsonArraySubSet12,
+        "visible" => "0"
+    ));
     array_push($jsonArrayDataSet, array(
         "seriesname" => "Total Branches",
         "data" => $jsonArraySubSet5,
@@ -262,6 +296,12 @@ function getTestcaseCountTrend_Project($verticalName, $projectName, $startDate, 
     array_push($jsonArrayDataSet, array(
         "seriesname" => "Covered Branches",
         "data" => $jsonArraySubSet6,
+        "visible" => "0"
+    ));
+
+    array_push($jsonArrayDataSet, array(
+        "seriesname" => "Functions %",
+        "data" => $jsonArraySubSet11,
         "visible" => "0"
     ));
     array_push($jsonArrayDataSet, array(
@@ -292,8 +332,8 @@ if (!isset($jsonArray['error']))
     switch ($_GET['functionname'])
     {
         case 'getProjectNames':
-            validateParams(2, $_GET['arguments']);
-            $jsonArray = getProjectNames($_GET['arguments'][0], $_GET['arguments'][1]);
+            validateParams(4, $_GET['arguments']);
+            $jsonArray = getProjectNames($_GET['arguments'][0], $_GET['arguments'][1], $_GET['arguments'][2], $_GET['arguments'][3]);
         break;
         case 'getCoverageNumbers_All':
             validateParams(4, $_GET['arguments']);

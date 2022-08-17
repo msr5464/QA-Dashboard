@@ -6,10 +6,10 @@ function getTableName($verticalName) {
     return str_replace(" ", "_", strtolower($verticalName)."_results");
 }
 
-function getProjectNames($verticalName) {
+function getProjectNames($verticalName, $startDate, $endDate, $isPodDataActive) {
     global $DB;
     $jsonArray = array();
-    $sql = "select projectName from ".getTableName($verticalName)." group by projectName order by projectName asc;";
+    $sql = "select projectName from ".getTableName($verticalName)." where YEAR(createdAt)=YEAR('" . $startDate . "') OR YEAR(createdAt)=YEAR('" . $endDate . "') group by projectName order by projectName asc;";
 
     foreach ($DB->query($sql) as $row)
     {
@@ -21,19 +21,16 @@ function getProjectNames($verticalName) {
 function getAvgPercentage_All($verticalName, $startDate, $endDate, $groupName) {
     global $DB;
     $jsonArray = array();
-    $sql = "select environment,groupName,Floor(avg(passedCases)*100/avg(totalCases)) as percentage from ".getTableName($verticalName)." where groupName in (".$groupName.") and date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by environment;";
+    $sql = "select environment,groupName,Floor(sum(passedCases)) as passedCases,Floor(sum(totalCases)) as totalCases,Floor(sum(passedCases)*100/sum(totalCases)) as percentage from (select environment,groupName,avg(totalCases) as totalCases,avg(passedCases) as passedCases from ".getTableName($verticalName)." where groupName in (".$groupName.") and date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by environment,projectName) as temp group by environment;";
 
     foreach ($DB->query($sql) as $row)
     {
         $jsonArraySubSet1 = array();
         $jsonArrayItem = array();
 
-        $jsonArrayItem['label'] = "'".$row['groupName']."' fail percentage";
-        $jsonArrayItem['value'] = 100 - $row['percentage'];
-        array_push($jsonArraySubSet1, $jsonArrayItem);
-
-        $jsonArrayItem['label'] = "'".$row['groupName']."' pass percentage";
-        $jsonArrayItem['value'] = $row['percentage'];
+        $jsonArrayItem['passedCases'] = $row['passedCases'];
+        $jsonArrayItem['totalCases'] = $row['totalCases'];
+        $jsonArrayItem['percentage'] = $row['percentage'];
         array_push($jsonArraySubSet1, $jsonArrayItem);
 
         array_push($jsonArray, array(
@@ -148,12 +145,12 @@ function getLast7Records($verticalName, $projectName, $startDate, $endDate, $env
     $jsonArrayCategory = array();
     $jsonArraySubCategory = array();
     $jsonArrayForPercentage = array();
-    $sql = "(select id,buildTag,resultsLink,percentage,Date(createdAt) as createdAt from ".getTableName($verticalName)." where projectName in (" . $projectName . ") and environment='".$environment."' and groupName='".$groupName."' and date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' order by id desc) order by id desc";
+    $sql = "(select id,buildTag,resultLink,percentage,Date(createdAt) as createdAt from ".getTableName($verticalName)." where projectName in (" . $projectName . ") and environment='".$environment."' and groupName='".$groupName."' and date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' order by id desc) order by id desc";
 
     foreach ($DB->query($sql) as $row)
     {
         $jsonArrayItem = array();
-        $jsonArrayItem['label'] = $row['createdAt'] . "\n" . $row['buildTag']. ", link- " .$row['resultsLink'];
+        $jsonArrayItem['label'] = $row['createdAt'] . "\n" . $row['buildTag']. ", link- " .$row['resultLink'];
         array_push($jsonArraySubCategory, $jsonArrayItem);
 
         $jsonArrayItem1 = array();
@@ -183,19 +180,16 @@ function getLast7Records($verticalName, $projectName, $startDate, $endDate, $env
 function getAvgPercentage_Project($verticalName, $projectName, $startDate, $endDate, $groupName) {
     global $DB;
     $jsonArray = array();
-    $sql = "select environment,groupName,Floor(sum(passedCases)*100/sum(totalCases)) as percentage from (select environment,groupName,avg(totalCases) as totalCases,avg(passedCases) as passedCases from ".getTableName($verticalName)." where projectName in (" . $projectName . ") and groupName in (".$groupName.") and date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by environment,projectName) as temp group by environment;";
+    $sql = "select environment,groupName,Floor(avg(passedCases)) as passedCases,Floor(avg(totalCases)) as totalCases,Floor(sum(passedCases)*100/sum(totalCases)) as percentage from (select environment,groupName,avg(totalCases) as totalCases,avg(passedCases) as passedCases from ".getTableName($verticalName)." where projectName in (" . $projectName . ") and groupName in (".$groupName.") and date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by environment,projectName) as temp group by environment;";
 
     foreach ($DB->query($sql) as $row)
     {
         $jsonArraySubSet1 = array();
         $jsonArrayItem = array();
 
-        $jsonArrayItem['label'] = "'".$row['groupName']."' fail percentage";
-        $jsonArrayItem['value'] = 100 - $row['percentage'];
-        array_push($jsonArraySubSet1, $jsonArrayItem);
-
-        $jsonArrayItem['label'] = "'".$row['groupName']."' pass percentage";
-        $jsonArrayItem['value'] = $row['percentage'];
+        $jsonArrayItem['passedCases'] = $row['passedCases'];
+        $jsonArrayItem['totalCases'] = $row['totalCases'];
+        $jsonArrayItem['percentage'] = $row['percentage'];
         array_push($jsonArraySubSet1, $jsonArrayItem);
 
         array_push($jsonArray, array(
@@ -450,8 +444,8 @@ if (!isset($jsonArray['error']))
     switch ($_GET['functionname'])
     {
         case 'getProjectNames':
-            validateParams(1, $_GET['arguments']);
-            $jsonArray = getProjectNames($_GET['arguments'][0]);
+            validateParams(4, $_GET['arguments']);
+            $jsonArray = getProjectNames($_GET['arguments'][0], $_GET['arguments'][1], $_GET['arguments'][2], $_GET['arguments'][3]);
         break;
         case 'getAvgPercentage_All':
             validateParams(4, $_GET['arguments']);

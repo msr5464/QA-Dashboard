@@ -2,31 +2,24 @@ var defaultFilter = "7";
 var verticalName = "";
 var projectName = "";
 var isPodDataActive = "";
+var fontColor = "#ffffff";
+var theme = "candy";
 
 $(function () {
     verticalName = $("#verticalName").html().trim();
     if (verticalName != "" && verticalName != null) {
-        setDataIntoStorage("selectedVertical", verticalName);
+        setDataIntoStorage("pdg", verticalName);
     } else {
-        verticalName = getDataFromStorage("selectedVertical");
+        verticalName = getDataFromStorage("pdg");
         if (verticalName != "" && verticalName != null) {
             $("#verticalName").html(verticalName);
         } else {
             redirectToHomePage();
         }
     }
-
-    selectedYear = $("#selectedYear").html().trim();
-    if (selectedYear != "" && selectedYear != null) {
-        setDataIntoStorage("selectedYear", selectedYear);
-    } else {
-        selectedYear = getDataFromStorage("selectedYear");
-        $("#selectedYear").html(selectedYear);
-    }
     setStartEndDates();
-    isPodDataActive = getDataFromVerticalTable(verticalName, "isPodDataActive");
+    isPodDataActive = getDataFromStorage("podview");
     fetchActiveTabs(verticalName);
-    fetchProjectNames(verticalName, isPodDataActive);
     activateFilter(verticalName);
 });
 
@@ -35,15 +28,20 @@ $(document).ready(function () {
         window.location.href = pageName;
     });
 
+   $("#qaDashboard").click(function () {
+        setDataIntoStorage("pdg", "");
+    });
+
     $("#verticalName").click(function () {
-        setDataIntoStorage("selectedVertical", "");
+        setDataIntoStorage("pdg", "");
         setDataIntoStorage("startDate", "");
         setDataIntoStorage("endDate", "");
+        setDataIntoStorage("podview", '0');
+        setDataIntoStorage("darkmode", '1');
         saveFilter("7");
-        document.getElementById("selectedYear").innerHTML = "";
         document.getElementById("dash").innerHTML = "";
         document.getElementById("verticalName").style.textTransform = "lowercase";
-        $("#verticalName").html("<b><font color='yellow'>Redirecting back to select a vertical first...</font></b>");
+        $("#verticalName").html("<b><font color='yellow'>Redirecting back to select a vertical name first...</font></b>");
         window.setTimeout(redirectToHomePage, 1000);
     });
 
@@ -120,8 +118,7 @@ function activateFilter(verticalName) {
 }
 
 function setCookie(cname, cvalue) {
-    var d = new Date();
-    d.setTime(d.getTime() + (180 * 24 * 60 * 60 * 1000));
+    var d = new Date(new Date().getFullYear(), 11, 31);
     var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
@@ -133,25 +130,43 @@ function getCookie(cname) {
 }
 
 function saveFilter(value) {
-    setDataIntoStorage("selectedFilter", value);
+    setDataIntoStorage("filter", value);
 }
 
 function getFilter() {
-    return getDataFromStorage("selectedFilter");
+    return getDataFromStorage("filter");
 }
 
 function setDataIntoStorage(key, value) {
-    localStorage.setItem(key, value);
     setCookie(key, value);
 }
 
-function getDataFromStorage(value) {
-    var localValue = localStorage.getItem(value);
+function getDataFromStorage(key) {
+    var localValue = getKeyValueFromUrl(key, "");
     if (localValue != "" && localValue != null)
+    {
+        setDataIntoStorage(key,localValue);
         return localValue;
+    }
     else
-        return getCookie(value);
+    {
+        localValue = getCookie(key);
+        if (localValue != "" && localValue != null)
+            return localValue;
+        else
+            return "";
+    }
 }
+
+function getKeyValueFromUrl(key, defaultValue) {
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var value = url.searchParams.get(key);
+    if (value != null)
+        return value;
+    else
+        return defaultValue;
+};
 
 function hideProjectCharts() {
     $(".defaultChart").show();
@@ -160,9 +175,6 @@ function hideProjectCharts() {
     $("#warning").show();
     $("#selectProject").show();
     $("#projectName").html("");
-    $(".gauge").html("Project not selected.<br>No data to display!");
-    $(".gauge").removeClass("bigFont");
-    $(".gauge").addClass("custom-text-2");
 }
 
 function hideDefaultCharts() {
@@ -183,6 +195,19 @@ function hideBlankCharts() {
 }
 
 function validateAndExecute(verticalName, timeFilter) {
+    //Show Loader
+    $(".gauge").html('<img src="../images/loader.gif" height="100" />');
+    $(".linearChart").html("");
+    
+    //Toggle Dark Mode settings
+    var darkMode = getDataFromStorage("darkmode");
+    if (darkMode != "" && darkMode != null && darkMode === "0") {
+        $(".chart-card").addClass("greyBackground");
+        $(".gaugeContainer").addClass("whiteBackground");
+        theme="fusion";
+        fontColor = "#000000";
+    }
+
     if(timeFilter === "N") {
         var s = new Date(document.getElementById("startDate").value);
         var e = new Date(document.getElementById("endDate").value);
@@ -197,6 +222,10 @@ function validateAndExecute(verticalName, timeFilter) {
     }
     var startDate = s.toISOString().slice(0, 10);
     var endDate = e.toISOString().slice(0, 10);
+    
+    $("#projectNamesDropdown").empty();
+    $(".chosen-select").chosen();
+    fetchProjectNames(verticalName, startDate, endDate, isPodDataActive);
 
     projectName = $("#projectName").html().trim();
     if (projectName.length != 0) {
@@ -206,19 +235,19 @@ function validateAndExecute(verticalName, timeFilter) {
     }
 }
 
-function fetchProjectNames(verticalName, isPodDataActive) {
+function fetchProjectNames(verticalName, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getProjectNames',
-            arguments: [verticalName, isPodDataActive]
+            arguments: [verticalName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
                 $("#projectNamesDropdown").append($("<option />").val(value).text(value));
             });
-            $(".chosen-select").chosen();
+            $(".chosen-select").trigger("chosen:updated");
         }
     });
 };

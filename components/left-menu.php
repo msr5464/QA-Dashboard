@@ -2,7 +2,7 @@
  <div class="row">
     <div class="col-md-12 col-8">
        <div class="text-sm-left text-md-center logo">
-          <a href='/' style="color: #00ff00;">QUALITY DASHBOARD</a>
+          <a id="qaDashboard" href='/' style="color: #00ff00;">QUALITY DASHBOARD</a>
        </div>
     </div>
     <div class="col-md-12 col-4 text-right">
@@ -18,12 +18,12 @@
     <ul class="left-options">
        <li class="hide left-option <?php echo $activateTestrailPage; ?>" id="testrail">
           <a href="testrail.php">
-          Testrail Numbers
+          Test Coverage
           </a>
        </li>
        <li class="hide left-option <?php echo $activateResultPage; ?>" id="results">
           <a href="results.php">
-          Automation Results
+          Automation Stability
           </a>
        </li>
        <li class="hide left-option <?php echo $activateJiraPage; ?>" id="jira">
@@ -33,7 +33,7 @@
        </li>
        <li class="hide left-option <?php echo $activateUnitTestsPage; ?>" id="units">
           <a href="units.php">
-          Unit Tests
+          Code Coverage
           </a>
        </li>
        <li class="left-option">

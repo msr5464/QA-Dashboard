@@ -6,11 +6,10 @@ function getTableName($verticalName) {
     return str_replace(" ", "_", strtolower($verticalName)."_testrail");
 }
 
-function getProjectNames($verticalName, $isPodDataActive) {
+function getProjectNames($verticalName, $startDate, $endDate, $isPodDataActive) {
     global $DB;
     $jsonArray = array();
-    $sql = "select projectName from ".getTableName($verticalName)." where projectName not like 'Pod%' group by projectName order by projectName asc;";
-    $sql = showPodLevelData($sql, $isPodDataActive);
+    $sql = "select projectName from ".getTableName($verticalName)." where YEAR(createdAt)=YEAR('" . $startDate . "') OR YEAR(createdAt)=YEAR('" . $endDate . "') group by projectName order by projectName asc;";
 
     foreach ($DB->query($sql) as $row)
     {
@@ -22,15 +21,71 @@ function getProjectNames($verticalName, $isPodDataActive) {
 function getCoverageNumbers_All($verticalName, $startDate, $endDate, $isPodDataActive) {
     global $DB;
     $jsonArray = array();
-    $sql = "Select FLOOR((sum(f.alreadyAutomated)/sum(f.totalAutomationCases))*100) as automationCoveragePerc, FLOOR((sum(f.p0AutomatedCases)/sum(f.p0Cases))*100) as p0CoveragePerc, FLOOR((sum(f.p1AutomatedCases)/sum(f.p1Cases))*100) as p1CoveragePerc, f.id from ( select projectName, max(id) as id from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' and projectName not like 'Pod%' group by projectName) as x inner join ".getTableName($verticalName)." as f on f.projectName = x.projectName and f.id = x.id order by id desc;";
+    $sql = "Select sum(f.alreadyAutomated) as alreadyAutomated,sum(f.totalAutomationCases) as totalAutomationCases, FLOOR((sum(f.alreadyAutomated)/sum(f.totalAutomationCases))*100) as automationCoveragePerc, sum(f.p0AutomatedCases) as p0AutomatedCases, sum(f.p0Cases) as p0Cases, FLOOR((sum(f.p0AutomatedCases)/sum(f.p0Cases))*100) as p0CoveragePerc, sum(f.p1AutomatedCases) as p1AutomatedCases, sum(f.p1Cases) as p1Cases, FLOOR((sum(f.p1AutomatedCases)/sum(f.p1Cases))*100) as p1CoveragePerc, f.id from ( select projectName, max(id) as id from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' and projectName not like 'Pod%' group by projectName) as x inner join ".getTableName($verticalName)." as f on f.projectName = x.projectName and f.id = x.id order by id desc;";
+    $sql = showPodLevelData($sql, $isPodDataActive);
 
     foreach ($DB->query($sql) as $row)
     {
+        //Query should return only 1 row, otherwise this logic will not work properly
         $jsonArrayItem = array();
-        $jsonArrayItem["totalCoverage"] = $row['automationCoveragePerc'];
-        $jsonArrayItem["P0Coverage"] = $row['p0CoveragePerc'];
-        $jsonArrayItem["P1Coverage"] = $row['p1CoveragePerc'];
-        array_push($jsonArray, $jsonArrayItem);
+        $jsonArrayItem1 = array();
+        $jsonArraySubSet1 = array();
+        $jsonArraySubSet2 = array();
+        $jsonArraySubSet3 = array();
+        $jsonArraySubSet4 = array();
+        $jsonArraySubSet5 = array();
+        $jsonArraySubSet6 = array();
+
+        $jsonArrayItem['label'] = "Pending Full Coverage";
+        $jsonArrayItem['value'] = 100 - $row['automationCoveragePerc'];
+        array_push($jsonArraySubSet1, $jsonArrayItem);
+        $jsonArrayItem['label'] = "Achieved Full Coverage";
+        $jsonArrayItem['value'] = $row['automationCoveragePerc'];
+        array_push($jsonArraySubSet1, $jsonArrayItem);
+        array_push($jsonArray, array(
+            "FullCoverage-data" => $jsonArraySubSet1
+        ));
+
+        $jsonArrayItem['label'] = "Pending P0 Coverage";
+        $jsonArrayItem['value'] = 100 - $row['p0CoveragePerc'];
+        array_push($jsonArraySubSet2, $jsonArrayItem);
+        $jsonArrayItem['label'] = "Achieved P0 Coverage";
+        $jsonArrayItem['value'] = $row['p0CoveragePerc'];
+        array_push($jsonArraySubSet2, $jsonArrayItem);
+        array_push($jsonArray, array(
+            "P0Coverage-data" => $jsonArraySubSet2
+        ));
+
+        $jsonArrayItem['label'] = "Pending P1 Coverage";
+        $jsonArrayItem['value'] = 100 - $row['p1CoveragePerc'];
+        array_push($jsonArraySubSet3, $jsonArrayItem);
+        $jsonArrayItem['label'] = "Achieved P1 Coverage";
+        $jsonArrayItem['value'] = $row['p1CoveragePerc'];
+        array_push($jsonArraySubSet3, $jsonArrayItem);
+        array_push($jsonArray, array(
+            "P1Coverage-data" => $jsonArraySubSet3
+        ));
+
+        $jsonArrayItem1['alreadyAutomated'] = $row['alreadyAutomated'];
+        $jsonArrayItem1['automatableCases'] = $row['totalAutomationCases'];
+        array_push($jsonArraySubSet4, $jsonArrayItem1);
+        array_push($jsonArray, array(
+            "FullAutomation-data" => $jsonArraySubSet4
+        ));
+
+        $jsonArrayItem1['alreadyAutomated'] = $row['p0AutomatedCases'];
+        $jsonArrayItem1['automatableCases'] = $row['p0Cases'];
+        array_push($jsonArraySubSet5, $jsonArrayItem1);
+        array_push($jsonArray, array(
+            "P0Automation-data" => $jsonArraySubSet5
+        ));
+
+        $jsonArrayItem1['alreadyAutomated'] = $row['p1AutomatedCases'];
+        $jsonArrayItem1['automatableCases'] = $row['p1Cases'];
+        array_push($jsonArraySubSet6, $jsonArrayItem1);
+        array_push($jsonArray, array(
+            "P1Automation-data" => $jsonArraySubSet6
+        ));
     }
     return $jsonArray;
 }
@@ -45,7 +100,7 @@ function getP0CoverageChange($verticalName, $startDate, $endDate, $isPodDataActi
     $jsonArraySubSet2 = array();
     $jsonArraySubSet3 = array();
     $sql = "SELECT a.projectName as projectName, a.p0CoveragePerc as newP0CoveragePerc,b.p0CoveragePerc as oldP0CoveragePerc FROM ".getTableName($verticalName)." a JOIN ".getTableName($verticalName)." b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN ".getTableName($verticalName)." c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by projectName) and date(b.createdAt)>='" . $startDate . "' and date(b.createdAt)<='" . $endDate . "' and (a.p0CoveragePerc != b.p0CoveragePerc) and a.projectName not like 'Pod%' group by projectName order by (a.p0CoveragePerc - b.p0CoveragePerc) desc;";
-    //$sql = showPodLevelData($sql, $isPodDataActive);
+    $sql = showPodLevelData($sql, $isPodDataActive);
 
     foreach ($DB->query($sql) as $row)
     {
@@ -105,7 +160,7 @@ function getP1CoverageChange($verticalName, $startDate, $endDate, $isPodDataActi
     $jsonArraySubSet2 = array();
     $jsonArraySubSet3 = array();
     $sql = "SELECT a.projectName as projectName, a.p1CoveragePerc as newP1CoveragePerc,b.p1CoveragePerc as oldP1CoveragePerc FROM ".getTableName($verticalName)." a JOIN ".getTableName($verticalName)." b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN ".getTableName($verticalName)." c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by projectName) and date(b.createdAt)>='" . $startDate . "' and date(b.createdAt)<='" . $endDate . "' and (a.p1CoveragePerc != b.p1CoveragePerc) and a.projectName not like 'Pod%' group by projectName order by (a.p1CoveragePerc - b.p1CoveragePerc) desc";
-    //$sql = showPodLevelData($sql, $isPodDataActive);
+    $sql = showPodLevelData($sql, $isPodDataActive);
 
     foreach ($DB->query($sql) as $row)
     {
@@ -164,8 +219,8 @@ function getAutomatedCountChange($verticalName, $startDate, $endDate, $isPodData
     $jsonArraySubSet1 = array();
     $jsonArraySubSet2 = array();
     $jsonArraySubSet3 = array();
-    $sql = "SELECT a.projectName as projectName, a.alreadyAutomated as newAlreadyAutomated,b.alreadyAutomated as oldAlreadyAutomated FROM ".getTableName($verticalName)." a JOIN ".getTableName($verticalName)." b ON a.projectName = b.projectName AND a.id > b.id LEFT OUTER JOIN ".getTableName($verticalName)." c ON a.projectName = c.projectName AND a.id > c.id AND b.id < c.id WHERE a.id in (select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by projectName) and date(b.createdAt)>='" . $startDate . "' and date(b.createdAt)<='" . $endDate . "' and (a.alreadyAutomated > b.alreadyAutomated or a.alreadyAutomated < b.alreadyAutomated) and a.projectName not like 'Pod%' group by projectName order by (a.alreadyAutomated - b.alreadyAutomated) desc;";
-    //$sql = showPodLevelData($sql, $isPodDataActive);
+    $sql = "SELECT projectName,alreadyAutomated,SUM(positiveDelta) as positiveDelta,SUM(negativeDelta) as negativeDelta FROM ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' and projectName not like 'Pod%' group by projectName order by positiveDelta desc;";
+    $sql = showPodLevelData($sql, $isPodDataActive);
 
     foreach ($DB->query($sql) as $row)
     {
@@ -173,31 +228,34 @@ function getAutomatedCountChange($verticalName, $startDate, $endDate, $isPodData
         $jsonArrayItem1 = array();
         $jsonArrayItem2 = array();
         $jsonArrayItem3 = array();
-
-        $jsonArrayItem['label'] = $row['projectName'];
-        array_push($jsonArraySubCategory, $jsonArrayItem);
-        $jsonArrayItem1['value'] = $row['oldAlreadyAutomated'];
-        $increment = $row['newAlreadyAutomated'] - $row['oldAlreadyAutomated'];
-
-        if ($increment > 0)
+        
+        if ($row['positiveDelta'] > 0)
         {
-            $jsonArrayItem2['value'] = $increment;
-
+            $jsonArrayItem2['value'] = $row['positiveDelta'];
         }
-        else
+
+        if ($row['negativeDelta'] < 0)
         {
-            $jsonArrayItem3['value'] = $increment;
-
+            $jsonArrayItem3['value'] = $row['negativeDelta'];
         }
-        array_push($jsonArraySubSet1, $jsonArrayItem1);
-        array_push($jsonArraySubSet2, $jsonArrayItem2);
-        array_push($jsonArraySubSet3, $jsonArrayItem3);
+        
+        if ($row['positiveDelta'] > 0 || $row['negativeDelta'] < 0)
+        {
+            $jsonArrayItem['label'] = $row['projectName'];
+            array_push($jsonArraySubCategory, $jsonArrayItem);
+            $jsonArrayItem1['value'] = $row['alreadyAutomated'];
+            array_push($jsonArraySubSet1, $jsonArrayItem1);
+
+            array_push($jsonArraySubSet2, $jsonArrayItem2);
+            array_push($jsonArraySubSet3, $jsonArrayItem3);
+        }
     }
     array_push($jsonArrayCategory, array(
         "category" => $jsonArraySubCategory
     ));
     array_push($jsonArrayDataSet, array(
         "seriesname" => "Previous Count",
+        "visible" => "0",
         "data" => $jsonArraySubSet1
     ));
     array_push($jsonArrayDataSet, array(
@@ -226,8 +284,8 @@ function getFullCoverageData($verticalName, $startDate, $endDate, $isPodDataActi
     $jsonArrayForP1Coverage = array();
     $jsonArrayForP2Coverage = array();
 
-    $sql = "select * from ".getTableName($verticalName)." as a where id in(select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by projectName) and date(a.createdAt)>='" . $startDate . "' and date(a.createdAt)<='" . $endDate . "' and a.projectName not like 'Pod%' order by p0CoveragePerc desc,p1CoveragePerc desc,automationCoveragePerc desc;";
-    //$sql = showPodLevelData($sql, $isPodDataActive);
+    $sql = "select * from ".getTableName($verticalName)." as a where id in(select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by projectName) and date(a.createdAt)>='" . $startDate . "' and date(a.createdAt)<='" . $endDate . "' and a.projectName not like 'Pod%' order by totalAutomationCases desc,p0CoveragePerc desc,p1CoveragePerc desc;";
+    $sql = showPodLevelData($sql, $isPodDataActive);
 
     foreach ($DB->query($sql) as $row)
     {
@@ -296,8 +354,8 @@ function getFullCoverageData($verticalName, $startDate, $endDate, $isPodDataActi
 function getTestcaseCountDistribution($verticalName, $startDate, $endDate, $isPodDataActive) {
     global $DB;
     $jsonArray = array();
-    $sql = "select * from ".getTableName($verticalName)." as a where id in(select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by projectName) and date(a.createdAt)>='" . $startDate . "' and date(a.createdAt)<='" . $endDate . "' and a.projectName not like 'Pod%' order by p0CoveragePerc desc,p1CoveragePerc desc,automationCoveragePerc desc;";
-    //$sql = showPodLevelData($sql, $isPodDataActive); 
+    $sql = "select * from ".getTableName($verticalName)." as a where id in(select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' group by projectName) and date(a.createdAt)>='" . $startDate . "' and date(a.createdAt)<='" . $endDate . "' and a.projectName not like 'Pod%' order by totalAutomationCases desc,p0CoveragePerc desc,p1CoveragePerc desc;";
+    $sql = showPodLevelData($sql, $isPodDataActive); 
 
     $jsonArrayCategory = array();
     $jsonArraySubCategory = array();
@@ -362,15 +420,70 @@ function getTestcaseCountDistribution($verticalName, $startDate, $endDate, $isPo
 function getCoverageNumbers_Project($verticalName, $projectName, $startDate, $endDate) {
     global $DB;
     $jsonArray = array();
-    $sql = "select round((sum(alreadyAutomated)/sum(totalAutomationCases) * 100 ),2) as automationCoveragePerc,round((sum(p0AutomatedCases)/sum(p0Cases) * 100),2) as p0CoveragePerc,round((sum(p1AutomatedCases)/sum(p1Cases) * 100),2) as p1CoveragePerc from ".getTableName($verticalName)." where id in (select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' and projectName in (" . $projectName . ") group by projectName);";
+    $sql = "Select sum(alreadyAutomated) as alreadyAutomated,sum(totalAutomationCases) as totalAutomationCases, FLOOR((sum(alreadyAutomated)/sum(totalAutomationCases))*100) as automationCoveragePerc, sum(p0AutomatedCases) as p0AutomatedCases, sum(p0Cases) as p0Cases, FLOOR((sum(p0AutomatedCases)/sum(p0Cases))*100) as p0CoveragePerc, sum(p1AutomatedCases) as p1AutomatedCases, sum(p1Cases) as p1Cases, FLOOR((sum(p1AutomatedCases)/sum(p1Cases))*100) as p1CoveragePerc from ".getTableName($verticalName)." where id in (select max(id) from ".getTableName($verticalName)." where date(createdAt)>='" . $startDate . "' and date(createdAt)<='" . $endDate . "' and projectName in (" . $projectName . ") group by projectName);";
 
     foreach ($DB->query($sql) as $row)
     {
+        //Query should return only 1 row, otherwise this logic will not work properly
         $jsonArrayItem = array();
-        $jsonArrayItem["totalCoverage"] = $row['automationCoveragePerc'];
-        $jsonArrayItem["P0Coverage"] = $row['p0CoveragePerc'];
-        $jsonArrayItem["P1Coverage"] = $row['p1CoveragePerc'];
-        array_push($jsonArray, $jsonArrayItem);
+        $jsonArrayItem1 = array();
+        $jsonArraySubSet1 = array();
+        $jsonArraySubSet2 = array();
+        $jsonArraySubSet3 = array();
+        $jsonArraySubSet4 = array();
+        $jsonArraySubSet5 = array();
+        $jsonArraySubSet6 = array();
+
+        $jsonArrayItem['label'] = "Pending Full Coverage";
+        $jsonArrayItem['value'] = 100 - $row['automationCoveragePerc'];
+        array_push($jsonArraySubSet1, $jsonArrayItem);
+        $jsonArrayItem['label'] = "Achieved Full Coverage";
+        $jsonArrayItem['value'] = $row['automationCoveragePerc'];
+        array_push($jsonArraySubSet1, $jsonArrayItem);
+        array_push($jsonArray, array(
+            "FullCoverage-data" => $jsonArraySubSet1
+        ));
+
+        $jsonArrayItem['label'] = "Pending P0 Coverage";
+        $jsonArrayItem['value'] = 100 - $row['p0CoveragePerc'];
+        array_push($jsonArraySubSet2, $jsonArrayItem);
+        $jsonArrayItem['label'] = "Achieved P0 Coverage";
+        $jsonArrayItem['value'] = $row['p0CoveragePerc'];
+        array_push($jsonArraySubSet2, $jsonArrayItem);
+        array_push($jsonArray, array(
+            "P0Coverage-data" => $jsonArraySubSet2
+        ));
+
+        $jsonArrayItem['label'] = "Pending P1 Coverage";
+        $jsonArrayItem['value'] = 100 - $row['p1CoveragePerc'];
+        array_push($jsonArraySubSet3, $jsonArrayItem);
+        $jsonArrayItem['label'] = "Achieved P1 Coverage";
+        $jsonArrayItem['value'] = $row['p1CoveragePerc'];
+        array_push($jsonArraySubSet3, $jsonArrayItem);
+        array_push($jsonArray, array(
+            "P1Coverage-data" => $jsonArraySubSet3
+        ));
+
+        $jsonArrayItem1['alreadyAutomated'] = $row['alreadyAutomated'];
+        $jsonArrayItem1['automatableCases'] = $row['totalAutomationCases'];
+        array_push($jsonArraySubSet4, $jsonArrayItem1);
+        array_push($jsonArray, array(
+            "FullAutomation-data" => $jsonArraySubSet4
+        ));
+
+        $jsonArrayItem1['alreadyAutomated'] = $row['p0AutomatedCases'];
+        $jsonArrayItem1['automatableCases'] = $row['p0Cases'];
+        array_push($jsonArraySubSet5, $jsonArrayItem1);
+        array_push($jsonArray, array(
+            "P0Automation-data" => $jsonArraySubSet5
+        ));
+
+        $jsonArrayItem1['alreadyAutomated'] = $row['p1AutomatedCases'];
+        $jsonArrayItem1['automatableCases'] = $row['p1Cases'];
+        array_push($jsonArraySubSet6, $jsonArrayItem1);
+        array_push($jsonArray, array(
+            "P1Automation-data" => $jsonArraySubSet6
+        ));
     }
     return $jsonArray;
 }
@@ -597,8 +710,8 @@ if (!isset($jsonArray['error']))
     switch ($_GET['functionname'])
     {
         case 'getProjectNames':
-            validateParams(2, $_GET['arguments']);
-            $jsonArray = getProjectNames($_GET['arguments'][0], $_GET['arguments'][1]);
+            validateParams(4, $_GET['arguments']);
+            $jsonArray = getProjectNames($_GET['arguments'][0], $_GET['arguments'][1], $_GET['arguments'][2], $_GET['arguments'][3]);
         break;
         case 'getCoverageNumbers_All':
             validateParams(4, $_GET['arguments']);

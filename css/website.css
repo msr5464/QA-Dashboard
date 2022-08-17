@@ -5,10 +5,9 @@ body {
 	padding: 0;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	background: -webkit-gradient(linear, right top, left bottom, from(#216e93), color-stop(#21648a), color-stop(#1f5881), color-stop(#172d5b), to(#191c51));
-	background: -webkit-linear-gradient(top right, #216e93, #21648a, #1f5881, #172d5b, #191c51);
-	background: -o-linear-gradient(top right, #216e93, #21648a, #1f5881, #172d5b, #191c51);
-	background: linear-gradient(to bottom left, #216e93, #21648a, #1f5881, #172d5b, #191c51);
+	background: -webkit-gradient(linear, right top, left bottom, from(#216e93), color-stop(#216e93), color-stop(#216e93), color-stop(#216e93), to(#216e93));
+	background: -webkit-linear-gradient(top right, #216e93, #216e93, #216e93, #216e93, #216e93);
+	background: -o-linear-gradient(top right, #216e93, #216e93, #216e93, #216e93, #216e93);
 	color: #fff
 }
 
@@ -101,11 +100,7 @@ body {
 }
 
 #content-body {
-	background: -webkit-gradient(linear, right top, left bottom, from(#216e93), color-stop(#21648a), color-stop(#1f5881), color-stop(#172d5b), to(#191c51));
-	background: -webkit-linear-gradient(top right, #216e93, #21648a, #1f5881, #172d5b, #191c51);
-	background: -o-linear-gradient(top right, #216e93, #21648a, #1f5881, #172d5b, #191c51);
-	background: linear-gradient(to bottom left, #216e93, #21648a, #1f5881, #172d5b, #191c51);
-	color: #fff
+
 }
 
 .logo {
@@ -189,11 +184,35 @@ body {
 	display: -ms-inline-flexbox;
 	display: inline-flex;
 	width: auto;
-	border-radius: 15px;
 	background-color: hsla(0, 0%, 100%, .13);
 	overflow-y: hidden;
 	max-width: 337px;
 	white-space: nowrap;
+	border-top-right-radius: 15px;
+	border-top-left-radius: 15px;
+}
+
+::-webkit-scrollbar {
+width: 11px;
+height: 11px;
+background: #DCDCDC;
+}
+::-webkit-scrollbar-track {
+border: 0.5px solid #fdfdfd;
+}
+::-webkit-scrollbar-thumb {
+background: #3CB371;
+background-image: -webkit-linear-gradient(45deg,
+                                            rgba(255, 255, 255, .2) 25%,
+                        transparent 25%,
+                        transparent 50%,
+                        rgba(255, 255, 255, .2) 50%,
+                        rgba(255, 255, 255, .2) 75%,
+                        transparent 75%,
+                        transparent)
+}
+::-webkit-scrollbar-thumb:hover {
+background: #88ba1c;
 }
 
 .buttonwrapper li {
@@ -240,7 +259,7 @@ background-color: #9494b8;
 }
 
 .chart-card {
-	background-color: rgba(29, 27, 65, .6);
+	background-color: rgb(36,44,52);
 	border-radius: 4px;
 	overflow: hidden
 }
@@ -470,7 +489,7 @@ img.logo {
 	margin: 0;
 	font-family: Helvetica, Arial, sans-serif;
 	color: lightgreen;
-	font-size: 50px;
+	font-size: 60px;
 	font-weight: bold;
 	text-decoration: all;
 	letter-spacing: 0em;
@@ -505,4 +524,12 @@ img.logo {
     display: block; 
     height: auto;
   }
+}
+
+.greyBackground {
+	background-color: #1E345C;
+}
+
+.whiteBackground{
+	background-color: #ffffff;
 }

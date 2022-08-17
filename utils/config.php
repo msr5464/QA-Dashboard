@@ -1,4 +1,5 @@
 <?php
+$version = "1006";
 
 // display all error except deprecated and notice  
 error_reporting( E_ALL & ~E_DEPRECATED & ~E_NOTICE );
@@ -27,13 +28,7 @@ $dboptions = array(
 
 //connect with the server
 try {
-    $dbname = "";
-    if(empty($_COOKIE['selectedYear']))
-        $dbname = "2022";
-    else
-        $dbname = $_COOKIE['selectedYear'];
-
-    $DB = new PDO(DB_DRIVER . ':host=' . DB_HOST . ';dbname=' . $dbname, DB_HOST_USERNAME, DB_HOST_PASSWORD, $dboptions);
+    $DB = new PDO(DB_DRIVER . ':host=' . DB_HOST . ';dbname=' . DB_NAME, DB_HOST_USERNAME, DB_HOST_PASSWORD, $dboptions);
 } catch (Exception $ex) {
     echo errorMessage($ex->getMessage());
     die;
