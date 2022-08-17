@@ -43,10 +43,10 @@ The purpose of creating this dashboard is to track the overall Quality Metrics o
 ![Bugs Page](screenshots/unitTestsPage2.png "Unit Tests Coverage Page for one Project")
 
 
-### List of hidden features:
-##### Dark & Light Mode View:
+### Lets talk about some of the hidden features:
+##### 1. Dark & Light Mode View:
 To enable or disable the darkmode use query param as [`darkmode=1`](http://localhost:8282/testrail.php?darkmode=1) (by default its `darkmode=1`)
-##### Pod View for bigger teams:
+##### 2. Pod View for bigger teams:
 In case your Group or Vertical is quite big then you can convert the dashboard to only show high-level data for bigger teams ie. pods (1 pod = 2 or more smaller teams). Use query param as [`podview=1`](http://localhost:8282/testrail.php?podview=1) (by default its `podview=0`)
 
 **Note:** All query params get stored in **cookies** so that you don't need to pass them in URL every time, this means make sure to use `darkmode=1` or`podview=0` to turn off these views accordingly.
@@ -67,7 +67,7 @@ If its Mac, php server comes installed by default, just run this cmd to start se
 And then start the server using: `mysql.server start`
 
 #### 3. Setup Database and tables
-Use [this basic mysql dump file](utils/mysql-dump.sql "mysql-dump.sql") to create database and insert few dummy entries, on the successful execution of this script you should get minimum 4 tables (`<teamName>_results`, `<teamName>_jira`, `<teamName>_testrail`, `<teamName>_units`) created inside a database named as `thanos`
+Use [this basic db dump file](utils/db-dump.sql "db-dump.sql") to create database and insert few dummy entries, on the successful execution of this script you should get minimum 4 tables (`<teamName>_results`, `<teamName>_jira`, `<teamName>_testrail`, `<teamName>_units`) created inside a database named as `thanos`
 
 #### 4. Clone this repo in your machine
 After cloning the repo, navigate to the `utils` folder and update database credentials in [this file](utils/constants.php "constants.php")
