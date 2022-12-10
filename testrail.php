@@ -84,7 +84,6 @@
                               <label id="column-chart-container5">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
-                              <br>
                               <label id="column-chart-container6">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">

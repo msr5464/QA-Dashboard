@@ -49,7 +49,6 @@
                               <label id="column-chart-container2">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
-                              <br>
                               <label id="column-chart-container3">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">

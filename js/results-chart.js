@@ -1,41 +1,56 @@
 var backend = "utils/results-data.php";
 var pageName = "results.php";
 
-function showDefaultCharts(verticalName, timeFilter, startDate, endDate) {
+function showDefaultCharts(verticalName, tableName, timeFilter, startDate, endDate) {
     hideProjectCharts();
-    var environment1 = getDataFromVerticalTable(verticalName, "environment1");
-    var environment2 = getDataFromVerticalTable(verticalName, "environment2");
-    var groupName1 = getDataFromVerticalTable(verticalName, "groupName1");
-    var groupName2 = getDataFromVerticalTable(verticalName, "groupName2");
-    fetchAvgPercentage_GaugeChart(verticalName, startDate, endDate, "'regression', 'production'");
-    fetchAvgPercentage_ColumnChart(verticalName, timeFilter, startDate, endDate, environment1, groupName1, 1);
-    fetchAvgPercentage_ColumnChart(verticalName, timeFilter, startDate, endDate, environment2, groupName2, 2);
-    fetchAvgExecutionTime_ColumnChart(verticalName, timeFilter, startDate, endDate, environment1, groupName1, 3);
-    fetchAvgExecutionTime_ColumnChart(verticalName, timeFilter, startDate, endDate, environment2, groupName2, 4);
-    window.setTimeout(hideBlankCharts, 2500);
+    var environmentAndGroupNamePair1 = getDataFromVerticalTable(verticalName, "environmentAndGroupNamePair1");
+    var environmentAndGroupNamePair2 = getDataFromVerticalTable(verticalName, "environmentAndGroupNamePair2");
+    var environmentAndGroupNamePair3 = getDataFromVerticalTable(verticalName, "environmentAndGroupNamePair3");
+    var environment1 = environmentAndGroupNamePair1.split(",")[0];
+    var groupName1 = environmentAndGroupNamePair1.split(",")[1];
+    var environment2 = environmentAndGroupNamePair2.split(",")[0];
+    var groupName2 = environmentAndGroupNamePair2.split(",")[1];
+    var environment3 = environmentAndGroupNamePair3.split(",")[0];
+    var groupName3 = environmentAndGroupNamePair3.split(",")[1];
+
+    fetchAvgPercentage_GaugeChart(tableName, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3, isPodDataActive);
+    fetchAvgPercentage_ColumnChart(tableName, timeFilter, startDate, endDate, environment1, groupName1, 1, isPodDataActive);
+    fetchAvgPercentage_ColumnChart(tableName, timeFilter, startDate, endDate, environment2, groupName2, 2, isPodDataActive);
+    fetchAvgPercentage_ColumnChart(tableName, timeFilter, startDate, endDate, environment3, groupName3, 3, isPodDataActive);
+    fetchAvgExecutionTime_ColumnChart(tableName, timeFilter, startDate, endDate, environment1, groupName1, 4, isPodDataActive);
+    fetchAvgExecutionTime_ColumnChart(tableName, timeFilter, startDate, endDate, environment2, groupName2, 5, isPodDataActive);
+    fetchAvgExecutionTime_ColumnChart(tableName, timeFilter, startDate, endDate, environment3, groupName3, 6, isPodDataActive);
+    window.setTimeout(hideBlankCharts, 2000);
 }
 
-function showProjectCharts(verticalName, projectName, timeFilter, startDate, endDate) {
+function showProjectCharts(verticalName, tableName, projectName, timeFilter, startDate, endDate) {
     hideDefaultCharts();
-    var environment1 = getDataFromVerticalTable(verticalName, "environment1");
-    var environment2 = getDataFromVerticalTable(verticalName, "environment2");
-    var groupName1 = getDataFromVerticalTable(verticalName, "groupName1");
-    var groupName2 = getDataFromVerticalTable(verticalName, "groupName2");
-    fetchAvgPercForProject_GaugeChart(verticalName, projectName, timeFilter, startDate, endDate, "'regression', 'production'");
-    fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter, startDate, endDate, environment1, groupName1, 7);
-    fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter, startDate, endDate, environment2, groupName2, 8);
-    fetchAvgDailyPercentage_LineChart(verticalName, projectName, timeFilter, startDate, endDate, environment1, environment2, groupName1, groupName2);
-    fetchAvgDailyExecutionTime_LineChart(verticalName, projectName, timeFilter, startDate, endDate, environment1, environment2, groupName1, groupName2);
-    fetchTotalCasesGroupwise_LineChart(verticalName, projectName, timeFilter, startDate, endDate, environment1, environment2, groupName1, groupName2);
+    var environmentAndGroupNamePair1 = getDataFromVerticalTable(verticalName, "environmentAndGroupNamePair1");
+    var environmentAndGroupNamePair2 = getDataFromVerticalTable(verticalName, "environmentAndGroupNamePair2");
+    var environmentAndGroupNamePair3 = getDataFromVerticalTable(verticalName, "environmentAndGroupNamePair3");
+    var environment1 = environmentAndGroupNamePair1.split(",")[0];
+    var groupName1 = environmentAndGroupNamePair1.split(",")[1];
+    var environment2 = environmentAndGroupNamePair2.split(",")[0];
+    var groupName2 = environmentAndGroupNamePair2.split(",")[1];
+    var environment3 = environmentAndGroupNamePair3.split(",")[0];
+    var groupName3 = environmentAndGroupNamePair3.split(",")[1];
+    fetchAvgPercForProject_GaugeChart(tableName, projectName, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3, isPodDataActive);
+    fetchLastSevenResults_ColumnChart(tableName, projectName, timeFilter, startDate, endDate, environment1, groupName1, 7);
+    fetchLastSevenResults_ColumnChart(tableName, projectName, timeFilter, startDate, endDate, environment2, groupName2, 8);
+    fetchLastSevenResults_ColumnChart(tableName, projectName, timeFilter, startDate, endDate, environment3, groupName3, 9);
+    fetchAvgDailyPercentage_LineChart(tableName, projectName, timeFilter, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3);
+    fetchAvgDailyExecutionTime_LineChart(tableName, projectName, timeFilter, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3);
+    fetchTotalCasesGroupwise_LineChart(tableName, projectName, timeFilter, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3);
+    window.setTimeout(hideBlankCharts, 2000);
 }
 
-function fetchAvgPercentage_GaugeChart(verticalName, startDate, endDate, groupNames) {
+function fetchAvgPercentage_GaugeChart(tableName, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getAvgPercentage_All',
-            arguments: [verticalName, startDate, endDate, groupNames]
+            arguments: [tableName, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3, isPodDataActive]
         },
         success: function (result) {
             var resultValue1 = 0;
@@ -43,28 +58,28 @@ function fetchAvgPercentage_GaugeChart(verticalName, startDate, endDate, groupNa
             var resultValue3 = 0;
             for (i = 0; i < result.length; i++) {
                 $.each(result[i], function (key, value) {
-                    if (key === "Production-data")
-                        resultValue3 = value;
-                    if (key === "Sandbox-data")
-                        resultValue2 = value;
-                    if (key === "Staging-data")
+                    if (key === environment1+"-"+groupName1)
                         resultValue1 = value;
+                    if (key === environment2+"-"+groupName2)
+                        resultValue2 = value;
+                    if (key === environment3+"-"+groupName3)
+                        resultValue3 = value;
                 });
             }
-            enableGaugeChart(resultValue1, 1); 
-            enableGaugeChart(resultValue2, 2); 
-            enableGaugeChart(resultValue3, 3); 
+            enableGaugeChart(resultValue1, groupName1, environment1, 1);
+            enableGaugeChart(resultValue2, groupName2, environment2, 2);
+            enableGaugeChart(resultValue3, groupName3, environment3, 3);
         }
     });
 }
 
-function fetchAvgPercentage_ColumnChart(verticalName, timeFilter, startDate, endDate, environment, groupName, chartNum) {
+function fetchAvgPercentage_ColumnChart(tableName, timeFilter, startDate, endDate, environment, groupName, chartNum, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getAvgPercentage',
-            arguments: [verticalName, startDate, endDate, environment, groupName]
+            arguments: [tableName, startDate, endDate, environment, groupName, isPodDataActive]
         },
         success: function (result) {
             var resultsData = 0;
@@ -113,13 +128,13 @@ function fetchAvgPercentage_ColumnChart(verticalName, timeFilter, startDate, end
     });
 };
 
-function fetchAvgExecutionTime_ColumnChart(verticalName, timeFilter, startDate, endDate, environment, groupName, chartNum) {
+function fetchAvgExecutionTime_ColumnChart(tableName, timeFilter, startDate, endDate, environment, groupName, chartNum, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getAvgExecutionTime',
-            arguments: [verticalName, startDate, endDate, environment, groupName]
+            arguments: [tableName, startDate, endDate, environment, groupName, isPodDataActive]
         },
         success: function (result) {
             var resultsData = 0;
@@ -202,13 +217,13 @@ function fetchAvgExecutionTime_ColumnChart(verticalName, timeFilter, startDate, 
     });
 };
 
-function fetchAvgPercForProject_GaugeChart(verticalName, projectName, timeFilter, startDate, endDate, groupNames) {
+function fetchAvgPercForProject_GaugeChart(tableName, projectName, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getAvgPercentage_Project',
-            arguments: [verticalName, projectName, startDate, endDate, groupNames]
+            arguments: [tableName, projectName, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3, isPodDataActive]
         },
         success: function (result) {
             var resultValue1 = 0;
@@ -216,28 +231,28 @@ function fetchAvgPercForProject_GaugeChart(verticalName, projectName, timeFilter
             var resultValue3 = 0;
             for (i = 0; i < result.length; i++) {
                 $.each(result[i], function (key, value) {
-                    if (key === "Production-data")
-                        resultValue3 = value;
-                    if (key === "Sandbox-data")
-                        resultValue2 = value;
-                    if (key === "Staging-data")
+                    if (key === environment1+"-"+groupName1)
                         resultValue1 = value;
+                    if (key === environment2+"-"+groupName2)
+                        resultValue2 = value;
+                    if (key === environment3+"-"+groupName3)
+                        resultValue3 = value;
                 });
             }
-            enableGaugeChart(resultValue1, 1); 
-            enableGaugeChart(resultValue2, 2); 
-            enableGaugeChart(resultValue3, 3); 
+            enableGaugeChart(resultValue1, groupName1, environment1, 1); 
+            enableGaugeChart(resultValue2, groupName2, environment2, 2); 
+            enableGaugeChart(resultValue3, groupName3, environment3, 3); 
         }
     });
 }
 
-function fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter, startDate, endDate, environment, groupName, chartNum) {
+function fetchLastSevenResults_ColumnChart(tableName, projectName, timeFilter, startDate, endDate, environment, groupName, chartNum) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getLast7Records',
-            arguments: [verticalName, projectName, startDate, endDate, environment, groupName]
+            arguments: [tableName, projectName, startDate, endDate, environment, groupName]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -284,26 +299,30 @@ function fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter
                         }
                     },
                     "beforeRender": function (e, d) {
-                        var messageBlock = document.createElement('p');
-                        messageBlock.style.textAlign = "center";
-                        var activatedMessage = 'Click on the respective column to get Build Link';
-                        var getClickedMessage = function (categoryLabel, displayValue) {
-                            var fullLabel = fullData.find(v => v.label.toString().includes(categoryLabel)).label;
-                            var resultLink = fullLabel.split(linkSeperator)[1];
-                            categoryLabel = categoryLabel.substring(categoryLabel.lastIndexOf("\n") + 1);
-                            return 'Results Link for <B>"' + categoryLabel + '"</B> - <a style="color:yellow" href="' + resultLink + '" target="_blank">' + resultLink + '</a>';
-                        };
-                        e.data.container.appendChild(messageBlock);
 
-                        function dataPlotClickListener(e, a) {
-                            var categoryLabel = e.data.categoryLabel;
-                            var displayValue = e.data.displayValue;
-                            var resMessage = getClickedMessage(categoryLabel, displayValue);
-                            messageBlock.innerHTML = resMessage;
+                        if(!projectName.includes('Pod -'))
+                        {
+                            var messageBlock = document.createElement('p');
+                            messageBlock.style.textAlign = "center";
+                            var activatedMessage = 'Click on the respective column to get Build Link';
+                            var getClickedMessage = function (categoryLabel, displayValue) {
+                                var fullLabel = fullData.find(v => v.label.toString().includes(categoryLabel)).label;
+                                var resultLink = fullLabel.split(linkSeperator)[1];
+                                categoryLabel = categoryLabel.substring(categoryLabel.lastIndexOf("\n") + 1);
+                                return 'Results Link for <B>"' + categoryLabel + '"</B> - <a style="color:yellow" href="' + resultLink + '" target="_blank">' + resultLink + '</a>';
+                            };
+                            e.data.container.appendChild(messageBlock);
+
+                            function dataPlotClickListener(e, a) {
+                                var categoryLabel = e.data.categoryLabel;
+                                var displayValue = e.data.displayValue;
+                                var resMessage = getClickedMessage(categoryLabel, displayValue);
+                                messageBlock.innerHTML = resMessage;
+                            }
+
+                            messageBlock.innerText = activatedMessage;
+                            e.sender.addEventListener('dataplotclick', dataPlotClickListener);
                         }
-
-                        messageBlock.innerText = activatedMessage;
-                        e.sender.addEventListener('dataplotclick', dataPlotClickListener);
                     }
                 },
                 dataSource: {
@@ -318,13 +337,13 @@ function fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter
     });
 };
 
-function fetchAvgDailyPercentage_LineChart(verticalName, projectName, timeFilter, startDate, endDate, environment1, environment2, groupName1, groupName2) {
+function fetchAvgDailyPercentage_LineChart(tableName, projectName, timeFilter, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getDailyAvgPercentage_Project',
-            arguments: [verticalName, projectName, startDate, endDate, environment1, environment2, groupName1, groupName2]
+            arguments: [tableName, projectName, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -365,13 +384,13 @@ function fetchAvgDailyPercentage_LineChart(verticalName, projectName, timeFilter
     });
 };
 
-function fetchAvgDailyExecutionTime_LineChart(verticalName, projectName, timeFilter, startDate, endDate, environment1, environment2, groupName1, groupName2) {
+function fetchAvgDailyExecutionTime_LineChart(tableName, projectName, timeFilter, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getDailyAvgExecutionTime_Project',
-            arguments: [verticalName, projectName, startDate, endDate, environment1, environment2, groupName1, groupName2]
+            arguments: [tableName, projectName, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -412,13 +431,13 @@ function fetchAvgDailyExecutionTime_LineChart(verticalName, projectName, timeFil
     });
 };
 
-function fetchTotalCasesGroupwise_LineChart(verticalName, projectName, timeFilter, startDate, endDate, environment1, environment2, groupName1, groupName2) {
+function fetchTotalCasesGroupwise_LineChart(tableName, projectName, timeFilter, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTotalCasesGroupwise_Project',
-            arguments: [verticalName, projectName, startDate, endDate, environment1, environment2, groupName1, groupName2]
+            arguments: [tableName, projectName, startDate, endDate, environment1, groupName1, environment2, groupName2, environment3, groupName3]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -459,9 +478,10 @@ function fetchTotalCasesGroupwise_LineChart(verticalName, projectName, timeFilte
     });
 };
 
-function enableGaugeChart(result, placeholderNum) 
+function enableGaugeChart(result, groupName, environment, placeholderNum) 
 {
 
+    document.getElementById("gauge"+placeholderNum).innerHTML = groupName.charAt(0).toUpperCase() + groupName.slice(1)+" Pass Percentage ["+environment+"]";
     var totalCases = 0;
     var passedCases = 0;
     var percentage = 0;

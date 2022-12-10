@@ -12,5 +12,6 @@
 <script src="libs/fusion-charts/themes/fusioncharts.theme.zune.js"></script>
 <script src="libs/fusion-charts/themes/fusioncharts.theme.candy.js"></script>
 <script src="libs/chosen/chosen-dropdown.js" type="text/javascript"></script>
+<script src="js/common-functions.js?<?php echo $version; ?>"></script>
 <script src="js/index-chart.js?<?php echo $version; ?>"></script>
 <script src="js/<?php echo $pageName; ?>-chart.js?<?php echo $version; ?>"></script>

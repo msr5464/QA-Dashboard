@@ -9,7 +9,7 @@ function getTableName($verticalName) {
 function getProjectNames($verticalName, $startDate, $endDate, $isPodDataActive) {
     global $DB;
     $jsonArray = array();
-    $sql = "select projectName from ".getTableName($verticalName)." where YEAR(createdAt)=YEAR('" . $startDate . "') OR YEAR(createdAt)=YEAR('" . $endDate . "') group by projectName order by projectName asc;";
+    $sql = "select projectName from ".getTableName($verticalName)." where YEAR(createdAt)>=YEAR('" . $startDate . "') OR YEAR(createdAt)=YEAR('" . $endDate . "') group by projectName order by projectName asc;";
 
     foreach ($DB->query($sql) as $row)
     {

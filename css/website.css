@@ -156,7 +156,13 @@ body {
 .left-options li#units:before {
 	background-image: url(../images/unit-tests.svg);
 	background-repeat: no-repeat;
-	background-size: 24px 24px
+	background-size: 26px 26px
+}
+
+.left-options li#releaseStatistics:before {
+	background-image: url(../images/releaseStatistics.svg);
+	background-repeat: no-repeat;
+	background-size: 26px 26px
 }
 
 .left-options li:hover>a {
@@ -533,3 +539,12 @@ img.logo {
 .whiteBackground{
 	background-color: #ffffff;
 }
+
+table, th, td {
+  border:1px solid black;
+}
+
+th {
+  background-color: #3E345C;
+}
+

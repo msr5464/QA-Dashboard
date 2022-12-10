@@ -33,9 +33,22 @@ function easy_decrypt($str) {
     return str_replace("_@#!@", "", $str);
 }
 
+function getActiveVerticalData() {
+    global $DB;
+    $sql = "select * from configurations where isActive='1' order by verticalName desc";
+    try {
+        $stmt = $DB->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+    } catch (Exception $ex) {
+        errorMessage($ex->getMessage());
+    }
+    return $results;
+}
+
 function getVerticalTableData() {
     global $DB;
-    $sql = "select * from vertical order by verticalName desc";
+    $sql = "select * from configurations order by verticalName desc";
     try {
         $stmt = $DB->prepare($sql);
         $stmt->execute();
@@ -51,15 +64,26 @@ function getLastUpdatedTime() {
     global $verticalName;
     global $projectName;
     global $pageName;
+
     $vertical = $verticalName;
     if($vertical == null || $vertical == "")
-        $vertical = $_COOKIE['pdg'];
-    
+        $vertical = $_COOKIE['entity'];
+
+    $results = "";
+    $tableName = "";
+    $sql = "select * from configurations where verticalName='".$vertical."';";
+    try {
+        foreach ($DB->query($sql) as $row)
+            $tableName = $row['tableNamePrefix'];
+    } catch (Exception $ex) {
+        errorMessage($ex->getMessage());
+    }
+
     if($projectName != null && $projectName != "") {
-        $sql = "select createdAt from ".str_replace(" ", "_", strtolower($vertical))."_".$pageName." where projectName in (" . $projectName . ") order by id desc limit 1";
+        $sql = "select createdAt from ".$tableName."_".$pageName." where projectName in (" . $projectName . ") order by id desc limit 1";
     }
     else {
-        $sql = "select createdAt from ".str_replace(" ", "_", $vertical)."_".$pageName." order by id desc limit 1";
+        $sql = "select createdAt from ".$tableName."_".$pageName." order by id desc limit 1";
     }
     try {
         $stmt = $DB->prepare($sql);

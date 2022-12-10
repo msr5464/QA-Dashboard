@@ -1,30 +1,49 @@
 var backend = "utils/testrail-data.php";
 var pageName = "testrail.php";
 
-function showDefaultCharts(verticalName, timeFilter, startDate, endDate) {
+$(document).ready(function () {
+    $("#goButton").click(function () {
+        setDataIntoStorage("country",$("#countryDropdown").val());
+        setDataIntoStorage("platform",$("#platformDropdown").val());
+    });
+    $("#addFiltersButton").click(function () {
+        showDropdowns();
+        $("#addFiltersButton").hide();
+    });
+});
+
+function showDropdowns() {
+    $("#selectProject").show();
+    $("#projectNamesDropdown").val(projectName.replaceAll("'","").split(',')).trigger("chosen:updated");
+    $("#countryDropdown").addClass("chosen-select").val(getDataFromStorage("country").split(',')).show().chosen();
+    $("#platformDropdown").addClass("chosen-select").val(getDataFromStorage("platform").split(',')).show().chosen();
+}
+
+function showDefaultCharts(verticalName, tableName, timeFilter, startDate, endDate) {
     hideProjectCharts();
-    fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, isPodDataActive);
-    fetchAutomatedCountChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
-    //fetchP0CoverageChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
-    //fetchP1CoverageChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
-    fetchFullCoverageData_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
-    fetchTestcaseDistribution_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
+    fetchCoverageNumbers_GaugeChart_All(tableName, startDate, endDate, isPodDataActive);
+    fetchAutomatedCountChange_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive);
+    //fetchP0CoverageChange_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive);
+    //fetchP1CoverageChange_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive);
+    fetchFullCoverageData_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive);
+    fetchTestcaseDistribution_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive);
 }
 
-function showProjectCharts(verticalName, projectName, timeFilter, startDate, endDate) {
+function showProjectCharts(verticalName, tableName, projectName, timeFilter, startDate, endDate) {
     hideDefaultCharts();
-    fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter, startDate, endDate);
-    fetchTotalvsAutomatedCount_ColumnChart(verticalName, projectName, timeFilter, startDate, endDate);
-    fetchTestcaseCountTrend_LineChart(verticalName, projectName, timeFilter, startDate, endDate);
+    fetchCoverageNumbers_GaugeChart(tableName, projectName, timeFilter, startDate, endDate);
+    fetchTotalvsAutomatedCount_ColumnChart(tableName, projectName, timeFilter, startDate, endDate);
+    fetchTestcaseCountTrend_LineChart(tableName, projectName, timeFilter, startDate, endDate);
+    //window.setTimeout('$("#addFiltersButton").show();', 1000); - Uncomment it to enable the dropdowns
 }
 
-function fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, isPodDataActive) {
+function fetchCoverageNumbers_GaugeChart_All(tableName, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getCoverageNumbers_All',
-            arguments: [verticalName, startDate, endDate,isPodDataActive]
+            arguments: [tableName, startDate, endDate,isPodDataActive]
         },
         success: function (result) {
             var resultValue1 = 0;
@@ -59,13 +78,13 @@ function fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, i
     });
 };
 
-function fetchAutomatedCountChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
+function fetchAutomatedCountChange_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getAutomatedCountChange',
-            arguments: [verticalName, startDate, endDate, isPodDataActive]
+            arguments: [tableName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -92,12 +111,6 @@ function fetchAutomatedCountChange_ColumnChart(verticalName, timeFilter, startDa
                 "palettecolors": "5c70cc,70cc5c,f2726f",
                 "toolTipColor": "#FDFDFD"
             };
-            if(isPodDataActive == '1')
-            {
-                chartProperties.captionFontSize = "22";
-                chartProperties.valueFontSize = "22";
-                chartProperties.labelFontSize = "16";
-            }
 
             apiChart = new FusionCharts({
                 type: 'stackedcolumn2dline',
@@ -117,13 +130,13 @@ function fetchAutomatedCountChange_ColumnChart(verticalName, timeFilter, startDa
 };
 
 
-function fetchP0CoverageChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
+function fetchP0CoverageChange_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getP0CoverageChange',
-            arguments: [verticalName, startDate, endDate, isPodDataActive]
+            arguments: [tableName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -149,12 +162,6 @@ function fetchP0CoverageChange_ColumnChart(verticalName, timeFilter, startDate, 
                 "tooltipBorderThickness": "0.7",
                 "toolTipColor": "#FDFDFD"
             };
-            if(isPodDataActive == '1')
-            {
-                chartProperties.captionFontSize = "22";
-                chartProperties.valueFontSize = "22";
-                chartProperties.labelFontSize = "16";
-            }
 
             apiChart = new FusionCharts({
                 type: 'stackedcolumn2dline',
@@ -173,13 +180,13 @@ function fetchP0CoverageChange_ColumnChart(verticalName, timeFilter, startDate, 
     });
 };
 
-function fetchP1CoverageChange_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
+function fetchP1CoverageChange_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getP1CoverageChange',
-            arguments: [verticalName, startDate, endDate, isPodDataActive]
+            arguments: [tableName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -205,12 +212,6 @@ function fetchP1CoverageChange_ColumnChart(verticalName, timeFilter, startDate, 
                 "tooltipBorderThickness": "0.7",
                 "toolTipColor": "#FDFDFD"
             };
-            if(isPodDataActive == '1')
-            {
-                chartProperties.captionFontSize = "22";
-                chartProperties.valueFontSize = "22";
-                chartProperties.labelFontSize = "16";;
-            }
 
             apiChart = new FusionCharts({
                 type: 'stackedcolumn2dline',
@@ -229,13 +230,13 @@ function fetchP1CoverageChange_ColumnChart(verticalName, timeFilter, startDate, 
     });
 };
 
-function fetchFullCoverageData_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
+function fetchFullCoverageData_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getFullCoverageData',
-            arguments: [verticalName, startDate, endDate, isPodDataActive]
+            arguments: [tableName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -270,12 +271,6 @@ function fetchFullCoverageData_ColumnChart(verticalName, timeFilter, startDate, 
                 "toolTipColor": "#FDFDFD"
 
             };
-            if(isPodDataActive == '1')
-            {
-                chartProperties.captionFontSize = "22";
-                chartProperties.valueFontSize = "22";
-                chartProperties.labelFontSize = "16";
-            }
 
             apiChart = new FusionCharts({
                 type: 'scrollcolumn2d',
@@ -294,13 +289,13 @@ function fetchFullCoverageData_ColumnChart(verticalName, timeFilter, startDate, 
     });
 };
 
-function fetchTestcaseDistribution_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
+function fetchTestcaseDistribution_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTestcaseCountDistribution',
-            arguments: [verticalName, startDate, endDate, isPodDataActive]
+            arguments: [tableName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             var resultValue2 = 0;
@@ -333,12 +328,6 @@ function fetchTestcaseDistribution_ColumnChart(verticalName, timeFilter, startDa
                 "tooltipBorderThickness": "0.7",
                 "toolTipColor": "#FDFDFD"
             };
-            if(isPodDataActive == '1')
-            {
-                chartProperties.captionFontSize = "22";
-                chartProperties.valueFontSize = "22";
-                chartProperties.labelFontSize = "16";
-            }
 
             apiChart = new FusionCharts({
                 type: 'scrollstackedcolumn2d',
@@ -357,13 +346,13 @@ function fetchTestcaseDistribution_ColumnChart(verticalName, timeFilter, startDa
     });
 };
 
-function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter, startDate, endDate) {
+function fetchCoverageNumbers_GaugeChart(tableName, projectName, timeFilter, startDate, endDate) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getCoverageNumbers_Project',
-            arguments: [verticalName, projectName, startDate, endDate]
+            arguments: [tableName, projectName, startDate, endDate]
         },
         success: function (result) {
             var resultValue1 = 0;
@@ -398,13 +387,13 @@ function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter, 
     });
 };
 
-function fetchTotalvsAutomatedCount_ColumnChart(verticalName, projectName, timeFilter, startDate, endDate) {
+function fetchTotalvsAutomatedCount_ColumnChart(tableName, projectName, timeFilter, startDate, endDate) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTotalvsAutomatedCount_Project',
-            arguments: [verticalName, projectName, startDate, endDate]
+            arguments: [tableName, projectName, startDate, endDate]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -447,13 +436,13 @@ function fetchTotalvsAutomatedCount_ColumnChart(verticalName, projectName, timeF
     });
 };
 
-function fetchTestcaseCountTrend_LineChart(verticalName, projectName, timeFilter, startDate, endDate) {
+function fetchTestcaseCountTrend_LineChart(tableName, projectName, timeFilter, startDate, endDate) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTestcaseCountTrend_Project',
-            arguments: [verticalName, projectName, startDate, endDate]
+            arguments: [tableName, projectName, startDate, endDate]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -635,10 +624,6 @@ function enableGaugeChart(result, placeholderNum)
         "chartTopMargin": "25",
         "animateClockwise": "1"
     };
-    if(isPodDataActive == '1')
-    {
-        chartProperties.centerLabelFontSize = "27";
-    }
 
     apiChart = new FusionCharts({
         type: 'doughnut2d',

@@ -30,7 +30,7 @@
                      <div class="row mt-3 db-chart">
                         <div id="parent1" class="col-lg-6 col-xl-4 column">
                            <div class="chart-card mb-4">
-                              <div class="chart-title">Staging Pass Percentage</div>
+                              <div id="gauge1" class="chart-title">Staging Pass Percentage</div>
                               <div id="chart1" class="chart gaugeContainer">
                                  <center>
                                     <label class="gauge custom-text-2" id="gauge-chart-container1"><img src="../images/loader.gif" height="100" /></label>
@@ -40,7 +40,7 @@
                         </div>
                         <div id="parent2" class="col-lg-6 col-xl-4 column">
                            <div class="chart-card mb-4">
-                              <div class="chart-title">Sandbox Pass Percentage</div>
+                              <div id="gauge2" class="chart-title">Sandbox Pass Percentage</div>
                               <div id="chart2" class="chart gaugeContainer">
                                  <center>
                                     <label class="gauge custom-text-2" id="gauge-chart-container2"><img src="../images/loader.gif" height="100" /></label>
@@ -50,7 +50,7 @@
                         </div>
                         <div id="parent3" class="col-lg-6 col-xl-4 column">
                            <div class="chart-card mb-4">
-                              <div class="chart-title">Production Pass Percentage</div>
+                              <div id="gauge3" class="chart-title">Production Pass Percentage</div>
                               <div id="chart3" class="chart gaugeContainer">
                                  <center>
                                     <label class="gauge custom-text-2" id="gauge-chart-container3"><img src="../images/loader.gif" height="100" /></label>
@@ -76,13 +76,24 @@
                               <br>
                               <label id="column-chart-container4">Chart is loading here...</label>
                            </div>
-                           <div class="projectChart">
+                           <div class="defaultChart">
                               <br>
+                              <label id="column-chart-container5">Chart is loading here...</label>
+                           </div>
+                           <div class="defaultChart">
+                              <br>
+                              <label id="column-chart-container6">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
                               <label id="column-chart-container7">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
                               <br>
                               <label id="column-chart-container8">Chart is loading here...</label>
+                           </div>
+                           <div class="projectChart">
+                              <br>
+                              <label id="column-chart-container9">Chart is loading here...</label>
                            </div>
                            <div class="projectChart">
                               <br>

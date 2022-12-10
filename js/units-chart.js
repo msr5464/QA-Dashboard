@@ -1,27 +1,27 @@
 var backend = "utils/units-data.php";
 var pageName = "units.php";
 
-function showDefaultCharts(verticalName, timeFilter, startDate, endDate) {
+function showDefaultCharts(verticalName, tableName, timeFilter, startDate, endDate) {
     hideProjectCharts();
-    fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, isPodDataActive);
-    fetchCoverageDelta_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
-    fetchFullCoverageData_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive);
+    fetchCoverageNumbers_GaugeChart_All(tableName, startDate, endDate, isPodDataActive);
+    fetchCoverageDelta_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive);
+    fetchFullCoverageData_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive);
 }
 
-function showProjectCharts(verticalName, projectName, timeFilter, startDate, endDate) {
+function showProjectCharts(verticalName, tableName, projectName, timeFilter, startDate, endDate) {
     hideDefaultCharts();
-    fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter, startDate, endDate);
-    fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter, startDate, endDate);
-    fetchTestcaseCountTrend_LineChart(verticalName, projectName, timeFilter, startDate, endDate);
+    fetchCoverageNumbers_GaugeChart(tableName, projectName, timeFilter, startDate, endDate);
+    fetchLastSevenResults_ColumnChart(tableName, projectName, timeFilter, startDate, endDate);
+    fetchTestcaseCountTrend_LineChart(tableName, projectName, timeFilter, startDate, endDate);
 }
 
-function fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, isPodDataActive) {
+function fetchCoverageNumbers_GaugeChart_All(tableName, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getCoverageNumbers_All',
-            arguments: [verticalName, startDate, endDate,isPodDataActive]
+            arguments: [tableName, startDate, endDate,isPodDataActive]
         },
         success: function (result) {
             var resultValue1 = 0;
@@ -96,13 +96,13 @@ function fetchCoverageNumbers_GaugeChart_All(verticalName, startDate, endDate, i
 };
 
 
-function fetchCoverageDelta_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
+function fetchCoverageDelta_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getCoverageDelta',
-            arguments: [verticalName, startDate, endDate, isPodDataActive]
+            arguments: [tableName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -146,13 +146,13 @@ function fetchCoverageDelta_ColumnChart(verticalName, timeFilter, startDate, end
 };
 
 
-function fetchFullCoverageData_ColumnChart(verticalName, timeFilter, startDate, endDate, isPodDataActive) {
+function fetchFullCoverageData_ColumnChart(tableName, timeFilter, startDate, endDate, isPodDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getFullCoverageData',
-            arguments: [verticalName, startDate, endDate, isPodDataActive]
+            arguments: [tableName, startDate, endDate, isPodDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -196,13 +196,13 @@ function fetchFullCoverageData_ColumnChart(verticalName, timeFilter, startDate, 
 };
 
 
-function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter, startDate, endDate) {
+function fetchCoverageNumbers_GaugeChart(tableName, projectName, timeFilter, startDate, endDate) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getCoverageNumbers_Project',
-            arguments: [verticalName, projectName, startDate, endDate]
+            arguments: [tableName, projectName, startDate, endDate]
         },
         success: function (result) {
             var resultValue1 = 0;
@@ -270,13 +270,13 @@ function fetchCoverageNumbers_GaugeChart(verticalName, projectName, timeFilter, 
     });
 };
 
-function fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter, startDate, endDate) {
+function fetchLastSevenResults_ColumnChart(tableName, projectName, timeFilter, startDate, endDate) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getLast7Records',
-            arguments: [verticalName, projectName, startDate, endDate]
+            arguments: [tableName, projectName, startDate, endDate]
         },
         success: function (result) {
             $.each(result, function (key, value) {
@@ -372,13 +372,13 @@ function fetchLastSevenResults_ColumnChart(verticalName, projectName, timeFilter
 
 
 
-function fetchTestcaseCountTrend_LineChart(verticalName, projectName, timeFilter, startDate, endDate) {
+function fetchTestcaseCountTrend_LineChart(tableName, projectName, timeFilter, startDate, endDate) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getTestcaseCountTrend_Project',
-            arguments: [verticalName, projectName, startDate, endDate]
+            arguments: [tableName, projectName, startDate, endDate]
         },
         success: function (result) {
             $.each(result, function (key, value) {

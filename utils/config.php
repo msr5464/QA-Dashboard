@@ -1,5 +1,5 @@
 <?php
-$version = "1006";
+$version = "1001";
 
 // display all error except deprecated and notice  
 error_reporting( E_ALL & ~E_DEPRECATED & ~E_NOTICE );
