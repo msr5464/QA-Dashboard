@@ -27,9 +27,9 @@ import com.opencsv.CSVWriter;
 import thanos.utils.CommonUtilities;
 import thanos.utils.Config;
 import thanos.utils.Database;
-import thanos.utils.GcpHelper;
 import thanos.utils.Database.DatabaseName;
 import thanos.utils.Database.QueryType;
+import thanos.utils.GcpHelper;
 
 public class ResultsHelper
 {
@@ -230,8 +230,7 @@ public class ResultsHelper
 	/**
 	 * Create Csv file and upload to GCP Bucket
 	 * @param entityName Entity Name | Eg: Togoto / Merchant / Loan
-	 * @param createdAt Timestamp in format {YYYY-MM-DD HH:MM:SS} | Eg: 2021-05-05
-	 *        16:30:41
+	 * @param createdAt Timestamp in format {YYYY-MM-DD HH:MM:SS} | Eg: 2021-05-05 16:30:41
 	 * @param projectName Project Name | Eg: Portal
 	 * @param environment Environment Name | Eg: Staging, Production
 	 * @param groupName Group Name | Eg: smoke, regression
@@ -244,14 +243,7 @@ public class ResultsHelper
 	 *        CI_JOB_ID
 	 * @param resultLink Test Execution Report Link
 	 */
-	public void createAutomationResultsCsvAndUploadToGcpBucket(Config testConfig, String entityName, String createdAt, String projectName, String environment, String groupName, String duration, String percentage, String totalCases, String passedCases, String failedCases, String buildTag, String resultLink)
-	{
-		createAutomationResultsCsvFile(testConfig, entityName.replaceAll(" ", "_"), buildTag);
-		writeDataToCsvFile(createdAt, projectName, environment, groupName, duration, percentage, totalCases, passedCases, failedCases, buildTag, resultLink);
-		closeCsvAndUploadFile(testConfig);
-	}
-	
-	private String createAutomationResultsCsvFile(Config testConfig, String entityName, String buildTag)
+	public void createAutomationResultsCsvAndUploadToGcpBucket(Config testConfig, String gcpBucketAuthKeyLocation, String entityName, String createdAt, String projectName, String environment, String groupName, String duration, String percentage, String totalCases, String passedCases, String failedCases, String buildTag, String resultLink)
 	{
 		csvFileName = entityName + "_TestResults" + "_" + buildTag + ".csv";
 		String localFilePath = getFilePath(testConfig);
@@ -266,16 +258,8 @@ public class ResultsHelper
 		}
 		csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
 		csvWriter.writeNext(new String[] { "createdAt", "projectName", "environment", "groupName", "duration", "percentage", "totalCases", "passedCases", "failedCases", "buildTag", "resultLink" });
-		return csvFileName;
-	}
-	
-	private void writeDataToCsvFile(String createdAt, String projectName, String environment, String groupName, String duration, String percentage, String totalCases, String passedCases, String failedCases, String buildTag, String qaDashboardResultsLink)
-	{
-		csvWriter.writeNext(new String[] { createdAt, projectName, environment, groupName, duration, percentage, totalCases, passedCases, failedCases, buildTag, qaDashboardResultsLink });
-	}
-	
-	private void closeCsvAndUploadFile(Config testConfig)
-	{
+		csvWriter.writeNext(new String[] { createdAt, projectName, environment, groupName, duration, percentage, totalCases, passedCases, failedCases, buildTag, resultLink });
+		
 		try
 		{
 			writer.close();
@@ -284,7 +268,8 @@ public class ResultsHelper
 		{
 			e.printStackTrace();
 		}
-		GcpHelper.uploadFileInGcpBucket(testConfig, null, bucketName, getFilePath(testConfig) + csvFileName, csvFileName);
+		GcpHelper.uploadFileInGcpBucket(testConfig, gcpBucketAuthKeyLocation, bucketName, getFilePath(testConfig) + csvFileName, csvFileName);
+
 	}
 	
 	public void fetchAndUpdateResultsData(Config testConfig, String entityName, JSONObject jsonObject, ArrayList<String> environmentAndGroupNamePairs, LocalDate date)
