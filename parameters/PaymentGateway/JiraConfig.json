@@ -1,0 +1,26 @@
+{
+   "Pod - Onboardings":{
+      "jiraProjects":[
+         {
+            "projectName":"Team A",
+            "projectKey":"ABC"
+         },
+         {
+            "projectName":"Team B",
+            "projectKey":"DEF"
+         }
+      ]
+   },
+   "Pod - Payouts":{
+      "jiraProjects":[
+         {
+            "projectName":"Team C",
+            "projectKey":"GHI"
+         },
+         {
+            "projectName":"Team D",
+            "projectKey":"JKL"
+         }
+      ]
+   }
+}

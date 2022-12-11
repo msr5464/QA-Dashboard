@@ -13,3 +13,4 @@ target/*
 /bin/
 *.iml
 src/test/test.iml
+.gradle
