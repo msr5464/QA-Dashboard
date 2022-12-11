@@ -1,4 +1,4 @@
-package TestAutomation.utils;
+package thanos.utils;
 
 import java.lang.reflect.Method;
 import org.testng.annotations.BeforeMethod;
@@ -9,7 +9,7 @@ import org.testng.annotations.Listeners;
  * @author MukeshR
  *
  */
-@Listeners(TestAutomation.utils.TestListener.class)
+@Listeners(thanos.utils.TestListener.class)
 public class TestBase {
 	public static ThreadLocal<Config[]> threadLocalConfig = new ThreadLocal<Config[]>();
 	protected Config testConfig;

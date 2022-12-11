@@ -1,4 +1,4 @@
-package TestAutomation.helpers;
+package thanos.helpers;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,12 +12,12 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import TestAutomation.utils.CommonUtilities;
-import TestAutomation.utils.Config;
-import TestAutomation.utils.Database;
-import TestAutomation.utils.TestRailClient;
-import TestAutomation.utils.Database.DatabaseName;
-import TestAutomation.utils.Database.QueryType;
+import thanos.utils.CommonUtilities;
+import thanos.utils.Config;
+import thanos.utils.Database;
+import thanos.utils.TestRailClient;
+import thanos.utils.Database.DatabaseName;
+import thanos.utils.Database.QueryType;
 
 
 public class TestCoverageHelper

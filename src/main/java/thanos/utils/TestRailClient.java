@@ -6,7 +6,7 @@
  * http://docs.gurock.com/testrail-api2/accessing
  * Copyright Gurock Software GmbH. See license.md for details.
  */
-package TestAutomation.utils;
+package thanos.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

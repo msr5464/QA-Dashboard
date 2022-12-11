@@ -1,4 +1,4 @@
-package TestAutomation;
+package thanos;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -7,13 +7,13 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.json.JSONObject;
 import org.testng.annotations.Test;
-import TestAutomation.helpers.BugMetricsHelper;
-import TestAutomation.helpers.ResultsHelper;
-import TestAutomation.helpers.TestCoverageHelper;
-import TestAutomation.helpers.ResultsHelper.FileType;
-import TestAutomation.utils.CommonUtilities;
-import TestAutomation.utils.GcpHelper;
-import TestAutomation.utils.TestBase;
+import thanos.helpers.BugMetricsHelper;
+import thanos.helpers.ResultsHelper;
+import thanos.helpers.TestCoverageHelper;
+import thanos.helpers.ResultsHelper.FileType;
+import thanos.utils.CommonUtilities;
+import thanos.utils.GcpHelper;
+import thanos.utils.TestBase;
 
 public class PaymentGatewayNumbers extends TestBase
 {

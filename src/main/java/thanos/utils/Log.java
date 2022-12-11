@@ -1,4 +1,4 @@
-package TestAutomation.utils;
+package thanos.utils;
 
 import org.testng.Assert;
 import org.testng.Reporter;

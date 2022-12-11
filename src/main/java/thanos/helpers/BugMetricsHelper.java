@@ -1,4 +1,4 @@
-package TestAutomation.helpers;
+package thanos.helpers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,13 +11,13 @@ import java.util.TimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
-import TestAutomation.utils.Config;
-import TestAutomation.utils.Database;
-import TestAutomation.utils.Database.DatabaseName;
-import TestAutomation.utils.Database.QueryType;
 import net.rcarz.jiraclient.BasicCredentials;
 import net.rcarz.jiraclient.Issue;
 import net.rcarz.jiraclient.Issue.SearchResult;
+import thanos.utils.Config;
+import thanos.utils.Database;
+import thanos.utils.Database.DatabaseName;
+import thanos.utils.Database.QueryType;
 import net.rcarz.jiraclient.JiraClient;
 import net.rcarz.jiraclient.JiraException;
 

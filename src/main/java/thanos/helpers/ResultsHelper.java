@@ -1,4 +1,4 @@
-package TestAutomation.helpers;
+package thanos.helpers;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,12 +24,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.opencsv.CSVWriter;
-import TestAutomation.utils.CommonUtilities;
-import TestAutomation.utils.Config;
-import TestAutomation.utils.Database;
-import TestAutomation.utils.GcpHelper;
-import TestAutomation.utils.Database.DatabaseName;
-import TestAutomation.utils.Database.QueryType;
+import thanos.utils.CommonUtilities;
+import thanos.utils.Config;
+import thanos.utils.Database;
+import thanos.utils.GcpHelper;
+import thanos.utils.Database.DatabaseName;
+import thanos.utils.Database.QueryType;
 
 public class ResultsHelper
 {

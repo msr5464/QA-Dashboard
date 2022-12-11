@@ -1,9 +1,9 @@
-package TestAutomation;
+package thanos;
 
 import org.testng.annotations.Test;
-import TestAutomation.helpers.ResultsHelper;
-import TestAutomation.utils.Config;
-import TestAutomation.utils.TestBase;
+import thanos.helpers.ResultsHelper;
+import thanos.utils.Config;
+import thanos.utils.TestBase;
 
 public class TestDemo extends TestBase
 {

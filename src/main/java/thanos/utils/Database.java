@@ -1,4 +1,4 @@
-package TestAutomation.utils;
+package thanos.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
