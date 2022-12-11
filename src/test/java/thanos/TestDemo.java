@@ -3,13 +3,14 @@ package thanos;
 import java.io.File;
 import org.testng.annotations.Test;
 import thanos.helpers.ResultsHelper;
+import thanos.utils.Config;
 import thanos.utils.TestBase;
 
 public class TestDemo extends TestBase
 {
 	
-	@Test(description = "Example showing, how to send Automation Results data into GCP Bucket")
-	public void uploadAutomationResultsToBucket()
+	@Test(dataProvider = "getTestConfig", description = "Example showing, how to send Automation Results data into GCP Bucket")
+	public void uploadAutomationResultsToBucket(Config testConfig)
 	{
 		String entityName = "PaymentGateway";
 		String createdAt = "05/05/21 6:10";

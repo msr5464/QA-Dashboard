@@ -1,4 +1,5 @@
 package thanos.utils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,13 +17,11 @@ import com.google.gson.JsonParser;
 /**
  * This class will contain all the random functions
  * @author MukeshR
- *
  */
 public class CommonUtilities
 {
 	/**
 	 * format the string as json
-	 * 
 	 * @param input
 	 * @return formatted json string
 	 */
@@ -30,10 +29,9 @@ public class CommonUtilities
 	{
 		return new GsonBuilder().setPrettyPrinting().create().toJson(new JsonParser().parse(input));
 	}
-
+	
 	/**
 	 * This Method is used to create folder at given path
-	 *
 	 * @param path
 	 * @return
 	 */
@@ -54,7 +52,7 @@ public class CommonUtilities
 				System.out.println("Exception while creating Directory : " + path);
 				se.printStackTrace();
 			}
-		} 
+		}
 		else
 		{
 			System.out.println("Directory: " + path + " already Exist");
@@ -65,7 +63,6 @@ public class CommonUtilities
 	
 	/**
 	 * Check List Contains Given String
-	 *
 	 * @param list
 	 * @param stringToMatch
 	 * @return true/false
@@ -84,7 +81,6 @@ public class CommonUtilities
 		return false;
 	}
 	
-
 	public static String createFileInResultsDirectory(Config testConfig, String subDirectoryName)
 	{
 		String fileName = testConfig.getRunTimeProperty("resultsDirectory") + File.separator + subDirectoryName + File.separator + testConfig.testcaseName + "_" + generateRandomAlphaNumericString(15) + "_" + new SimpleDateFormat("HH-mm-ss").format(new Date());
@@ -92,19 +88,20 @@ public class CommonUtilities
 		return fileName;
 	}
 	
-	public static File getResultsDirectory(Config testConfig) {
+	public static File getResultsDirectory(Config testConfig)
+	{
 		File dest = new File(System.getProperty("user.dir") + File.separator + "test-output" + File.separator + "html" + File.separator);
 		return dest;
 	}
 	
 	/**
 	 * This function return the URL of a file on runtime depending on LOCAL or OFFICIAL Run
-	 * 
 	 * @param testConfig
 	 * @param fileUrl
 	 * @return
 	 */
-	public static String convertFilePathToHtmlUrl(String fileUrl) {
+	public static String convertFilePathToHtmlUrl(String fileUrl)
+	{
 		String htmlUrl = "";
 		htmlUrl = fileUrl.replace(File.separator, "/");
 		return htmlUrl;
@@ -129,13 +126,16 @@ public class CommonUtilities
 	 * @param testConfig
 	 * @param seconds
 	 */
-	public static void waitForSeconds(Config testConfig, int seconds){
+	public static void waitForSeconds(Config testConfig, int seconds)
+	{
 		int milliseconds = seconds * 1000;
-		try{
+		try
+		{
 			testConfig.logComment("Waiting for '" + seconds + "' seconds");
 			Thread.sleep(milliseconds);
 		}
-		catch (InterruptedException e){
+		catch (InterruptedException e)
+		{
 			testConfig.logExceptionAndFail("", e);
 		}
 	}
@@ -147,19 +147,23 @@ public class CommonUtilities
 	 * @param expected
 	 * @param actual
 	 */
-	public static <T> void compareEquals(Config testConfig, String what, T expected, T actual){
-		if (expected == null & actual == null){
+	public static <T> void compareEquals(Config testConfig, String what, T expected, T actual)
+	{
+		if (expected == null & actual == null)
+		{
 			testConfig.logPass(what, actual);
 			return;
 		}
 		
-		if (actual != null){
+		if (actual != null)
+		{
 			if (!actual.equals(expected))
 				testConfig.logFail(what, expected, actual);
 			else
 				testConfig.logPass(what, actual);
 		}
-		else{
+		else
+		{
 			testConfig.logFail(what, expected, actual);
 		}
 	}
@@ -169,7 +173,7 @@ public class CommonUtilities
 		Random rd = new Random();
 		String aphaNumericString = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		StringBuilder sb = new StringBuilder(length);
-
+		
 		for (int i = 0; i < length; i++)
 		{
 			sb.append(aphaNumericString.charAt(rd.nextInt(aphaNumericString.length())));

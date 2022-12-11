@@ -269,7 +269,7 @@ public class ResultsHelper
 			e.printStackTrace();
 		}
 		GcpHelper.uploadFileInGcpBucket(testConfig, gcpBucketAuthKeyLocation, bucketName, getFilePath(testConfig) + csvFileName, csvFileName);
-
+		
 	}
 	
 	public void fetchAndUpdateResultsData(Config testConfig, String entityName, JSONObject jsonObject, ArrayList<String> environmentAndGroupNamePairs, LocalDate date)

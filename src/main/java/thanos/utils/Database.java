@@ -30,7 +30,6 @@ public class Database
 		update,
 		delete
 	}
-
 	
 	/**
 	 * Creates database connection using the Config parameters - 'DatabaseString', 'DatabaseUsername' and 'DatabasePassword'
@@ -121,7 +120,7 @@ public class Database
 		}
 		return returnValue;
 	}
-
+	
 	public static Map<String, String> executeSelectQuery(Config testConfig, String query, DatabaseName databaseName)
 	{
 		int rowNumber = 1;

@@ -25,13 +25,11 @@ import java.util.Base64;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-
 public class TestRailClient
 {
 	private String m_user;
 	private String m_password;
 	private String m_url;
-
 	
 	public TestRailClient(String base_url)
 	{
@@ -198,7 +196,8 @@ public class TestRailClient
 			{
 				throw new Exception("TestRail API return HTTP " + status + " (No additional error message received)");
 			}
-			else{
+			else
+			{
 				throw new Exception("Testrail API return HTTP" + status + "with error message" + istream);
 			}
 		}
@@ -284,5 +283,5 @@ public class TestRailClient
 		
 		return "";
 	}
-
+	
 }

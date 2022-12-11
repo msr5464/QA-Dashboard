@@ -21,7 +21,6 @@ import thanos.utils.Database.QueryType;
 import net.rcarz.jiraclient.JiraClient;
 import net.rcarz.jiraclient.JiraException;
 
-
 public class BugMetricsHelper
 {
 	private HashMap<String, Integer> podLevelData;

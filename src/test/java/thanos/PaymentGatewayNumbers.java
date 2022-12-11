@@ -9,9 +9,10 @@ import org.json.JSONObject;
 import org.testng.annotations.Test;
 import thanos.helpers.BugMetricsHelper;
 import thanos.helpers.ResultsHelper;
-import thanos.helpers.TestCoverageHelper;
 import thanos.helpers.ResultsHelper.FileType;
+import thanos.helpers.TestCoverageHelper;
 import thanos.utils.CommonUtilities;
+import thanos.utils.Config;
 import thanos.utils.GcpHelper;
 import thanos.utils.TestBase;
 
@@ -19,16 +20,16 @@ public class PaymentGatewayNumbers extends TestBase
 {
 	String entityName = "Payment Gateway";
 	
-	@Test(priority = 1, description = "Fetch the latest numbers from the TestRail for all the mentioned projects under Payment Gateway", groups = { "dataPopulator" })
-	public void fetchTestCoverageData()
+	@Test(priority = 1, dataProvider = "getTestConfig", description = "Fetch the latest numbers from the TestRail for all the mentioned projects under Payment Gateway", groups = { "dataPopulator" })
+	public void fetchTestCoverageData(Config testConfig)
 	{
 		TestCoverageHelper testRailHelper = new TestCoverageHelper(testConfig);
 		JSONObject testRailProjects = CommonUtilities.getJsonObjectFromJsonFile(getEntityConfigPath(entityName) + "TestRailConfig.json");
 		testRailHelper.fetchDataFromTestRail(testConfig, testRailProjects, entityName);
 	}
 	
-	@Test(priority = 2, description = "Fetch the latest numbers from the Jira for all the mentioned projects under Payment Gateway", groups = { "dataPopulator" })
-	public void fetchBugMetricsData()
+	@Test(priority = 2, dataProvider = "getTestConfig", description = "Fetch the latest numbers from the Jira for all the mentioned projects under Payment Gateway", groups = { "dataPopulator" })
+	public void fetchBugMetricsData(Config testConfig)
 	{
 		BugMetricsHelper bugMetricsHelper = new BugMetricsHelper(testConfig);
 		JSONObject jiraProjects = CommonUtilities.getJsonObjectFromJsonFile(getEntityConfigPath(entityName) + "JiraConfig.json");
@@ -44,8 +45,8 @@ public class PaymentGatewayNumbers extends TestBase
 		bugMetricsHelper.fetchDataFromJira(testConfig, jiraProjects, entityName, LocalDate.now(), jiraFilters);
 	}
 	
-	@Test(priority = 3, description = "Fetch the Thanos test results from Gcp and save to thanos DB for Payment Gateway", groups = { "dataPopulator" })
-	public void fetchAutomationStabilityData()
+	@Test(priority = 3, dataProvider = "getTestConfig", description = "Fetch the Thanos test results from Gcp and save to thanos DB for Payment Gateway", groups = { "dataPopulator" })
+	public void fetchAutomationStabilityData(Config testConfig)
 	{
 		String fileNamePrefix = entityName.replace(" ", "") + "_TestResults_";
 		String gcpBucketAuthKeyLocation = System.getProperty("user.dir") + File.separator + "parameters" + File.separator + "gcp-bucket-config.json";
@@ -73,8 +74,8 @@ public class PaymentGatewayNumbers extends TestBase
 		}
 	}
 	
-	@Test(priority = 4, description = "Fetch the latest numbers of unit test coverage from gcp bucket and insert to DB", groups = { "fullDataPopulator", "automationResultsFetcher" })
-	public void fetchCodeCoverageData()
+	@Test(priority = 4, dataProvider = "getTestConfig", description = "Fetch the latest numbers of unit test coverage from gcp bucket and insert to DB", groups = { "dataPopulator" })
+	public void fetchCodeCoverageData(Config testConfig)
 	{
 		String fileNamePrefix = entityName.replace(" ", "") + "_UnitTests_";
 		String gcpBucketAuthKeyLocation = System.getProperty("user.dir") + File.separator + "parameters" + File.separator + "gcp-bucket-config.json";

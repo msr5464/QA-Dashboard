@@ -19,7 +19,6 @@ import thanos.utils.TestRailClient;
 import thanos.utils.Database.DatabaseName;
 import thanos.utils.Database.QueryType;
 
-
 public class TestCoverageHelper
 {
 	private HashMap<String, String> podLevelData;
@@ -65,7 +64,7 @@ public class TestCoverageHelper
 		LocalDate date = LocalDate.now();
 		testConfig.putRunTimeProperty("tableName", entityName.toLowerCase().trim().replaceAll(" ", "_") + "_testrail");
 		fetchDataForProjectsAndPods(testConfig, jsonObject, entityName, date);
-
+		
 		// At the end, insert data of Entity to All Entities table
 		if (entityLevelData.size() != 0)
 		{
@@ -164,7 +163,7 @@ public class TestCoverageHelper
 		
 		do
 		{
-			for (retryCount = 0; retryCount <= 4; retryCount++)
+			for (retryCount = 0; retryCount <= 1; retryCount++)
 			{
 				try
 				{
@@ -178,7 +177,7 @@ public class TestCoverageHelper
 				}
 				catch (Exception e)
 				{
-					if (retryCount == 4)
+					if (retryCount == 1)
 						testConfig.logExceptionAndFail("Ending execution...", e);
 					else
 					{
@@ -385,7 +384,7 @@ public class TestCoverageHelper
 	private void compareTrueLocally(Config testConfig, String what, boolean actual)
 	{
 		if (!actual)
-			testConfig.logFail("Failed to verify '" + what +"'");
-
+			testConfig.logFail("Failed to verify '" + what + "'");
+		
 	}
 }
