@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import com.google.api.gax.paging.Page;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.Blob;
@@ -25,14 +24,14 @@ public class GcpHelper
 {
 	private static Storage storage = null;
 	
-	private static Storage connectToGcp(Config testConfig, String key)
+	private static Storage connectToGcp(Config testConfig, String authKey)
 	{
 		if (storage == null)
 		{
 			try
 			{
 				testConfig.logComment("Connecting to GCP server...");
-				storage = StorageOptions.newBuilder().setCredentials(ServiceAccountCredentials.fromStream(new FileInputStream(key))).build().getService();
+				storage = StorageOptions.newBuilder().setCredentials(ServiceAccountCredentials.fromStream(new FileInputStream(authKey))).build().getService();
 				testConfig.logCommentForDebugging("Connected successfully with GCP server.");
 			}
 			catch (Exception e)

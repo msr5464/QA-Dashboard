@@ -48,14 +48,15 @@ public class PaymentGatewayNumbers extends TestBase
 	public void fetchAutomationStabilityData()
 	{
 		String fileNamePrefix = entityName.replace(" ", "") + "_TestResults_";
-		ResultsHelper resultsHelper = new ResultsHelper();
+		String gcpBucketAuthKeyLocation = System.getProperty("user.dir") + File.separator + "parameters" + File.separator + "gcp-bucket-config.json";
 		
-		List<String> downloadFileNames = GcpHelper.getFilesListInAscSortedOrder(testConfig, null, resultsHelper.bucketName, fileNamePrefix);
-		Boolean isDownloadSuccess = GcpHelper.downloadFiles(testConfig, null, resultsHelper.bucketName, downloadFileNames, resultsHelper.getFilePath(testConfig));
+		ResultsHelper resultsHelper = new ResultsHelper();
+		List<String> downloadFileNames = GcpHelper.getFilesListInAscSortedOrder(testConfig, gcpBucketAuthKeyLocation, resultsHelper.bucketName, fileNamePrefix);
+		Boolean isDownloadSuccess = GcpHelper.downloadFiles(testConfig, gcpBucketAuthKeyLocation, resultsHelper.bucketName, downloadFileNames, resultsHelper.getFilePath(testConfig));
 		if (isDownloadSuccess && downloadFileNames.size() > 0)
 		{
 			List<String> processedFiles = resultsHelper.readCsvFileAndInsertToDB(testConfig, entityName, downloadFileNames, FileType.AutomationResults);
-			GcpHelper.renameOrDeleteMultipleFiles(testConfig, null, resultsHelper.bucketName, processedFiles, false, "P_");
+			GcpHelper.renameOrDeleteMultipleFiles(testConfig, gcpBucketAuthKeyLocation, resultsHelper.bucketName, processedFiles, false, "P_");
 			
 			// Code for calculating Pod level and Entity level data
 			ArrayList<String> environmentAndGroupNamePairs = new ArrayList<String>();
@@ -76,14 +77,15 @@ public class PaymentGatewayNumbers extends TestBase
 	public void fetchCodeCoverageData()
 	{
 		String fileNamePrefix = entityName.replace(" ", "") + "_UnitTests_";
-		ResultsHelper resultsHelper = new ResultsHelper();
+		String gcpBucketAuthKeyLocation = System.getProperty("user.dir") + File.separator + "parameters" + File.separator + "gcp-bucket-config.json";
 		
-		List<String> downloadFileNames = GcpHelper.getFilesListInAscSortedOrder(testConfig, null, resultsHelper.bucketName, fileNamePrefix);
-		Boolean isDownloadSuccess = GcpHelper.downloadFiles(testConfig, null, resultsHelper.bucketName, downloadFileNames, resultsHelper.getFilePath(testConfig));
+		ResultsHelper resultsHelper = new ResultsHelper();
+		List<String> downloadFileNames = GcpHelper.getFilesListInAscSortedOrder(testConfig, gcpBucketAuthKeyLocation, resultsHelper.bucketName, fileNamePrefix);
+		Boolean isDownloadSuccess = GcpHelper.downloadFiles(testConfig, gcpBucketAuthKeyLocation, resultsHelper.bucketName, downloadFileNames, resultsHelper.getFilePath(testConfig));
 		if (isDownloadSuccess && downloadFileNames.size() > 0)
 		{
 			downloadFileNames = resultsHelper.readCsvFileAndInsertToDB(testConfig, entityName, downloadFileNames, FileType.UnitTestCoverage);
-			GcpHelper.renameOrDeleteMultipleFiles(testConfig, null, resultsHelper.bucketName, downloadFileNames, false, "P_");
+			GcpHelper.renameOrDeleteMultipleFiles(testConfig, gcpBucketAuthKeyLocation, resultsHelper.bucketName, downloadFileNames, false, "P_");
 		}
 	}
 	

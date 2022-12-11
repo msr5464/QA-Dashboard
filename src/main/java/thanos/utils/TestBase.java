@@ -16,7 +16,7 @@ public class TestBase {
 
 	@BeforeMethod
 	public void getTestConfiguration(Method method) {
-		Config testConfig = new Config();
+		testConfig = new Config();
 		testConfig.testcaseName = method.getName();
 		threadLocalConfig.set(new Config[] { testConfig });
 	}

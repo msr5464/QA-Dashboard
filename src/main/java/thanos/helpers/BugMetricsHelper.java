@@ -53,9 +53,8 @@ public class BugMetricsHelper
 	
 	private JiraClient connectToJira(Config testConfig)
 	{
-		String JIRA_URL = "https://abc.atlassian.net/";
-		BasicCredentials creds = new BasicCredentials(System.getProperty("JiraUsername"), System.getProperty("JiraPassword"));
-		JiraClient jiraClient = new JiraClient(JIRA_URL, creds);
+		BasicCredentials creds = new BasicCredentials(testConfig.getRunTimeProperty("JiraUsername"), testConfig.getRunTimeProperty("JiraPassword"));
+		JiraClient jiraClient = new JiraClient(testConfig.getRunTimeProperty("JiraHostUrl"), creds);
 		testConfig.logComment("Connected to Jira server successfully.");
 		return jiraClient;
 	}

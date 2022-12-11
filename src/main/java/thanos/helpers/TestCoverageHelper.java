@@ -53,9 +53,9 @@ public class TestCoverageHelper
 	
 	private TestRailClient connectToTestRail(Config testConfig)
 	{
-		TestRailClient client = new TestRailClient("https://abc.testrail.net/");
-		client.setUser(System.getProperty("TestRailUsername"));
-		client.setPassword(System.getProperty("TestRailPassword"));
+		TestRailClient client = new TestRailClient(testConfig.getRunTimeProperty("TestRailHostUrl"));
+		client.setUser(testConfig.getRunTimeProperty("TestRailUsername"));
+		client.setPassword(testConfig.getRunTimeProperty("TestRailPassword"));
 		testConfig.logComment("Connected to TestRail server successfully.");
 		return client;
 	}
@@ -65,13 +65,11 @@ public class TestCoverageHelper
 		LocalDate date = LocalDate.now();
 		testConfig.putRunTimeProperty("tableName", entityName.toLowerCase().trim().replaceAll(" ", "_") + "_testrail");
 		fetchDataForProjectsAndPods(testConfig, jsonObject, entityName, date);
-		
+
 		// At the end, insert data of Entity to All Entities table
 		if (entityLevelData.size() != 0)
 		{
 			testConfig.putRunTimeProperty("tableName", "all_entities_testrail");
-			if (testConfig.getRunTimeProperty("enablejsonlogs").equalsIgnoreCase("true"))
-				testConfig.logCommentJson("All Team Testrail Numbers:" + CommonUtilities.formatStringAsJson(entityLevelData.toString()), "Green");
 			addTestrailDataInDatabase(testConfig, date, entityName, entityLevelData);
 		}
 	}
@@ -85,8 +83,6 @@ public class TestCoverageHelper
 			if (testRailConfigKey.equals("testRailSuites"))
 			{
 				fetchProjectWiseTestRailDataAndInsertIntoDb(testConfig, jsonObject.getJSONArray("testRailSuites"), entityName, date);
-				if (testConfig.getRunTimeProperty("enablejsonlogs").equalsIgnoreCase("true"))
-					testConfig.logCommentJson("POD Testrail Numbers = " + CommonUtilities.formatStringAsJson(podLevelData.toString()), "Green");
 				updateEntityLevelTestRailNumbers(testConfig, entityLevelData);
 			}
 			else

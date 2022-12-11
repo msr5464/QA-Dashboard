@@ -36,7 +36,7 @@ public class TestListener implements ITestListener, IInvokedMethodListener {
 					} catch (AssertionError e) {
 						errorMessage = errorMessage + e.getMessage();
 						testResult.setStatus(TestResult.FAILURE);
-						testResult.setThrowable(new AssertionError(errorMessage));
+						//testResult.setThrowable(new AssertionError(errorMessage));
 						Log.failure(testConfig, errorMessage);
 					}
 				}
