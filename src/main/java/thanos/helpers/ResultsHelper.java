@@ -227,51 +227,6 @@ public class ResultsHelper
 		return processedFiles;
 	}
 	
-	/**
-	 * Create Csv file and upload to GCP Bucket
-	 * @param entityName Entity Name | Eg: Togoto / Merchant / Loan
-	 * @param createdAt Timestamp in format {YYYY-MM-DD HH:MM:SS} | Eg: 2021-05-05 16:30:41
-	 * @param projectName Project Name | Eg: Portal
-	 * @param environment Environment Name | Eg: Staging, Production
-	 * @param groupName Group Name | Eg: smoke, regression
-	 * @param duration Total Execution time in seconds - 123
-	 * @param percentage Total Percent | Eg: 16.30
-	 * @param totalCases Total Test Cases
-	 * @param passedCases Total Test Cases with Status as PASS
-	 * @param failedCases Total Test Cases with Status as FAIL
-	 * @param buildTag Runtime unique number | build tag | Eg: For Gitlab-
-	 *        CI_JOB_ID
-	 * @param resultLink Test Execution Report Link
-	 */
-	public void createAutomationResultsCsvAndUploadToGcpBucket(Config testConfig, String gcpBucketAuthKeyLocation, String entityName, String createdAt, String projectName, String environment, String groupName, String duration, String percentage, String totalCases, String passedCases, String failedCases, String buildTag, String resultLink)
-	{
-		csvFileName = entityName + "_TestResults" + "_" + buildTag + ".csv";
-		String localFilePath = getFilePath(testConfig);
-		CommonUtilities.createFolder(localFilePath);
-		try
-		{
-			writer = Files.newBufferedWriter(Paths.get(localFilePath + csvFileName));
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
-		csvWriter.writeNext(new String[] { "createdAt", "projectName", "environment", "groupName", "duration", "percentage", "totalCases", "passedCases", "failedCases", "buildTag", "resultLink" });
-		csvWriter.writeNext(new String[] { createdAt, projectName, environment, groupName, duration, percentage, totalCases, passedCases, failedCases, buildTag, resultLink });
-		
-		try
-		{
-			writer.close();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		GcpHelper.uploadFileInGcpBucket(testConfig, gcpBucketAuthKeyLocation, bucketName, getFilePath(testConfig) + csvFileName, csvFileName);
-		
-	}
-	
 	public void fetchAndUpdateResultsData(Config testConfig, String entityName, JSONObject jsonObject, ArrayList<String> environmentAndGroupNamePairs, LocalDate date)
 	{
 		for (int i = 0; i < environmentAndGroupNamePairs.size(); i++)
@@ -435,5 +390,49 @@ public class ResultsHelper
 		testConfig.putRunTimeProperty("newProjectName", newProjectName);
 		String updateQuery = "update {$tableName} set projectName='{$newProjectName}' where projectName='{$projectName}';";
 		Database.executeQuery(testConfig, updateQuery, QueryType.update, DatabaseName.Thanos);
+	}
+	
+	/**
+	 * Create Csv file and upload to GCP Bucket
+	 * @param entityName Entity Name | Eg: Togoto / Merchant / Loan
+	 * @param createdAt Timestamp in format {YYYY-MM-DD HH:MM:SS} | Eg: 2021-05-05 16:30:41
+	 * @param projectName Project Name | Eg: Portal
+	 * @param environment Environment Name | Eg: Staging, Production
+	 * @param groupName Group Name | Eg: smoke, regression
+	 * @param duration Total Execution time in seconds - 123
+	 * @param percentage Total Percent | Eg: 16.30
+	 * @param totalCases Total Test Cases
+	 * @param passedCases Total Test Cases with Status as PASS
+	 * @param failedCases Total Test Cases with Status as FAIL
+	 * @param buildTag Runtime unique number | build tag | Eg: For Gitlab-
+	 *        CI_JOB_ID
+	 * @param resultLink Test Execution Report Link
+	 */
+	public void createAutomationResultsCsvAndUploadToGcpBucket(Config testConfig, String gcpBucketAuthKeyLocation, String entityName, String createdAt, String projectName, String environment, String groupName, String duration, String percentage, String totalCases, String passedCases, String failedCases, String buildTag, String resultLink)
+	{
+		csvFileName = entityName + "_TestResults" + "_" + buildTag + ".csv";
+		String localFilePath = getFilePath(testConfig);
+		CommonUtilities.createFolder(localFilePath);
+		try
+		{
+			writer = Files.newBufferedWriter(Paths.get(localFilePath + csvFileName));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
+		csvWriter.writeNext(new String[] { "createdAt", "projectName", "environment", "groupName", "duration", "percentage", "totalCases", "passedCases", "failedCases", "buildTag", "resultLink" });
+		csvWriter.writeNext(new String[] { createdAt, projectName, environment, groupName, duration, percentage, totalCases, passedCases, failedCases, buildTag, resultLink });
+		
+		try
+		{
+			writer.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		GcpHelper.uploadFileInGcpBucket(testConfig, gcpBucketAuthKeyLocation, bucketName, getFilePath(testConfig) + csvFileName, csvFileName);
 	}
 }
