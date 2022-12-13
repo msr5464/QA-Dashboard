@@ -404,8 +404,8 @@ public class BugMetricsHelper
 		testConfig.putRunTimeProperty("status", status);
 		testConfig.putRunTimeProperty("title", title);
 		testConfig.putRunTimeProperty("environment", environment);
-		testConfig.putRunTimeProperty("bugFoundByCustomField", bugFoundBy);
-		testConfig.putRunTimeProperty("bugCategoryCustomField", bugCategory);
+		testConfig.putRunTimeProperty("bugFoundBy", bugFoundBy);
+		testConfig.putRunTimeProperty("bugCategory", bugCategory);
 		testConfig.putRunTimeProperty("priority", priority);
 		testConfig.putRunTimeProperty("sprint", sprint);
 		
