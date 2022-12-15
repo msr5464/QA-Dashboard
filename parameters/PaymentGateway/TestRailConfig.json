@@ -1,0 +1,30 @@
+{
+   "Pod - Onboardings":{
+      "testRailSuites":[
+         {
+            "suiteName":"Team A",
+            "suiteId":"1234",
+            "projectId":"11"
+         },
+         {
+            "suiteName":"Team B",
+            "suiteId":"2345",
+            "projectId":"12"
+         }
+      ]
+   },
+   "Pod - Payouts":{
+      "testRailSuites":[
+         {
+            "suiteName":"Team C",
+            "suiteId":"3456",
+            "projectId":"13"
+         },
+         {
+            "suiteName":"Team D",
+            "suiteId":"4567",
+            "projectId":"14"
+         }
+      ]
+   }
+}

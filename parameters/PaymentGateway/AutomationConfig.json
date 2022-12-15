@@ -1,0 +1,26 @@
+{
+   "Pod - Onboardings":{
+      "automationSuites":[
+         {
+            "projectName": "Team A",
+            "platformName":"Web"
+         },
+         {
+            "projectName": "Team B",
+            "platformName":"Api"
+         }
+      ]
+   },
+   "Pod - Payouts":{
+      "automationSuites":[
+         {
+            "projectName": "Team C",
+            "platformName": "Android"
+         },
+         {
+            "projectName": "Team D",
+            "platformName": "Api"
+         }
+      ]
+   }
+}
