@@ -97,7 +97,7 @@ Update all_entities_jira set createdAt=DATE_ADD(createdAt, INTERVAL (Select DATE
 After cloning the repo, navigate to the `Website/utils` folder and update database credentials in [this file](Website/utils/constants.php "constants.php")
 
 ## Start Web Server:
-Start the php server and navigate to `http://localhost:8282`, you should see the home page as shown in the screenshots above.
+Now, go to `Website` folder via terminal and Start the php server using cmd: `php -S localhost:8282`, then navigate to `http://localhost:8282`, you should see the home page as shown in the screenshots above.
 
 
 ## How I am populating data:
@@ -166,4 +166,4 @@ A big Thanks to the Fusion Charts team for putting such wonderful documentation 
 
 
 ## Creator:
-Mukesh Rajput, For any further questions, contact [@mukesh.rajput](https://www.linkedin.com/in/mukesh-rajput)
+Mukesh Rajput, For any further help or queries, contact [@mukesh.rajput](https://www.linkedin.com/in/mukesh-rajput)
