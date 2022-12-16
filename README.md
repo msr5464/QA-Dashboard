@@ -55,31 +55,21 @@ In case your Group or Vertical is quite big then you can convert the dashboard t
 **Note:** All query params get stored in **cookies** so that you don't need to pass them in URL every time, this means make sure to use `darkmode=1` or`podview=0` to turn off these views accordingly.
 
 
-## Tools/Languages Used:
-#### For Web Portal:
-##### HTML
-##### PHP
-##### JavaScript
-##### MYSQL
+## Installation & Basic Setup:
 
-#### For Data Populator:
-##### JAVA
-##### TESTNG
-##### GRADLE
+#### 1. Install PHP Server in your machine
+If its Mac, just use `brew install php`
 
+#### 2. Install MYSQL Server
+If its Mac, just use `brew install mysql`, and then start the server using: `mysql.server start`
 
-## Prerequisites:
+#### 3. Clone this repo in your machine
+After cloning the repo, navigate to the `Website/utils` folder and update database credentials in [constants.php file](Website/utils/constants.php "constants.php")
 
-#### 1. Install php server in your machine
-If its Mac, php server comes installed by default, just run this cmd to start server: `php -S localhost:8282`
+#### 4. Setup Dummy Database
+Use [this basic db dump file](Documentation/db-dump.sql "db-dump.sql") to create database and insert few dummy entries, on the successful execution of this script you should get minimum 5 tables (`paymentGateway_results`, `paymentGateway_jira`, `paymentGateway_testrail`, `paymentGateway_bugs`, `paymentGateway_units`) along with configurations table created inside a database named as `thanos`
 
-#### 2. Install mysql server
-And then start the server using: `mysql.server start`
-
-#### 3. Setup Database and tables
-Use [this basic db dump file](Documentation//db-dump.sql "db-dump.sql") to create database and insert few dummy entries, on the successful execution of this script you should get minimum 5 tables (`<entityName>_results`, `<entityName>_jira`, `<entityName>_testrail`, `<entityName>_bugs`, `<entityName>_units`) along with configurations table created inside a database named as `thanos`
-
-#### 4. Run these queries to change createdAt of dummy data:
+#### 5. Run queries to change createdAt of dummy data
 ```
 set global sql_mode='';
 Update payment_gateway_testrail set createdAt=DATE_ADD(createdAt, INTERVAL (Select DATEDIFF(now(),createdAt) from (Select createdAt from payment_gateway_testrail order by id desc limit 1) as X) DAY) where id > 0;
@@ -93,61 +83,81 @@ Update all_entities_jira set createdAt=DATE_ADD(createdAt, INTERVAL (Select DATE
 
 ```
 
-#### 4. Clone this repo in your machine
-After cloning the repo, navigate to the `Website/utils` folder and update database credentials in [this file](Website/utils/constants.php "constants.php")
+#### 6. Start web server and you are DONE!
+As final step, now navigate to `Website` folder via terminal and start the PHP server using cmd: `php -S localhost:8282`, then navigate to `http://localhost:8282`, you should see the home page as shown in the screenshots above. Congratulations basic setup using dummy data is done!
 
-## Start Web Server:
-Now, go to `Website` folder via terminal and Start the php server using cmd: `php -S localhost:8282`, then navigate to `http://localhost:8282`, you should see the home page as shown in the screenshots above.
+
+## Tech Stack Used:
+
+#### For Web Portal:
+##### HTML
+##### CSS
+##### JavaScript
+##### PHP
+##### MYSQL
+##### FusionCharts
+
+#### For Data Populator:
+##### Java
+##### TestNG
+##### Gradle
 
 
 ## How I am populating data:
-For this, please refer to `src` folder in the root directory, it contains whole framework for poulating data into these tables (using Testrail & Jira apis).
+Incase you are also using Testrail & Jira in your organization then, please refer to `src` folder in the root directory, it contains whole framework for populating data into these tables, but if your are not using Testrail or Jira then you need to build your own utility to fetch data from them.
 
-1. For `<entityName>_results table` - I have updated my automation frameworks to insert required data in `results` table at the end of each automation execution.
+1. For `paymentGateway_results table` - I have updated my automation frameworks to insert required data in `_results` table at the end of each automation execution.
 
-2. For `<entityName>_testrail table` - Please don't be confused with the table name, it is not only limited to testrail numbers, but these numbers can also be fetched from any testcase management tool. I have used APIs of Testrail to fetch all the required numbers from Testrail and then inserting them in the `testrail` table twice a week.
+2. For `paymentGateway_testrail table` - Please don't be confused with the table name, it is not only limited to testrail numbers, but these numbers can also be fetched from any testcase management tool. I have used APIs of Testrail to fetch all the required numbers from Testrail and then inserting them in the `_testrail` table twice a day.
 
-3. For `<entityName>_jira` & `<entityName>_bugs table`- Again don't be confused with the table name, it is not only limited to jira numbers, but these numbers can also be fetched from any ticket management tool. I have used APIs of Jira to fetch all the required numbers from Jira and then inserting them in the `jira` table twice a week.
+3. For `paymentGateway_jira` & `paymentGateway_bugs table`- Again don't be confused with the table names, these are not only limited to Jira numbers, but these numbers can also be fetched from any ticket management tool. I have used APIs of Jira to fetch all the required numbers from Jira and then inserting them in the `_jira & _bugs` table twice a day.
 
-4. For `<entityName>_units table` - This table is used to store the code coverage data sent by developer's pipeline into GCP bucket and from ther our worker read csv files and populate data into this table every day.
+4. For `paymentGateway_units table` - This table is used to store the code coverage data sent by developer's pipeline into GCP bucket and from ther our worker read csv files and populate data into `_units` table every day.
 
-Point is, no matter if you insert data manually or via automation scripts, till the time you are able to add data in these 5 tables daily/weekly, your dashboard will keep showing updated data and graphs.
+Point is, no matter if you insert data manually or via automation scripts, till the time you are able to add data in these 5 tables daily/weekly, your dashboard will keep showing updated datapoints.
 
 
 ## Steps for onboarding your Organization to QA Dashboard:
-1. Create a new Test class file with syntax: `<entityName>Numbers.java` at path  `src/test/java/thanos/`
+1. Rename the test class file: [PaymentGatewayNumbers.java](src/test/java/thanos/PaymentGatewayNumbers.java "PaymentGatewayNumbers.java") at path `src/test/java/thanos/` with your EntityName.
 2. Update `entityName` variable as per your Entity Name in test class file.
-4. Create directory inside `parameters/` path with `entityName` variable's name.
+3. Rename directory inside `Parameters/` path with `EntityName`
+4. After this, using mySql workbench, truncate all the tables present in Thanos DB to remove dummy data except `configurations` from table.
+5. Now, Rename all the table names, to replace prefix from `payment_gateway` to your `entity_name`
+6. Once this is done, replace `Payment Gateway` related data points with your `Entity Name` in `configurations` table and accordingly disable/enable the respective pages in case all the integrations are not required.
+7. Now, follow these steps for each type of integration you want to have: 
     
-    #### For Test Coverage:
-    1. Take reference from existing test class files like: [PaymentGatewayNumbers.java](src/test/java/thanos/PaymentGatewayNumbers.java "PaymentGatewayNumbers.java") and add a new test method `fetchTestCoverageData` in your test class.
-    2. Inside newly created directory `parameters/<Entity Name>`, add new json file with name `TestRailConfig.json`
-    3. In `TestRailConfig.json`, list out all the TestRail suite names of your Entity along with suite id and project id. Refer: [TestRailConfig.json](parameters/PaymentGateway/TestRailConfig.json "TestRailConfig.json") for more details.
+    ### For Test Coverage:
+    ##### Prerequisite: You must have a TestRail Account
+    1. Check test method `fetchTestCoverageData` in your test class ie. [PaymentGatewayNumbers.java](src/test/java/thanos/PaymentGatewayNumbers.java "PaymentGatewayNumbers.java") and update the description to remove Payment Gateway
+    2. Inside directory `Parameters/<Entity Name>`, In [TestRailConfig.json](Parameters/PaymentGateway/TestRailConfig.json "TestRailConfig.json"), list out all the TestRail suite names(name can be anything which you want to show in QA-Dashboard) of your Entity along with suite id and project id in the existing format.
+    3. Finally, put TestRail Credentials in the [config.properties file](Parameters/config.properties "config.properties")
     
-    #### For Automation Results:
-    1. Create the jar file of this repo & put in your automation framework repo as a dependency.
-    2. Thereafter call this function `ResultsHelper.createAutomationResultsCsvAndUploadToGcpBucket` and pass all the necessary parameters, this will help to put your automation results data in GCP bucket in the form of csv file.
-    3. Then in this (QA Dashbaord) repo, create new json file with name `AutomationConfig.json`, list out all the automation project names of your Entity along with platform type & pod name . Refer: [AutomationConfig.json](parameters/PaymentGateway/AutomationConfig.json "AutomationConfig.json") for more details.
-    4. Finally, add 1 more testcase (in above created your Entity test class) to fetch the automation reports from GCP bucket and insert to Thanos DB, you can take reference from `fetchAutomationStabilityData` testcase present in [PaymentGatewayNumbers.java](src/test/java/thanos/PaymentGatewayNumbers.java "PaymentGatewayNumbers.java").
-
-    #### For Unit Tests Coverage
-    1. Unit test coverage data is generated using the developer's pipeline, if this data in not available then ask developers to have code coverage numbers for each repo.
-    2. Developer's Repo will upload data to GCP bucket (as csv file) by doing 1 time integration with GCP bucket(using ci/cd pipelines). File format and sample code [can be found here](https://docs.google.com/spreadsheets/d/1SjmPT591qUQzld6syw8jynKNDixrwdXdjcyD7TvjdBw/edit#gid=120821750)
-    3. Once this integration is done & csv files start uploading to bucket on every dev code build, add 1 more testcase (in above created your Entity test class) to fetch the unit test coverage reports from GCP bucket and insert to Thanos DB, you can take reference from `fetchCodeCoverageData` testcase present in [PaymentGatewayNumbers.java](src/test/java/thanos/PaymentGatewayNumbers.java "PaymentGatewayNumbers.java").
+    ### For Bug Metrics:
+    ##### Prerequisite: You must have a Jira Admin Account
+    1. Check test method `fetchBugMetricsData` in your test class ie. [PaymentGatewayNumbers.java](src/test/java/thanos/PaymentGatewayNumbers.java "PaymentGatewayNumbers.java") and update the description to remove Payment Gateway
+    2. Update the logic of filters in the code, like from which date you want to fetch numbers, what all Jira issue types you want to capture along with different statuses for "tickets tested" & "bugs found" data.
+    3. Then create, custom fields in Jira (you will require Admin access of Jira for this) so that people can start filling various data points against every bug found like - environment (staging/production), bugFoundBy (manual/automation/crashes/actual users etc) and bugCategory (android/ios/backend/web/mweb etc) and attach these new fields in Jira bug screen.
+    4. Now, put custom field IDs of these new fields in the method `fetchBugMetricsData`
+    5. Inside directory `Parameters/<Entity Name>`, In[JiraConfig.json](Parameters/PaymentGateway/JiraConfig.json "JiraConfig.json"), list out all the Jira project names (name can be anything which you want to show in QA-Dashboard) of your Entity along with Jira project key in the existing format.
+    6. Finally, put Jira Credentials in the [config.properties file](Parameters/config.properties "config.properties")
     
-    #### For Bug Metrics
-    1. Take reference from existing test class files for eg: [PaymentGatewayNumbers.java](src/test/java/thanos/PaymentGatewayNumbers.java "PaymentGatewayNumbers.java") and add a new test method `fetchBugMetricsData` in your test class.
+    ### For Automation Results:
+    ##### Prerequisite: You must have a GCP bucket and secret key file to access the bucket and working Automation frameworks
+    1. One way is to directly insert data into the thanos DB after each automation execution (write your own custom code for this) then you dont need to follow setp 2 & 3 listed below.
+    2. Another way is to create the jar file of this repo & put in your automation framework repo as a dependency.
+    3. Thereafter call this function `ResultsHelper.createAutomationResultsCsvAndUploadToGcpBucket` and pass all the necessary parameters, this will help to put your automation results data in GCP bucket in the form of csv file.
+    4. Then in this (QA Dashboard) repo, In [AutomationConfig.json](Parameters/PaymentGateway/AutomationConfig.json "AutomationConfig.json") list out all the automation project names (name should match with name you sending in csv file) of your Entity along with Platform type in the existing format.
+    5. Now, Inside test method `fetchAutomationStabilityData` in the test class [PaymentGatewayNumbers.java](src/test/java/thanos/PaymentGatewayNumbers.java "PaymentGatewayNumbers.java") and update the description to remove Payment Gateway and have proper csv `fileNamePrefix` accordingly.
+    6. Finally, Put the secret key file of Bucket inside parameters or some other place and update the pass in `gcpBucketAuthKeyLocation` variable
 
-    2. Define the filters in code, as shown in the `fetchBugMetricsData` method, like from which data you want to fetch numbers, what all Jira ticket types you want to capture along with statuses.
+    ### For Unit Tests Coverage:
+    ##### Prerequisite: You must have a GCP bucket and secret key file to access the bucket and working Code coverage tool inside Developer's repo
+    1. Unit test coverage data is generated using the developer's pipeline, if this data in not available then ask developers to have code coverage framework for each repo.
+    2. Developer's Repo will upload data to GCP bucket (as csv file) by doing 1 time integration with GCP bucket(using ci/cd pipelines). File format and sample code [can be found here](https://docs.google.com/spreadsheets/d/1SjmPT591qUQzld6syw8jynKNDixrwdXdjcyD7TvjdBw/edit#gid=120821750). For this ask them to write their custom code in each repository.
+    3. Now, Inside test method `fetchCodeCoverageData` in the test class [PaymentGatewayNumbers.java](src/test/java/thanos/PaymentGatewayNumbers.java "PaymentGatewayNumbers.java") and update the description to remove Payment Gateway and have proper csv `fileNamePrefix` accordingly.
+    4. Finally, Put the secret key file of Bucket inside parameters or some other place and update the pass in `gcpBucketAuthKeyLocation` variable
 
-    3. Then create, custom fields in Jira (you will require admin access of Jira for this) so that people can start filling variour data points again every bug found like - environment (staging/production), bugFoundBy (manual/automation/crashes/actual users etc) and bugCategory (android/ios/backend/web/mweb etc) and attach these new fields in Jira bug screen.
-    4. Now, put custom field IDs of these new fields in the java code
-    5. Inside newly created directory `parameters/<Entity Name>`, add new json file with name `JiraConfig.json`
-    6. In `JiraConfig.json`, list out all the Jira project names of your Entity along with project key. Refer: [JiraConfig.json](parameters/PaymentGateway/JiraConfig.json "JiraConfig.json") for more details.
-<br>
-
-5. After this, add new entry for your entity into `configurations` table present in thanos DB.
-6. Once all the steps are done, data will start populating into respective DB tables and you can schedule to run this code everyday or multiple times a day as per requirements. 
+8. Once all the steps are done, data will start populating into respective DB tables and you can schedule to run this code everyday or multiple times a day as per requirements. 
 
 
 ## Debugging:
@@ -158,11 +168,6 @@ Then run this query in the mysql terminal or UI: `set global sql_mode='';` and s
 2. If you are seeing `Error!: SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: NO)` on the dashboard it means your db credentials are incorrect, you need to modify them in [this file](Website/utils/constants.php "constants.php")
 
 In case there are some more bugs/issues, you can report them to the `Issues` section of this repo.
-
-
-## References:
-This dashboard has been created by using the public services of [Fusion Charts](https://www.fusioncharts.com/).
-A big Thanks to the Fusion Charts team for putting such wonderful documentation which helped me in swift integration.
 
 
 ## Creator:

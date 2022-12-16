@@ -54,7 +54,7 @@ public class TestCoverageHelper
 	{
 		TestRailClient client = new TestRailClient(testConfig.getRunTimeProperty("TestRailHostUrl"));
 		client.setUser(testConfig.getRunTimeProperty("TestRailUsername"));
-		client.setPassword(testConfig.getRunTimeProperty("TestRailPassword"));
+		client.setPassword(testConfig.getRunTimeProperty("TestRailApiToken"));
 		testConfig.logComment("Connected to TestRail server successfully.");
 		return client;
 	}
