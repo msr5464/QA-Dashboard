@@ -52,7 +52,7 @@ public class BugMetricsHelper
 	
 	private JiraClient connectToJira(Config testConfig)
 	{
-		BasicCredentials creds = new BasicCredentials(testConfig.getRunTimeProperty("JiraUsername"), testConfig.getRunTimeProperty("JiraPassword"));
+		BasicCredentials creds = new BasicCredentials(testConfig.getRunTimeProperty("JiraUsername"), testConfig.getRunTimeProperty("JiraApiToken"));
 		JiraClient jiraClient = new JiraClient(testConfig.getRunTimeProperty("JiraHostUrl"), creds);
 		testConfig.logComment("Connected to Jira server successfully.");
 		return jiraClient;
