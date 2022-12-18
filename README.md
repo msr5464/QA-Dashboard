@@ -14,7 +14,9 @@ The purpose of creating this dashboard is to track the overall Quality Metrics o
 
 
 ### Documentation:
-To know each and everything about this QA-Dashboard, refer to this [presentation document](Documentation/QA-Dashboard-ppt.pdf)
+##### To know each and everything about this QA-Dashboard, refer to this [presentation](Documentation/QA-Dashboard-ppt.pdf)
+##### Detailed Video on how to [Install & Setup QA-Dashboard](https://youtu.be/peIV9eP-Gwg) in your local
+##### Video covering detailed [Walkthrough of all the features](https://youtu.be/031XiHmKZQM) available in this QA-Dashboard
 
 ## Screenshots:
 
@@ -167,7 +169,11 @@ Then run this query in the mysql terminal or UI: `set global sql_mode='';` and s
 
 2. If you are seeing `Error!: SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: NO)` on the dashboard it means your db credentials are incorrect, you need to modify them in [this file](Website/utils/constants.php "constants.php")
 
-In case there are some more bugs/issues, you can report them to the `Issues` section of this repo.
+In case there are some more bugs/issues, you can report them to the [Issues](https://github.com/msr5464/QA-Dashboard/issues) section of this repo.
+
+
+## Want to Contribute?
+As code is already publicly available, for contributing further just raise a Pull Request after making the necessary changes. Once PR is all reviewed it will be merged into master and your change will be live. Just fyi, code related to Frontend is placed in “Website” folder and Code related to Backend (ie. Data Polulators) is in “src” folder.
 
 
 ## Creator:
