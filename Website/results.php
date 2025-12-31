@@ -1,16 +1,17 @@
 <?php 
  require("utils/config.php");
- $fullData = getVerticalTableData();
+ $fullData = getEntityTableData();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
    <head>
       <script type='text/javascript'>
-      var verticalTableData = <?php echo json_encode($fullData); ?>;
+      var entityTableData = <?php echo json_encode($fullData); ?>;
       </script>
       <?php
          $pageName = "results";
+         $dbTableName = "results";
          require "components/head-title.php";
       ?>
    </head>
@@ -28,7 +29,7 @@
                         require "components/header.php";
                      ?>
                      <div class="row mt-3 db-chart">
-                        <div id="parent1" class="col-lg-6 col-xl-4 column">
+                        <div id="parent1" class="col-lg-6 col-xl-4 column chart-3-columns">
                            <div class="chart-card mb-4">
                               <div id="gauge1" class="chart-title">Staging Pass Percentage</div>
                               <div id="chart1" class="chart gaugeContainer">
@@ -38,7 +39,7 @@
                               </div>
                            </div>
                         </div>
-                        <div id="parent2" class="col-lg-6 col-xl-4 column">
+                        <div id="parent2" class="col-lg-6 col-xl-4 column chart-3-columns">
                            <div class="chart-card mb-4">
                               <div id="gauge2" class="chart-title">Sandbox Pass Percentage</div>
                               <div id="chart2" class="chart gaugeContainer">
@@ -48,12 +49,22 @@
                               </div>
                            </div>
                         </div>
-                        <div id="parent3" class="col-lg-6 col-xl-4 column">
+                        <div id="parent3" class="col-lg-6 col-xl-4 column chart-3-columns">
                            <div class="chart-card mb-4">
                               <div id="gauge3" class="chart-title">Production Pass Percentage</div>
                               <div id="chart3" class="chart gaugeContainer">
                                  <center>
                                     <label class="gauge custom-text-2" id="gauge-chart-container3"><img src="../images/loader.gif" height="100" /></label>
+                                 </center>
+                              </div>
+                           </div>
+                        </div>
+                        <div id="parent4" class="col-lg-6 col-xl-4 column chart-3-columns" style="display: none;">
+                           <div class="chart-card mb-4">
+                              <div id="gauge4" class="chart-title">Fourth Group Pass Percentage</div>
+                              <div id="chart4" class="chart gaugeContainer">
+                                 <center>
+                                    <label class="gauge custom-text-2" id="gauge-chart-container4"><img src="../images/loader.gif" height="100" /></label>
                                  </center>
                               </div>
                            </div>

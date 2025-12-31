@@ -1,0 +1,14 @@
+{
+   "Vertical - Cards":{
+      "automationSuites":[
+         {
+            "projectName":"CardsInfra",
+            "groupName":"webCases,apiCases,androidCases,iosCases"
+         },
+         {
+            "projectName":"CardConnectorService"
+         }
+      ]
+   }
+}
+

@@ -14,13 +14,13 @@ public class Database
 	
 	public enum DatabaseName
 	{
-		Thanos(1);
+		QA_Dashbaord("thanos");
 		
-		public final int values;
+		public final String keyIdentifier;
 		
-		DatabaseName(final int value)
+		DatabaseName(final String value)
 		{
-			values = value;
+			keyIdentifier = value;
 		}
 	}
 	
@@ -46,7 +46,7 @@ public class Database
 			{
 				switch (databaseName)
 				{
-				case Thanos:
+				case QA_Dashbaord:
 					connection = thanosConnection;
 					if (connection == null)
 					{
@@ -71,9 +71,9 @@ public class Database
 	{
 		try
 		{
-			String host = testConfig.getRunTimeProperty(databaseName.toString() + "DatabaseHost");
-			String userName = testConfig.getRunTimeProperty(databaseName.toString() + "DatabaseUsername");
-			String password = testConfig.getRunTimeProperty(databaseName.toString() + "DatabasePassword");
+			String host = testConfig.getRunTimeProperty(databaseName.keyIdentifier + "DatabaseHost");
+			String userName = testConfig.getRunTimeProperty(databaseName.keyIdentifier + "DatabaseUsername");
+			String password = testConfig.getRunTimeProperty(databaseName.keyIdentifier + "DatabasePassword");
 			testConfig.logComment("Connecting to " + databaseName.toString() + ":-" + host);
 			return DriverManager.getConnection(host, userName, password);
 		}
@@ -87,7 +87,7 @@ public class Database
 	public static Object executeQuery(Config testConfig, String sqlQuery, QueryType queryType, DatabaseName databaseName)
 	{
 		sqlQuery = testConfig.replaceArgumentsWithRunTimeProperties(sqlQuery);
-		testConfig.logComment("Executing query - '" + sqlQuery + "'");
+		testConfig.logCommentForDebugging("Executing query - '" + sqlQuery + "'");
 		Connection connection = (Connection) getConnection(testConfig, databaseName);
 		Object returnValue = null;
 		try
@@ -105,12 +105,12 @@ public class Database
 				if (recordsModified == 0)
 					testConfig.logWarning("No record updated for this query");
 				else
-					testConfig.logComment("Total record updated - " + recordsModified);
+					testConfig.logCommentForDebugging("Total record updated - " + recordsModified);
 				returnValue = recordsModified;
 				break;
 			case delete:
 				returnValue = connection.createStatement().executeUpdate(sqlQuery);
-				testConfig.logComment("Total records deleted - " + returnValue);
+				testConfig.logCommentForDebugging("Total records deleted - " + returnValue);
 				break;
 			}
 		}
@@ -135,7 +135,7 @@ public class Database
 				if (row == rowNumber)
 				{
 					resultMap = createHashMapFromResultSet(testConfig, resultSet);
-					testConfig.logComment("Query Result :- " + resultMap.toString());
+					testConfig.logCommentForDebugging("Query Result :- " + resultMap.toString());
 					break;
 				}
 				else

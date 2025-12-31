@@ -1,0 +1,46 @@
+{
+  "Vertical - Payment & FX": {
+    "testRailSuites": [
+      {
+        "suiteName": "Payment & FX - Team 1",
+        "suiteId": "41",
+        "projectId": "3"
+      },
+      {
+        "suiteName": "Payment & FX - Team 2",
+        "suiteId": "42",
+        "projectId": "3"
+      },
+      {
+        "suiteName": "Payment & FX - Team 3",
+        "suiteId": "43",
+        "projectId": "3"
+      },
+      {
+        "suiteName": "Payment & FX - Payout Service",
+        "suiteId": "2507",
+        "projectId": "3"
+      },
+      {
+        "suiteName": "Payment & FX - Ledger Service",
+        "suiteId": "2508",
+        "projectId": "3"
+      },
+      {
+        "suiteName": "Payment & FX - Stripe Integration",
+        "suiteId": "2537",
+        "projectId": "3"
+      },
+      {
+        "suiteName": "Payment & FX - Connect APIs",
+        "suiteId": "2539",
+        "projectId": "3"
+      },
+      {
+        "suiteName": "Payment & FX - PaymentGateway Hub",
+        "suiteId": "2540",
+        "projectId": "3"
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+   "Vertical - Payment & FX":{
+      "automationSuites":[
+         {
+            "projectName":"TreasuryTeam1"
+         },
+         {
+            "projectName":"TreasuryTeam2"
+         },
+         {
+            "projectName":"TreasuryTeam3",
+            "groupName":"webCases,apiCases,androidCases,iosCases"
+         },
+         {
+            "projectName":"PayoutService"
+         },
+         {
+            "projectName":"HKPaymentsFlow"
+         },
+         {
+            "projectName":"LedgerService"
+         },
+         {
+            "projectName":"CentralFxConversionHub"
+         },
+         {
+            "projectName":"USColumn"
+         },
+         {
+            "projectName":"AccountSegregation"
+         },
+         {
+            "projectName":"StripeIntegration"
+         },
+         {
+            "projectName":"ConnectApis"
+         }
+      ]
+   }
+}
+

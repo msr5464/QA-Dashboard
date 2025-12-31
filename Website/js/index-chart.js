@@ -1,27 +1,28 @@
 var defaultFilter = "7";
-var verticalName = "";
+var entityName = "";
 var projectName = "";
-var isPodDataActive = "";
+var isVerticalDataActive = "";
 var fontColor = "#ffffff";
 var theme = "candy";
-var tableName = "";
+var tableNamePrefix = "";
+var defaultEntity = "PaymentGateway";
 $(function () {
-    verticalName = $("#verticalName").html().trim();
-    if (verticalName != "" && verticalName != null) {
-        setDataIntoStorage("entity", verticalName);
+    entityName = $("#entityName").html().trim();
+    if (entityName != "" && entityName != null) {
+        setDataIntoStorage("entity", entityName);
     } else {
-        verticalName = getDataFromStorage("entity");
-        if (verticalName != "" && verticalName != null) {
-            $("#verticalName").html(verticalName);
+        entityName = getDataFromStorage("entity");
+        if (entityName != "" && entityName != null) {
+            $("#entityName").html(entityName);
         } else {
             redirectToHomePage();
         }
     }
     setStartEndDates();
-    isPodDataActive = getDataFromStorage("podview");
-    tableName = getDataFromVerticalTable(verticalName, "tableNamePrefix");
-    fetchActiveTabs(verticalName);
-    activateFilter(verticalName);
+    isVerticalDataActive = getDataFromStorage("verticalview");
+    tableNamePrefix = getDataFromEntityTable(entityName, "tableNamePrefix");
+    fetchActiveTabs(entityName);
+    activateFilter(entityName);
 });
 
 $(document).ready(function () {
@@ -33,7 +34,7 @@ $(document).ready(function () {
         setDataIntoStorage("entity", "");
     });
 
-    $("#verticalName").click(function () {
+    $("#entityName").click(function () {
         resetData();
     });
 
@@ -48,53 +49,53 @@ $(document).ready(function () {
 
     $("#last1days").click(function () {
         saveFilter("1");
-        validateAndExecute(verticalName, getFilter());
+        validateAndExecute(entityName, getFilter());
     });
 
     $("#last7days").click(function () {
         saveFilter("7");
-        validateAndExecute(verticalName, getFilter());
+        validateAndExecute(entityName, getFilter());
     });
 
     $("#last15days").click(function () {
         saveFilter("15");
-        validateAndExecute(verticalName, getFilter());
+        validateAndExecute(entityName, getFilter());
     });
 
     $("#last30days").click(function () {
         saveFilter("30");
-        validateAndExecute(verticalName, getFilter());
+        validateAndExecute(entityName, getFilter());
     });
 
     $("#last90days").click(function () {
         saveFilter("90");
-        validateAndExecute(verticalName, getFilter());
+        validateAndExecute(entityName, getFilter());
     });
 
     $("#applyDateFilter").click(function () {
         saveFilter("N");
-        validateAndExecute(verticalName, getFilter());
+        validateAndExecute(entityName, getFilter());
     });
 });
 
 function resetData()
 {
-    setDataIntoStorage("entity", "");
+    setDataIntoStorage("entity", defaultEntity);
     setDataIntoStorage("startDate", "");
     setDataIntoStorage("endDate", "");
-    setDataIntoStorage("podview", '0');
+    setDataIntoStorage("verticalview", '0');
     setDataIntoStorage("darkmode", '1');
     setDataIntoStorage("country","");
     setDataIntoStorage("platform","");
     setDataIntoStorage("environment","");
     saveFilter("7");
     document.getElementById("dash").innerHTML = "";
-    document.getElementById("verticalName").style.textTransform = "lowercase";
-    $("#verticalName").html("<b><font color='yellow'>Redirecting back to select your entity / vertical first...</font></b>");
+    document.getElementById("entityName").style.textTransform = "lowercase";
+    $("#entityName").html("<b><font color='yellow'>Reseting all the selected filters to default values...</font></b>");
     window.setTimeout(redirectToHomePage, 1000);
 }
 
-function activateFilter(verticalName) {
+function activateFilter(entityName) {
     var currentFilter = getFilter();
     if (!currentFilter) {
         saveFilter(defaultFilter);
@@ -123,7 +124,7 @@ function activateFilter(verticalName) {
             $("#filters").animate({scrollLeft: $('#lastNdays').position().left}, 500);
             break;
     }
-    validateAndExecute(verticalName, currentFilter);
+    validateAndExecute(entityName, currentFilter);
 }
 
 function saveFilter(value) {
@@ -174,7 +175,7 @@ function hideBlankCharts() {
     }
 }
 
-function validateAndExecute(verticalName, timeFilter) {
+function validateAndExecute(entityName, timeFilter) {
     //Show Loader
     $(".gauge").html('<img src="../images/loader.gif" height="100" />');
     $(".linearChart").html("");
@@ -202,31 +203,38 @@ function validateAndExecute(verticalName, timeFilter) {
     }
     var startDate = s.toISOString().slice(0, 10);
     var endDate = e.toISOString().slice(0, 10);
+    console.log("s-date: "+startDate);
+    console.log("e-date: "+endDate);
     
     $("#projectNamesDropdown").empty();
     $(".chosen-select").chosen();
-    fetchProjectNames(tableName, startDate, endDate, isPodDataActive);
+    fetchProjectNames(tableNamePrefix, startDate, endDate, isVerticalDataActive);
+    enableAllVerticalsDropdown('#projectNamesDropdown');
 
-    projectName = $("#projectName").html().trim();
+    projectName = decodeHtmlEntities($("#projectName").html().trim());
     if (projectName.length != 0) {
-        showProjectCharts(verticalName, tableName, projectName, timeFilter, startDate, endDate);
+        showProjectCharts(tableNamePrefix, projectName, timeFilter, startDate, endDate);
     } else {
-        showDefaultCharts(verticalName, tableName, timeFilter, startDate, endDate);
+        showDefaultCharts(tableNamePrefix, timeFilter, startDate, endDate, isVerticalDataActive);
     }
 }
 
-function fetchProjectNames(tableName, startDate, endDate, isPodDataActive) {
+function fetchProjectNames(tableNamePrefix, startDate, endDate, isVerticalDataActive) {
     $.ajax({
         url: backend,
         type: 'GET',
         data: {
             functionname: 'getProjectNames',
-            arguments: [tableName, startDate, endDate, isPodDataActive]
+            arguments: [tableNamePrefix, startDate, endDate, isVerticalDataActive]
         },
         success: function (result) {
             $.each(result, function (key, value) {
                 $("#projectNamesDropdown").append($("<option />").val(value).text(value));
             });
+            // Add 'All Verticals' at the top after all project names are added
+            if ($('#projectNamesDropdown option[value="ALL_VERTICALS"]').length === 0) {
+                $('#projectNamesDropdown').prepend($('<option />').val('ALL_VERTICALS').text('All Verticals'));
+            }
             $(".chosen-select").trigger("chosen:updated");
         }
     });
@@ -244,7 +252,7 @@ function setStartEndDates() {
         }
     }
     else {
-        finalStartDate.setMonth(finalStartDate.getMonth() - 6);
+        finalStartDate.setMonth(finalStartDate.getMonth() - 5);
     }
 
     var startDate = document.getElementById("startDate");

@@ -4,12 +4,12 @@
          <label class="handLink" id="dash">
          Entity - 
           </label>
-         <label class="handLink" id="verticalName">
+         <label class="handLink" id="entityName">
             <?php 
-            if (isset($_POST['verticalName']) && $_POST['verticalName'] != '') {
-               $verticalName = $_POST['verticalName']; 
-               if(preg_match('/^[a-z0-9 .\-]+$/i', $verticalName))
-                  echo $verticalName;
+            if (isset($_POST['entityName']) && $_POST['entityName'] != '') {
+               $entityName = $_POST['entityName']; 
+               if(preg_match('/^[a-z0-9& .\-]+$/i', $entityName))
+                  echo $entityName;
             }
             ?> 
          </label>
@@ -32,7 +32,7 @@
       if(isset($_POST['projectNamesDropdown'])) { 
          $projectName="'".implode("','",$_POST['projectNamesDropdown'])."'";
          logger("projectName=".$projectName);
-         if(preg_match('/^[a-z0-9 .\'\-,]+$/i', $projectName))
+         if(preg_match('/^[a-z0-9& ().\'\-,\/]+$/i', $projectName))
             echo $projectName;
       }?></label>
       <input type='button' id="addFiltersButton" style="font-size: 14px;" value='Modify Filter' class="hide" />
@@ -49,14 +49,35 @@
                <option value="Vietnam">Malaysia</option>
             </select>
             <select name='platformDropdown' id='platformDropdown' style="width: 140px;" multiple data-placeholder="Select Platform" class="hide">
-               <option value="web">Web/mWeb</option>
-               <option value="android">Android</option>
-               <option value="ios">iOS</option>
-               <option value="backend">Backend</option>
+               <option value="Api">Api</option>
+               <option value="Web">Web</option>
+               <option value="Android">Android</option>
+               <option value="iOS">iOS</option>
+               
             </select>
             <select name='environmentDropdown' id='environmentDropdown' style="width: 140px;" multiple data-placeholder="Select Environment" class="hide">
                <option value="Staging">Staging</option>
                <option value="Production">Production</option>
+            </select>
+            <select name='prodBugCategoryDropdown' id='prodBugCategoryDropdown' style="width: 140px;" multiple data-placeholder="Select Bug Category" class="hide">
+               <option value="PaymentGateway">PaymentGateway</option>
+               <option value="Invalid">Invalid</option>
+               <option value="Others">Others</option>
+            </select>
+            <select name='fctBugCategoryDropdown' id='fctBugCategoryDropdown' style="width: 140px;" multiple data-placeholder="Select Bug Category" class="hide">
+               <option value="PaymentGateway">PaymentGateway</option>
+               <option value="Partner">Partner</option>
+               <option value="Invalid">Invalid</option>
+            </select>
+            <select name='stgBugCategoryDropdown' id='stgBugCategoryDropdown' style="width: 140px;" multiple data-placeholder="Select Bug Category" class="hide">
+               <option value="PaymentGateway">PaymentGateway</option>
+               <option value="Partner">Partner</option>
+               <option value="Invalid">Invalid</option>
+            </select>
+            <select name='bugCategoryDropdown' id='bugCategoryDropdown' style="width: 140px;" multiple data-placeholder="Select Bug Category" class="hide">
+               <option value="STG">STG</option>
+               <option value="FCT">FCT</option>
+               <option value="PRD">PRD</option>
             </select>
             <input type='submit' id="goButton" value='Go' />
          </form>

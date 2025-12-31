@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.testng.ITestResult;
@@ -43,11 +44,12 @@ public class Config
 		softAssert = new SoftAssert();
 		runTimeProperties = new Properties();
 		Properties properties = null;
+		FileInputStream fileInputStream = null;
+		String parametersPath = System.getProperty("user.dir") + File.separator + "parameters" + File.separator;
 		// Code to read .properties file and put key value pairs into RunTime Property file
 		try
 		{
-			String parametersPath = System.getProperty("user.dir") + File.separator + "parameters" + File.separator;
-			FileInputStream fileInputStream = new FileInputStream(parametersPath + "config.properties");
+			fileInputStream = new FileInputStream(parametersPath + "config.properties");
 			properties = new Properties();
 			properties.load(fileInputStream);
 			fileInputStream.close();
@@ -77,9 +79,26 @@ public class Config
 		}
 		
 		// Putting values into variables from RunTime properties
-		endExecutionOnfailure = endExecutionOnfailure || getRunTimeProperty("EndExecutionOnFailure").equalsIgnoreCase("true");
-		isRemoteExecution = isRemoteExecution || getRunTimeProperty("RemoteExecution").equalsIgnoreCase("true");
+		endExecutionOnfailure = endExecutionOnfailure || getRunTimeProperty("endExecutionOnFailure").equalsIgnoreCase("true");
+		isRemoteExecution = isRemoteExecution || getRunTimeProperty("remoteExecution").equalsIgnoreCase("true");
 		isDebugMode = isDebugMode || getRunTimeProperty("debugMode").equalsIgnoreCase("true");
+		try
+		{
+			fileInputStream = new FileInputStream(parametersPath + "system.properties");
+			Properties systemProperties = new Properties();
+			systemProperties.load(fileInputStream);
+			fileInputStream.close();
+			Enumeration<Object> enumeration2 = systemProperties.keys();
+			while (enumeration2.hasMoreElements())
+			{
+				String str = (String) enumeration2.nextElement();
+				System.setProperty(str, (String) systemProperties.get(str));
+			}
+		}
+		catch (Exception e)
+		{
+			logWarning("system.properties file not found.");
+		}
 	}
 	
 	/**

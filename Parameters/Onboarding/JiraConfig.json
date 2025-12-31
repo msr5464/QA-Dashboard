@@ -1,0 +1,29 @@
+{
+  "Vertical - Onboarding": {
+    "jiraProjects": [
+      {
+        "projectName": "Onboarding",
+        "projectKey": "ACCS",
+        "productVerticalFieldValue": "Onboarding"
+      }
+    ]
+  },
+  "Vertical - Acquisition": {
+    "jiraProjects": [
+      {
+        "projectName": "Acquisition",
+        "projectKey": "ACCS",
+        "productVerticalFieldValue": "Acquisition"
+      }
+    ]
+  },
+  "Vertical - OpsRisk": {
+    "jiraProjects": [
+      {
+        "projectName": "OpsRisk",
+        "projectKey": "ACCS",
+        "productVerticalFieldValue": "OpsRisk"
+      }
+    ]
+  }
+}

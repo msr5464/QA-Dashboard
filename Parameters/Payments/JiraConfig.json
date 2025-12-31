@@ -1,0 +1,21 @@
+{
+  "Vertical - Payment & FX": {
+    "jiraProjects": [
+      {
+        "projectName": "Payment & FX",
+        "projectKey": "PAYMT",
+        "productVerticalFieldValue": "Payment & FX"
+      }
+    ]
+  },
+  "Vertical - FinRisk": {
+    "jiraProjects": [
+      {
+        "projectName": "FinRisk",
+        "projectKey": "PAYMT",
+        "productVerticalFieldValue": "FinRisk"
+      }
+    ]
+  }
+}
+

@@ -1,0 +1,26 @@
+{
+  "Vertical - Onboarding": {
+    "testRailSuites": [
+      {
+        "suiteName": "FinCrime - Onboarding",
+        "suiteId": "9",
+        "projectId": "1"
+      },
+      {
+        "suiteName": "FinCrime - TxM",
+        "suiteId": "10",
+        "projectId": "1"
+      },
+      {
+        "suiteName": "FinCrime - User Security",
+        "suiteId": "8",
+        "projectId": "1"
+      },
+      {
+        "suiteName": "FinCrime - Advance",
+        "suiteId": "2500",
+        "projectId": "1"
+      }
+    ]
+  }
+}

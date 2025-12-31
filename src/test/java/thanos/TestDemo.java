@@ -1,10 +1,14 @@
 package thanos;
 
 import java.io.File;
+
 import org.testng.annotations.Test;
+
 import thanos.helpers.ResultsHelper;
+import thanos.utils.CommonUtilities;
 import thanos.utils.Config;
 import thanos.utils.TestBase;
+import thanos.utils.TriggerTestNgXmlFile;
 
 public class TestDemo extends TestBase
 {
@@ -28,5 +32,21 @@ public class TestDemo extends TestBase
 		ResultsHelper resultsHelper = new ResultsHelper();
 		String gcpBucketAuthKeyLocation = System.getProperty("user.dir") + File.separator + "parameters" + File.separator + "gcp-bucket-config.json";
 		resultsHelper.createAutomationResultsCsvAndUploadToGcpBucket(testConfig, gcpBucketAuthKeyLocation, entityName, createdAt, projectName, environment, groupName, duration, percentage, totalCases, passedCases, failedCases, buildTag, resultLink);
+	}
+	
+	@Test(dataProvider = "getTestConfig", description = "This Demo")
+	public void testDemo(Config testConfig)
+	{
+		String projectName = "DataPopulator";
+		String sendEmailTo = "your-email@example.com";
+		String jobBuildTag = CommonUtilities.generateRandomAlphaNumericString(15);
+		String groupNames = "dataPopulator";
+		String sendReportOnSlack = "false";
+		String branchName = "main";
+		String debugMode = "false";
+		TriggerTestNgXmlFile.remoteExecution = false;
+		
+		String args[] = { projectName, sendEmailTo, jobBuildTag, groupNames, sendReportOnSlack, branchName, debugMode };
+		TriggerTestNgXmlFile.main(args);
 	}
 }

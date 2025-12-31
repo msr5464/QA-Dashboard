@@ -9,7 +9,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
+
 import org.apache.commons.io.IOUtils;
+
 import com.google.api.gax.paging.Page;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.Blob;
@@ -146,6 +148,7 @@ public class GcpHelper
 	 * @param filePrefix : prefix of file name to search files on server
 	 * @return the List of fileNames in asc sorted order of updatedOn timeStamp
 	 */
+	@SuppressWarnings("deprecation")
 	public static List<String> getFilesListInAscSortedOrder(Config testConfig, String authKey, String bucketName, String filePrefix)
 	{
 		storage = GcpHelper.connectToGcp(testConfig, authKey);

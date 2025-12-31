@@ -1,12 +1,12 @@
 $(function () {
-    verticalName = getDataFromStorage("entity");
-    if (verticalName != "" && verticalName != null) {
-        $("#verticalName").html(verticalName);
+    entityName = getDataFromStorage("entity");
+    if (entityName != "" && entityName != null) {
+        $("#entityName").html(entityName);
     } else {
         redirectToHomePage();
     }
-    isPodDataActive = getDataFromStorage("podview");
-    fetchActiveTabs(verticalName);
+    isVerticalDataActive = getDataFromStorage("verticalview");
+    fetchActiveTabs(entityName);
 });
 
 $(document).ready(function () {

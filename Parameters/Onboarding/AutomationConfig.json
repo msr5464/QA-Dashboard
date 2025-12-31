@@ -1,0 +1,18 @@
+{
+   "Vertical - Onboarding": {
+      "automationSuites": [
+         {
+            "projectName": "Growth"
+         },
+         {
+            "projectName": "Frs"
+         },
+         {
+            "projectName": "Onboarding"
+         },
+         {
+            "projectName": "Txm"
+         }
+      ]
+   }
+}

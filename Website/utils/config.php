@@ -1,18 +1,69 @@
 <?php
-$version = "1001";
-
-// display all error except deprecated and notice  
-error_reporting( E_ALL & ~E_DEPRECATED & ~E_NOTICE );
-// turn on output buffering 
-ob_start();
+$version = "1035";
 
 require_once("constants.php");
 require_once("common-functions.php");
 
-/*
- * turn off magic-quotes support, for runtime e, as it will cause problems if enabled
+/**
+ * Entity Configurations
+ * 
+ * Defines which entities are available and their settings.
+ * Each entity controls:
+ * - Which pages/tabs are visible (show* flags)
+ * - Database table prefix (tableNamePrefix)
+ * - Environment/group pairs for results page
+ * - Active status (isActive)
  */
-if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
+$ENTITY_CONFIGURATIONS = [
+    [
+        'entityName' => 'PaymentGateway',
+        'tableNamePrefix' => 'paymentgateway',
+        'isActive' => true,
+        'showFctTests' => true,
+        'showFctTestsAuto' => true,
+        'showAllTests' => false,
+        'showAllTestsAuto' => false,
+        'showAutomationStability' => true,
+        'showProdBugs' => true,
+        'showFctBugs' => true,
+        'showStagingBugs' => true,
+        'showTotalBugs' => true,
+        'environmentAndGroupNamePairs' => [
+            'staging,regression',
+            'staging,androidCases',
+            'staging,iosCases'
+        ]
+    ],
+    [
+        'entityName' => 'All Entities',
+        'tableNamePrefix' => 'entities',
+        'isActive' => false,
+        'showFctTests' => false,
+        'showFctTestsAuto' => false,
+        'showAllTests' => true,
+        'showAllTestsAuto' => true,
+        'showAutomationStability' => true,
+        'showProdBugs' => false,
+        'showFctBugs' => false,
+        'showStagingBugs' => false,
+        'showTotalBugs' => false,
+        'environmentAndGroupNamePairs' => [
+            'staging,regression',
+            'staging,androidCases',
+            'staging,Production'
+        ]
+    ]
+];
+
+// display all error except deprecated and notice  
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+
+// turn on output buffering 
+ob_start();
+
+// turn off magic-quotes support, for runtime e, as it will cause problems if enabled
+if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime'))
+    set_magic_quotes_runtime(0);
 
 // set currentPage in the local scope
 $currentPage = pathinfo($_SERVER['PHP_SELF'], PATHINFO_FILENAME);
@@ -34,4 +85,3 @@ try {
     die;
 }
 ?>
-

@@ -15,7 +15,7 @@
             var x = getCookie('entity');
             if (x)
             {
-               window.location.href = 'testrail.php';
+               window.location.href = 'tests-fct-auto.php';
             }
         </script>
     </head>
@@ -26,7 +26,7 @@
                 <div class="container-fluid">
                     <div class="row flex-xl-nowrap">
                     <?php
-                     $fullData = getActiveVerticalData();
+                     $fullData = getActiveEntityData();
                      require "components/left-menu.php";
                     ?>
                             <div id="content-body" class="col-12 col-md-9 col-xl-10 pl-4 pr-4 bd-content">
@@ -44,22 +44,22 @@
                                     <center>
                                         <p class="paragraph1">This dashboard is created to track overall Quality Metrics for whole organization at one place! </p>
                                         <br>
-                                        <p id="demo" class="paragraph2">To fetch the numbers/metrics, please select your respective Entity / Vertical name! </p>
+                                        <p id="demo" class="paragraph2">To fetch the numbers / metrics, please select your entity / organisation name! </p>
                                         <br>
                                         <div class="mt-3 db-chart">
                                             <div id="parent1" class="col-lg-6">
                                                 <div class="chart-card mb-4">
                                                     <center>
-                                                        <div class="chart-title greyBackground" id="text2"><b>Select the name of your Entity / Vertical name:</b></div>
+                                                        <div class="chart-title greyBackground" id="text2"><b>Select the name of your entity / organisation:</b></div>
                                                         <div id="chart1" class="project-dropdown greyBackground">
-                                                            <form name="testform" method="POST" action="testrail.php">
+                                                            <form name="testform" method="POST" action="tests-fct-auto.php">
                                                                 <br>
-                                                                <select name='verticalName' id='verticalName' style="width: 35%">
-                                                                    <option value=''>Choose your Entity Name</option>
+                                                                <select name='entityName' id='entityName' style="width: 35%">
+                                                                    <option value=''>Choose your Entity</option>
                                                                     <?php
                                                                         foreach ($fullData as $row) 
                                                                         {
-                                                                            echo "<option value='$row[verticalName]'>$row[verticalName]</option>";
+                                                                            echo "<option value='$row[entityName]'>$row[entityName]</option>";
                                                                         }
                                                                     ?>
                                                                 </select>

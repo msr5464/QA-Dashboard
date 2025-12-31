@@ -141,28 +141,52 @@ body {
 	background-size: 24px 24px
 }
 
-.left-options li#testrail:before {
+.left-options li#fct-tests:before {
+	background-image: url(../images/fct-tests.svg);
+	background-repeat: no-repeat;
+	background-size: 24px 24px
+}
+
+.left-options li#fct-tests-auto:before {
+	background-image: url(../images/automatable.svg);
+	background-repeat: no-repeat;
+	background-size: 24px 24px
+}
+
+.left-options li#all-tests:before {
 	background-image: url(../images/testrail.svg);
 	background-repeat: no-repeat;
 	background-size: 24px 24px
 }
 
-.left-options li#jira:before {
-	background-image: url(../images/bug.svg);
+.left-options li#all-tests-auto:before {
+	background-image: url(../images/automatable.svg);
 	background-repeat: no-repeat;
 	background-size: 24px 24px
 }
 
-.left-options li#units:before {
-	background-image: url(../images/unit-tests.svg);
-	background-repeat: no-repeat;
-	background-size: 26px 26px
-}
-
-.left-options li#releaseStatistics:before {
+.left-options li#total-bugs:before {
 	background-image: url(../images/releaseStatistics.svg);
 	background-repeat: no-repeat;
-	background-size: 26px 26px
+	background-size: 24px 24px
+}
+
+.left-options li#prod-bugs:before {
+	background-image: url(../images/prodBugs.png);
+	background-repeat: no-repeat;
+	background-size: 24px 24px
+}
+
+.left-options li#fct-bugs:before {
+	background-image: url(../images/fctBugs.png);
+	background-repeat: no-repeat;
+	background-size: 24px 24px
+}
+
+.left-options li#staging-bugs:before {
+	background-image: url(../images/stagingBugs.png);
+	background-repeat: no-repeat;
+	background-size: 24px 24px
 }
 
 .left-options li:hover>a {
@@ -272,6 +296,105 @@ background-color: #9494b8;
 
 .chart svg {
 	background-color: transparent!important
+}
+
+/* Dynamic chart sizing for automation stability charts */
+.chart-3-columns {
+	flex: 0 0 33.333333%;
+	max-width: 33.333333%;
+}
+
+.chart-4-columns {
+	flex: 0 0 25%;
+	max-width: 25%;
+}
+
+/* Responsive behavior for 4 charts */
+@media (max-width: 1399.98px) {
+	.chart-4-columns {
+		flex: 0 0 50%;
+		max-width: 50%;
+	}
+}
+
+@media (max-width: 991.98px) {
+	.chart-3-columns,
+	.chart-4-columns {
+		flex: 0 0 100%;
+		max-width: 100%;
+	}
+}
+
+/* Ensure proper spacing and alignment */
+.chart-3-columns .chart-card,
+.chart-4-columns .chart-card {
+	height: auto;
+	min-height: 200px;
+}
+
+/* Adjust gauge chart size for 4-column layout */
+.chart-4-columns .gaugeContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transform: scale(0.9);
+	transform-origin: center center;
+	position: relative;
+}
+
+/* Ensure the center tag inside gauge container is properly aligned */
+.chart-4-columns .gaugeContainer center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+/* Ensure the gauge label container is centered */
+.chart-4-columns .gaugeContainer .gauge {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0 auto;
+}
+
+/* Center FusionCharts SVG elements in 4-column layout */
+.chart-4-columns .gaugeContainer svg {
+	margin: 0 auto;
+	display: block;
+}
+
+/* Center any div containers within the gauge container */
+.chart-4-columns .gaugeContainer > center > label > div {
+	margin: 0 auto;
+	text-align: center;
+}
+
+/* Ensure proper alignment of FusionCharts container divs */
+.chart-4-columns .gaugeContainer [id^="gauge-chart-container"] {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+/* Center the FusionCharts div elements */
+.chart-4-columns .gaugeContainer div[id*="fusioncharts"] {
+	margin: 0 auto !important;
+	text-align: center;
+}
+
+/* Ensure all child elements of gauge containers are centered in 4-column layout */
+.chart-4-columns .gaugeContainer * {
+	box-sizing: border-box;
+}
+
+.chart-4-columns .gaugeContainer > center {
+	width: 100%;
+	height: 100%;
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
 }
 
 .chart-title {
@@ -548,3 +671,156 @@ th {
   background-color: #3E345C;
 }
 
+.footNote{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	color:lightgreen;
+	font-size:12px;
+	margin-top: 15px;
+	margin-bottom: -15px;
+}
+th,
+td {
+	padding: 5px;
+	text-align: left;
+}
+
+/* Main heading styles */
+.tableMainHeading {
+	color: white;
+	/* White text color */
+	font-size: 20px;
+	font-weight: bold;
+	background-color: #3498db;
+	/* Blue background color */
+}
+
+thead tr:first-child th {
+	background-color: #333;
+	color: white;
+	/* White text color */
+}
+
+thead th {
+	background-color: #a9cce3;
+	/* Light blue */
+	font-weight: bold;
+	font-size: 16px;
+	color: #333;
+	/* Dark text color */
+}
+
+tbody th:nth-child(1),
+tbody td:nth-child(1) {
+	background-color: #a9cce3;
+	/* Light blue */
+	font-size: 14px;
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+	background-color: #fef9e7;
+	/* Very light yellow */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+	background-color: #eaf2f8;
+	/* Very light blue */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+	background-color: #fdf2e9;
+	/* Very light orange */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+	background-color: #f5eef8;
+	/* Very light purple */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+	background-color: #f8f9f9;
+	/* Very light gray */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(7),
+td:nth-child(7) {
+	background-color: #fef9e7;
+	/* Light yellow */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(8),
+td:nth-child(8) {
+	background-color: #ebf5fb;
+	/* Very light blue */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(9),
+td:nth-child(9) {
+	background-color: #fdebd0;
+	/* Very light orange */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(10),
+td:nth-child(10) {
+	background-color: #f5eef8;
+	/* Very light purple */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(11),
+td:nth-child(11) {
+	background-color: #e8f6f3;
+	/* Very light cyan */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(12),
+td:nth-child(12) {
+	background-color: #fdf2e9;
+	/* Very light orange */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(13),
+td:nth-child(13) {
+	background-color: #f9e79f;
+	/* Light yellow */
+	color: #333;
+	/* Dark text color */
+}
+
+th:nth-child(14),
+td:nth-child(14) {
+	background-color: #a9cce3;
+	/* Light blue */
+	font-size: 14px;
+	color: #333;
+	/* Dark text color */
+}

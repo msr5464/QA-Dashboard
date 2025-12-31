@@ -21,7 +21,7 @@ public class TestListener implements ITestListener, IInvokedMethodListener
 		{
 			if (testConfig != null)
 			{
-				testConfig.logComment("**************TEST EXECUTION ENDS HERE**************");
+				//testConfig.logComment("**************TEST EXECUTION ENDS HERE**************");
 			}
 		}
 	}

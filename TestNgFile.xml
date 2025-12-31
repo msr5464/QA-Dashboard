@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite thread-count="10" parallel="tests"
+	name="dataPopulator cases on {$branchName} branch">
+	<parameter name="resultsDirectory" value="{$resultsDirectory}" />
+	<parameter name="remoteExecution" value="{$remoteExecution}" />
+	<parameter name="debugMode" value="{$debugMode}" />
+	<test name="Payments" verbose="0">
+		<groups>
+			<run>
+				<include name="{$groupNames}" />
+			</run>
+		</groups>
+		<classes>
+			<class name="thanos.Payments" />
+		</classes>
+	</test>
+	<test name="Onboarding" verbose="0">
+		<groups>
+			<run>
+				<include name="{$groupNames}" />
+			</run>
+		</groups>
+		<classes>
+			<class name="thanos.Onboarding" />
+		</classes>
+	</test>
+	<test name="Cards" verbose="0">
+		<groups>
+			<run>
+				<include name="{$groupNames}" />
+			</run>
+		</groups>
+		<classes>
+			<class name="thanos.Cards" />
+		</classes>
+	</test>
+</suite>

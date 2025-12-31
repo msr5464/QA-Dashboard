@@ -16,9 +16,24 @@
  </div>
  <nav class="bd-links collapse" id="bd-docs-nav">
     <ul class="left-options">
-       <li class="hide left-option <?php echo $activateTestrailPage; ?>" id="testrail">
-          <a href="testrail.php">
-          Test Coverage
+      <li class="hide left-option <?php echo $activateProdTestsPage; ?>" id="prod-tests">
+          <a href="prod-tests.php">
+           ProdSanity Tests - Total
+          </a>
+       </li>
+       <li class="hide left-option <?php echo $activateProdTestsAutoPage; ?>" id="prod-tests-auto">
+          <a href="prod-tests-auto.php">
+          ProdSanity Tests - Automatable
+          </a>
+       </li>
+       <li class="hide left-option <?php echo $activateFctTestsPage; ?>" id="fct-tests">
+          <a href="tests-fct.php">
+           FCT Tests - Total
+          </a>
+       </li>
+       <li class="hide left-option <?php echo $activateFctTestsAutoPage; ?>" id="fct-tests-auto">
+          <a href="tests-fct-auto.php">
+          FCT Tests - Automatable
           </a>
        </li>
        <li class="hide left-option <?php echo $activateResultPage; ?>" id="results">
@@ -26,14 +41,34 @@
           Automation Stability
           </a>
        </li>
-       <li class="hide left-option <?php echo $activateJiraPage; ?>" id="jira">
-          <a href="jira.php">
-          Bug Metrics
+       <li class="hide left-option <?php echo $activateProdBugsPage; ?>" id="prod-bugs">
+          <a href="bugs-prod.php">
+          PRD / Production Bugs
           </a>
        </li>
-       <li class="hide left-option <?php echo $activateUnitTestsPage; ?>" id="units">
-          <a href="units.php">
-          Code Coverage
+       <li class="hide left-option <?php echo $activateFctBugsPage; ?>" id="fct-bugs">
+          <a href="bugs-fct.php">
+          FCT / Regression Bugs
+          </a>
+       </li>
+       <li class="hide left-option <?php echo $activateStagingBugsPage; ?>" id="staging-bugs">
+          <a href="bugs-staging.php">
+          STG / Feature Bugs
+          </a>
+       </li>
+       <li class="hide left-option <?php echo $activateTotalBugsPage; ?>" id="total-bugs">
+          <a href="bugs-total.php">
+          Overall Bug Metrics
+          </a>
+       </li>
+       <li class="hide left-option <?php echo $activateAllTestsPage; ?>" id="all-tests">
+          <a href="tests-all.php">
+          Overall Tests - Total
+          </a>
+       </li>
+       <li class="hide left-option <?php echo $activateAllTestsAutoPage; ?>" id="all-tests-auto">
+          <a href="tests-all-auto.php">
+          Overall Tests - Automatable
           </a>
        </li>
        <li class="left-option">

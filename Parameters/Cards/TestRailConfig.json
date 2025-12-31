@@ -1,0 +1,16 @@
+{
+  "Vertical - Cards": {
+    "testRailSuites": [
+      {
+        "suiteName": "Cards - Cards Infra",
+        "suiteId": "2542",
+        "projectId": "8"
+      },
+      {
+        "suiteName": "Cards - Card Connectors",
+        "suiteId": "2541",
+        "projectId": "8"
+      }
+    ]
+  }
+}

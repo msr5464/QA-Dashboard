@@ -5,9 +5,11 @@
       <br>
       <?php
          $latestEntry = getLastUpdatedTime();
-         foreach ($latestEntry as $row) 
-         {
-            echo "<span class='custom-text-3'>Data last updated on: $row[createdAt]</span>";
+         if (!empty($latestEntry) && is_array($latestEntry)) {
+            foreach ($latestEntry as $row) 
+            {
+               echo "<span class='custom-text-3'>Data last updated on: $row[createdAt]</span>";
+            }
          }
 		?>
    </div>

@@ -4,13 +4,25 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+
 import org.json.JSONObject;
+
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 
@@ -102,9 +114,27 @@ public class CommonUtilities
 	 */
 	public static String convertFilePathToHtmlUrl(String fileUrl)
 	{
-		String htmlUrl = "";
-		htmlUrl = fileUrl.replace(File.separator, "/");
-		return htmlUrl;
+		String finalPath = fileUrl;
+		if (fileUrl.contains("RegressionResults"))
+		{
+			finalPath = "http:" + fileUrl.replace(File.separator, "/").replace("RegressionResults/", "Results/").replace("file:/", "/");
+		}
+		else if (fileUrl.contains("test-output") && !fileUrl.contains("file://"))
+		{
+			finalPath = fileUrl.replace(File.separator, "/");
+			finalPath = "file://" + finalPath;
+		}
+
+		// Replace internal IP with public dashboard URL if needed
+		// Update this with your actual dashboard URL
+		String internalIp = System.getProperty("internalResultsServerIp", "10.102.140.83");
+		String publicDashboardUrl = System.getProperty("publicDashboardUrl", "https://your-dashboard.example.com");
+		if (finalPath.contains("http://" + internalIp))
+		{
+			finalPath = finalPath.replace("http://" + internalIp, publicDashboardUrl);
+		}
+		return finalPath;
+	
 	}
 	
 	public static JSONObject getJsonObjectFromJsonFile(String jsonFilePath)
@@ -180,6 +210,57 @@ public class CommonUtilities
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * This function is used to decrypt the message
+	 * @param encryptedMessage - message which needs to be decrypt
+	 * @return decrypted message
+	 */
+	
+	public static String decryptMessage(byte[] encryptedMessage)
+	{
+		try
+		{
+			Decoder decoder = Base64.getDecoder();
+			String key = new String(decoder.decode(System.getProperty("thanosToken")));
+			IvParameterSpec iv = new IvParameterSpec(key.getBytes("UTF-8"));
+			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+			byte[] original = cipher.doFinal(decoder.decode(encryptedMessage));
+			return new String(original);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * This function is used to encrypt the message
+	 * @param plainMessage - message which needs to be encrypt
+	 * @return encrypted message
+	 */
+	public static byte[] encryptMessage(String plainMessage)
+	{
+		try
+		{
+			String key = new String(Base64.getDecoder().decode(System.getProperty("thanosToken").getBytes()));
+			IvParameterSpec iv = new IvParameterSpec(key.getBytes("UTF-8"));
+			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+			byte[] encrypted = cipher.doFinal(plainMessage.getBytes());
+			return Base64.getEncoder().encode(encrypted);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
 	
 	public static String getCurrentDateTime(String format)
 	{
@@ -195,4 +276,42 @@ public class CommonUtilities
 		long time = date.getTime();
 		return String.valueOf(time);
 	}
+
+    public static String formatDate(String inDate, String inDateFormat, String outDateFormat)
+    {
+        SimpleDateFormat inSDF = new SimpleDateFormat(inDateFormat);
+        SimpleDateFormat outSDF = new SimpleDateFormat(outDateFormat);
+        String outDate = "";
+        if (inDate != null)
+        {
+            try
+            {
+                Date date = inSDF.parse(inDate);
+                outDate = outSDF.format(date);
+            } catch (ParseException ex)
+            {
+            	try {
+            		//check incase, format already like outDateFormat
+					Date date = outSDF.parse(inDate);
+					outDate = inDate;
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+            }
+        }
+        return outDate;
+    }
+    
+    public static LocalDateTime parseDateTime(String dateTimeString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        return LocalDateTime.parse(dateTimeString, formatter);
+    }
+    
+    public static String formatDuration(Duration duration) {
+        long hours = duration.toHours();
+        long minutes = duration.toMinutesPart();
+        long seconds = duration.toSecondsPart();
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
 }
