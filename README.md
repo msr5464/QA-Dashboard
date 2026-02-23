@@ -1,5 +1,5 @@
 <div>
-  <img src="https://raw.githubusercontent.com/msr5464/Basic-Automation-Framework/refs/heads/master/ThanosLogo.png" title="Powered by Thanos and created by Mukesh Rajput" height="50">
+  <img src="https://raw.githubusercontent.com/msr5464/Basic-Automation-Framework/refs/heads/master/Logo-full.png" title="Powered by Thanos and created by Mukesh Rajput" height="50">
 
   # QUALITY DASHBOARD
 
@@ -11,7 +11,7 @@
   [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 </div>
 
-An open-source quality metrics dashboard for tracking test coverage, automation stability, and bug metrics across multiple teams and projects. This dashboard helps organizations visualize quality metrics in real-time, making it easier to track quality progress across large engineering organizations.
+An open-source quality metrics dashboard for tracking test coverage, automation stability, and bug metrics across multiple teams and projects. This dashboard helps organizations visualize quality metrics in real-time, making it easier to track quality progress across large engineering organisations.
 
 ## 📋 Table of Contents
 - [Overview](#-overview)
