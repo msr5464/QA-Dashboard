@@ -1,15 +1,11 @@
-<div>
-  <img src="https://raw.githubusercontent.com/msr5464/Basic-Automation-Framework/refs/heads/master/Logo-full.png" title="Powered by Thanos and created by Mukesh Rajput" height="50">
+# <a href="https://www.linkedin.com/in/mukesh-rajput/"><img align="right" src="https://raw.githubusercontent.com/msr5464/Selenium-Automation-Framework/refs/heads/master/Logo-full.png" alt="Mukesh" height="40"></a> QUALITY DASHBOARD
 
-  # QUALITY DASHBOARD
+**📊 Overall Quality Metrics | Test Coverage Analytics | Bug Tracking Intelligence | Automation Stability Insights**
 
-  **📊 Overall Quality Metrics | Test Coverage Analytics | Bug Tracking Intelligence | Automation Stability Insights**
-  
-  [![PHP](https://img.shields.io/badge/PHP-7.4+-777BB4.svg?logo=php&logoColor=white)](https://www.php.net/)
-  [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1.svg?logo=mysql&logoColor=white)](https://www.mysql.com/)
-  [![Java](https://img.shields.io/badge/Java-11+-007396.svg?logo=java&logoColor=white)](https://www.oracle.com/java/)
-  [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-</div>
+[![PHP](https://img.shields.io/badge/PHP-7.4+-777BB4.svg?logo=php&logoColor=white)](https://www.php.net/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1.svg?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Java](https://img.shields.io/badge/Java-11+-007396.svg?logo=java&logoColor=white)](https://www.oracle.com/java/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 An open-source quality metrics dashboard for tracking test coverage, automation stability, and bug metrics across multiple teams and projects. This dashboard helps organizations visualize quality metrics in real-time, making it easier to track quality progress across large engineering organisations.
 
@@ -22,7 +18,6 @@ An open-source quality metrics dashboard for tracking test coverage, automation 
 - [Project Structure](#-project-structure)
 - [Technologies](#-technologies)
 - [License](#-license)
-- [Creator](#-creator)
 - [Acknowledgments](#-acknowledgments)
 
 ## 🎯 Overview
@@ -205,19 +200,21 @@ This project is open source. See [LICENSE](LICENSE) file for details.
 
 ---
 
-## 👤 Creator
-
-**Mukesh Rajput** For any further help or queries, contact [@mukesh.rajput](https://www.linkedin.com/in/mukesh-rajput/)
-
----
-
 ## 🙏 Acknowledgments
 
 - **Fusion Charts**: For the excellent data visualization library.
 - **Open Source Community**: For the tools and frameworks that make this possible.
 
 ---
+---
 
 <div align="center">
-  <strong>Made with ❤️ for Engineering Team!</strong>
+
+**Mukesh Rajput** · [LinkedIn](https://www.linkedin.com/in/mukesh-rajput/) · [Portfolio](https://msr5464.github.io/)
+
+<sub>Made with ❤️ for the Engineering Team</sub>
+
 </div>
+
+---
+---
