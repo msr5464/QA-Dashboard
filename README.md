@@ -5,7 +5,7 @@
 [![PHP](https://img.shields.io/badge/PHP-7.4+-777BB4.svg?logo=php&logoColor=white)](https://www.php.net/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1.svg?logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![Java](https://img.shields.io/badge/Java-11+-007396.svg?logo=java&logoColor=white)](https://www.oracle.com/java/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](LICENSE)
 
 An open-source quality metrics dashboard for tracking test coverage, automation stability, and bug metrics across multiple teams and projects. This dashboard helps organizations visualize quality metrics in real-time, making it easier to track quality progress across large engineering organisations.
 
@@ -196,7 +196,7 @@ If dashboard shows empty graphs or tables
 
 ## 📝 License
 
-This project is open source. See [LICENSE](LICENSE) file for details.
+Apache 2.0 (see [LICENSE](LICENSE)). The bundled third-party libraries (Bootstrap in `Website/css`, Chosen and FusionCharts in `Website/libs`) keep their own licences.
 
 ---
 
